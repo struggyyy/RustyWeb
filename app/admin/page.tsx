@@ -2,7 +2,13 @@
 
 import { Filter, MoreVertical, Search, LogOut, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
-import { collection, query, orderBy, onSnapshot, Timestamp } from "firebase/firestore";
+import {
+  collection,
+  query,
+  orderBy,
+  onSnapshot,
+  Timestamp,
+} from "firebase/firestore";
 import { db } from "@/lib/firebase/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { Report, ReportStatus } from "@/types/reports";
@@ -23,12 +29,18 @@ export default function AdminDashboardPage() {
   const [dateTo, setDateTo] = useState<string>("");
   const [locationQuery, setLocationQuery] = useState<string>("");
   const [filterRadius, setFilterRadius] = useState<number | null>(null);
-  const [filterLocation, setFilterLocation] = useState<{latitude: number, longitude: number} | null>(null);
+  const [filterLocation, setFilterLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
   const [showMapView, setShowMapView] = useState(false);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [showReportModal, setShowReportModal] = useState(false);
-  const [selectedMapReport, setSelectedMapReport] = useState<Report | null>(null);
+  const [selectedMapReport, setSelectedMapReport] = useState<Report | null>(
+    null
+  );
   const [showMapModal, setShowMapModal] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -48,10 +60,7 @@ export default function AdminDashboardPage() {
       return;
     }
 
-    const q = query(
-      collection(db, "reports"),
-      orderBy("createdAt", "desc")
-    );
+    const q = query(collection(db, "reports"), orderBy("createdAt", "desc"));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const fetchedReports = snapshot.docs.map((doc) => ({
@@ -67,15 +76,22 @@ export default function AdminDashboardPage() {
   }, [user, isAdmin, authLoading, router]);
 
   // Calculate distance between two points using Haversine formula
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+  const calculateDistance = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ): number => {
     const R = 6371; // Earth's radius in kilometers
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
 
@@ -109,7 +125,9 @@ export default function AdminDashboardPage() {
     }
 
     // Filter by location and radius
-    if (filterLocation && filterRadius !== null && filterRadius > 0) {
+    if (filterLocation) {
+      // Use explicit radius if set, otherwise use default 50km for city + nearby areas
+      const effectiveRadius = filterRadius !== null && filterRadius > 0 ? filterRadius : 50;
       filtered = filtered.filter((report) => {
         if (!report.location) return false;
         const distance = calculateDistance(
@@ -118,24 +136,36 @@ export default function AdminDashboardPage() {
           report.location.latitude,
           report.location.longitude
         );
-        return distance <= filterRadius;
+        return distance <= effectiveRadius;
       });
     }
 
     // Filter by search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter((report) => (
-        report.id.toLowerCase().includes(query) ||
-        report.description.toLowerCase().includes(query) ||
-        (report.userEmail && report.userEmail.toLowerCase().includes(query)) ||
-        (report.location && 
-          `${report.location.latitude.toFixed(4)}, ${report.location.longitude.toFixed(4)}`.includes(query))
-      ));
+      filtered = filtered.filter(
+        (report) =>
+          report.id.toLowerCase().includes(query) ||
+          report.description.toLowerCase().includes(query) ||
+          (report.userEmail &&
+            report.userEmail.toLowerCase().includes(query)) ||
+          (report.location &&
+            `${report.location.latitude.toFixed(
+              4
+            )}, ${report.location.longitude.toFixed(4)}`.includes(query))
+      );
     }
 
     setFilteredReports(filtered);
-  }, [reports, searchQuery, selectedStatuses, dateFrom, dateTo, filterLocation, filterRadius]);
+  }, [
+    reports,
+    searchQuery,
+    selectedStatuses,
+    dateFrom,
+    dateTo,
+    filterLocation,
+    filterRadius,
+  ]);
 
   const handleDetailsPress = (report: Report) => {
     setSelectedReport(report);
@@ -181,11 +211,16 @@ export default function AdminDashboardPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Submitted": return "bg-status-Submitted/10 text-status-Submitted";
-      case "Accepted": return "bg-status-Accepted/10 text-status-Accepted";
-      case "Completed": return "bg-status-Completed/10 text-status-Completed";
-      case "Canceled": return "bg-status-Canceled/10 text-status-Canceled";
-      default: return "bg-neutral-100 text-neutral-500";
+      case "Submitted":
+        return "bg-status-Submitted/10 text-status-Submitted";
+      case "Accepted":
+        return "bg-status-Accepted/10 text-status-Accepted";
+      case "Completed":
+        return "bg-status-Completed/10 text-status-Completed";
+      case "Canceled":
+        return "bg-status-Canceled/10 text-status-Canceled";
+      default:
+        return "bg-neutral-100 text-neutral-500";
     }
   };
 
@@ -200,26 +235,37 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen flex font-sans">
       {/* Sidebar - Hidden on mobile, fixed on desktop */}
-      <aside className="hidden lg:block w-64 bg-white/80 backdrop-blur-md border-r border-neutral-100 fixed h-full z-20">
+      <aside className="hidden xl:block w-64 bg-white/80 backdrop-blur-md border-r border-neutral-100 fixed h-full z-20">
         <div className="p-6 border-b border-neutral-100">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">R</span>
             </div>
-            <span className="text-xl font-bold text-neutral-600">Rusty Admin</span>
+            <span className="text-xl font-bold text-neutral-600">
+              Rusty Admin
+            </span>
           </div>
         </div>
         <nav className="p-4 space-y-1">
-          <a href="#" className="block px-4 py-2 bg-neutral-50 text-brand-primary font-medium rounded-lg">
+          <a
+            href="#"
+            className="block px-4 py-2 bg-neutral-50 text-brand-primary font-medium rounded-lg"
+          >
             Reports
           </a>
-          <a href="#" className="block px-4 py-2 text-neutral-300 hover:bg-neutral-50 hover:text-neutral-400 rounded-lg transition-colors">
+          <a
+            href="#"
+            className="block px-4 py-2 text-neutral-300 hover:bg-neutral-50 hover:text-neutral-400 rounded-lg transition-colors"
+          >
             Users
           </a>
-          <a href="#" className="block px-4 py-2 text-neutral-300 hover:bg-neutral-50 hover:text-neutral-400 rounded-lg transition-colors">
+          <a
+            href="#"
+            className="block px-4 py-2 text-neutral-300 hover:bg-neutral-50 hover:text-neutral-400 rounded-lg transition-colors"
+          >
             Settings
           </a>
-          <button 
+          <button
             onClick={() => logOut()}
             className="w-full text-left px-4 py-2 text-neutral-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors mt-8 flex items-center gap-2"
           >
@@ -229,22 +275,38 @@ export default function AdminDashboardPage() {
       </aside>
 
       {/* Main Content */}
-      <main className="lg:ml-64 flex-1 p-4 md:p-8 overflow-x-hidden">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
+      <main className="xl:ml-64 flex-1 p-4 xl:p-8 overflow-x-hidden">
+        <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between mb-8 gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-neutral-700 mb-2">Report Management</h1>
-            <p className="text-neutral-400">Review and update citizen reports.</p>
+            <h1 className="text-2xl font-bold text-neutral-700 mb-2">
+              Report Management
+            </h1>
+            <p className="text-neutral-400">
+              Review and update citizen reports.
+            </p>
           </div>
           <div className="flex gap-4">
-            <button className="px-4 py-2 bg-white/80 backdrop-blur-sm border border-neutral-100 text-neutral-400 rounded-lg flex items-center justify-center gap-2 hover:bg-neutral-50 transition-colors shadow-sm whitespace-nowrap">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`px-4 py-2 backdrop-blur-sm border border-neutral-100 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-colors shadow-sm whitespace-nowrap ${
+                showFilters ||
+                selectedStatuses.length > 0 ||
+                dateFrom ||
+                dateTo ||
+                locationQuery ||
+                (filterRadius && filterRadius > 0)
+                  ? "bg-brand-primary text-white"
+                  : "bg-white/80 text-neutral-400"
+              }`}
+            >
               <Filter className="w-4 h-4" /> Filter
             </button>
             <button
               onClick={() => setShowMapView(!showMapView)}
               className={`px-4 py-2 backdrop-blur-sm border border-neutral-100 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-colors shadow-sm whitespace-nowrap ${
                 showMapView
-                  ? 'bg-brand-primary text-white'
-                  : 'bg-white/80 text-neutral-400'
+                  ? "bg-brand-primary text-white"
+                  : "bg-white/80 text-neutral-400"
               }`}
             >
               {showMapView ? (
@@ -263,8 +325,8 @@ export default function AdminDashboardPage() {
         {/* Search Bar */}
         <div className="mb-6 relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-300" />
-          <input 
-            type="text" 
+          <input
+            type="text"
             placeholder="Search reports by ID, location, or keyword..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -273,47 +335,51 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Status and Location Filters */}
-        <ReportFilters
-          selectedStatuses={selectedStatuses}
-          onStatusesChange={setSelectedStatuses}
-          locationQuery={locationQuery}
-          onLocationChange={(location, coords) => {
-            setLocationQuery(location);
-            if (coords) {
-              setFilterLocation(coords);
-            } else if (!location.trim()) {
-              setFilterLocation(null);
-            }
-          }}
-          filterRadius={filterRadius}
-          onRadiusChange={setFilterRadius}
-        />
+        {showFilters && (
+          <>
+            <ReportFilters
+              selectedStatuses={selectedStatuses}
+              onStatusesChange={setSelectedStatuses}
+              locationQuery={locationQuery}
+              onLocationChange={(location, coords) => {
+                setLocationQuery(location);
+                if (coords) {
+                  setFilterLocation(coords);
+                } else if (!location.trim()) {
+                  setFilterLocation(null);
+                }
+              }}
+              filterRadius={filterRadius}
+              onRadiusChange={setFilterRadius}
+            />
 
-        {/* Date Range Filters */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-neutral-600 mb-2">
-              From Date
-            </label>
-            <input
-              type="date"
-              value={dateFrom}
-              onChange={(e) => setDateFrom(e.target.value)}
-              className="w-full px-3 py-2 bg-white/80 backdrop-blur-sm border border-neutral-100 rounded-lg focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all text-neutral-600"
-            />
-          </div>
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-neutral-600 mb-2">
-              To Date
-            </label>
-            <input
-              type="date"
-              value={dateTo}
-              onChange={(e) => setDateTo(e.target.value)}
-              className="w-full px-3 py-2 bg-white/80 backdrop-blur-sm border border-neutral-100 rounded-lg focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all text-neutral-600"
-            />
-          </div>
-        </div>
+            {/* Date Range Filters */}
+            <div className="flex flex-col xl:flex-row gap-4 mb-6">
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-neutral-600 mb-2">
+                  From Date
+                </label>
+                <input
+                  type="date"
+                  value={dateFrom}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                  className="w-full px-3 py-2 bg-white/80 backdrop-blur-sm border border-neutral-100 rounded-lg focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all text-neutral-600"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-neutral-600 mb-2">
+                  To Date
+                </label>
+                <input
+                  type="date"
+                  value={dateTo}
+                  onChange={(e) => setDateTo(e.target.value)}
+                  className="w-full px-3 py-2 bg-white/80 backdrop-blur-sm border border-neutral-100 rounded-lg focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all text-neutral-600"
+                />
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Reports View - Map or List */}
         <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-neutral-100 shadow-sm overflow-hidden">
@@ -327,29 +393,45 @@ export default function AdminDashboardPage() {
             </div>
           ) : (
             <div className="p-6">
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {filteredReports.length === 0 ? (
-                  <div className="col-span-full bg-white/80 backdrop-blur-sm rounded-xl p-12 text-center border border-neutral-100 shadow-sm">
-                    <div className="w-16 h-16 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Search className="w-8 h-8 text-neutral-300" />
+              <div className="max-h-[600px] overflow-y-auto">
+                <div className="grid gap-4">
+                  {filteredReports.length === 0 ? (
+                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-12 text-center border border-neutral-100 shadow-sm">
+                      <div className="w-16 h-16 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Search className="w-8 h-8 text-neutral-300" />
+                      </div>
+                      <h3 className="text-lg font-bold text-neutral-600 mb-2">
+                        {searchQuery ||
+                        selectedStatuses.length > 0 ||
+                        dateFrom ||
+                        dateTo ||
+                        filterLocation ||
+                        (filterRadius && filterRadius > 0)
+                          ? "No reports found"
+                          : "No reports yet"}
+                      </h3>
+                      <p className="text-neutral-400">
+                        {searchQuery ||
+                        selectedStatuses.length > 0 ||
+                        dateFrom ||
+                        dateTo ||
+                        filterLocation ||
+                        (filterRadius && filterRadius > 0)
+                          ? "Try adjusting your search or filter criteria."
+                          : "Reports will appear here when submitted."}
+                      </p>
                     </div>
-                    <h3 className="text-lg font-bold text-neutral-600 mb-2">
-                      {searchQuery || selectedStatuses.length > 0 || dateFrom || dateTo || locationQuery || (filterRadius && filterRadius > 0) ? "No reports found" : "No reports yet"}
-                    </h3>
-                    <p className="text-neutral-400">
-                      {searchQuery || selectedStatuses.length > 0 || dateFrom || dateTo || locationQuery || (filterRadius && filterRadius > 0) ? "Try adjusting your search or filter criteria." : "Reports will appear here when submitted."}
-                    </p>
-                  </div>
-                ) : (
-                  filteredReports.map((report) => (
-                    <ReportCard
-                      key={report.id}
-                      report={report}
-                      isAdmin={true}
-                      onDetailsPress={handleDetailsPress}
-                    />
-                  ))
-                )}
+                  ) : (
+                    filteredReports.map((report) => (
+                      <ReportCard
+                        key={report.id}
+                        report={report}
+                        isAdmin={true}
+                        onDetailsPress={handleDetailsPress}
+                      />
+                    ))
+                  )}
+                </div>
               </div>
             </div>
           )}

@@ -24,58 +24,98 @@ export default function GoogleMaps({ reports, onMarkerClick, className }: Google
   const [loadError, setLoadError] = useState<string | null>(null);
   const scriptLoadedRef = useRef(false);
 
+  // Get pin color based on report status
+  const getPinColor = (status: string): string => {
+    switch (status) {
+      case "Submitted": return "#1976D2"; // Blue
+      case "Accepted": return "#00796B";  // Teal
+      case "Completed": return "#2E7D32"; // Green
+      case "Canceled": return "#C62828";  // Red
+      default: return "#6366f1"; // Default indigo
+    }
+  };
+
   // Load Google Maps API
   useEffect(() => {
-    // Check if already loaded
-    if (window.google && window.google.maps) {
-      setIsLoaded(true);
-      return;
-    }
+    const loadGoogleMaps = async () => {
+      // Check if already loaded
+      if (window.google && window.google.maps && window.google.maps.importLibrary) {
+        setIsLoaded(true);
+        return;
+      }
 
-    // Check if script is already being loaded
-    if (scriptLoadedRef.current) {
-      return;
-    }
+      // Check if script is already being loaded
+      if (scriptLoadedRef.current) {
+        // Wait for it to load
+        const checkGoogle = () => {
+          if (window.google && window.google.maps && window.google.maps.importLibrary) {
+            setIsLoaded(true);
+          } else {
+            setTimeout(checkGoogle, 100);
+          }
+        };
+        checkGoogle();
+        return;
+      }
 
-    // Check if script element already exists
-    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
-    if (existingScript) {
+      // Check if script element already exists
+      const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+      if (existingScript) {
+        scriptLoadedRef.current = true;
+        // Wait for it to load
+        const checkGoogle = () => {
+          if (window.google && window.google.maps && window.google.maps.importLibrary) {
+            setIsLoaded(true);
+          } else {
+            setTimeout(checkGoogle, 100);
+          }
+        };
+        checkGoogle();
+        return;
+      }
+
+      const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+      if (!apiKey || apiKey === 'your_google_maps_api_key_here') {
+        setLoadError('Google Maps API key not configured. Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables.');
+        return;
+      }
+
       scriptLoadedRef.current = true;
-      // Wait for it to load
-      const checkGoogle = () => {
-        if (window.google && window.google.maps) {
-          setIsLoaded(true);
-        } else {
-          setTimeout(checkGoogle, 100);
-        }
-      };
-      checkGoogle();
-      return;
-    }
 
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,marker&loading=async&v=beta`;
+      script.async = true;
 
-    if (!apiKey || apiKey === 'your_google_maps_api_key_here') {
-      setLoadError('Google Maps API key not configured. Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables.');
-      return;
-    }
+      const scriptLoadPromise = new Promise<void>((resolve, reject) => {
+        script.onload = () => {
+          // Wait a bit more to ensure libraries are fully loaded
+          setTimeout(() => {
+            if (window.google && window.google.maps && window.google.maps.importLibrary) {
+              resolve();
+            } else {
+              reject(new Error('Google Maps libraries not fully loaded'));
+            }
+          }, 500);
+        };
 
-    scriptLoadedRef.current = true;
+        script.onerror = (error) => {
+          console.error('Google Maps script load error:', error);
+          reject(new Error('Failed to load Google Maps. Please check your internet connection and API key.'));
+        };
+      });
 
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,marker&loading=async&v=beta`;
-    script.async = true;
+      document.head.appendChild(script);
 
-    script.onload = () => {
-      setIsLoaded(true);
+      try {
+        await scriptLoadPromise;
+        setIsLoaded(true);
+      } catch (error) {
+        setLoadError(error instanceof Error ? error.message : 'Failed to load Google Maps');
+      }
     };
 
-    script.onerror = (error) => {
-      console.error('Google Maps script load error:', error);
-      setLoadError('Failed to load Google Maps. Please check your internet connection and API key.');
-    };
-
-    document.head.appendChild(script);
+    loadGoogleMaps();
 
     return () => {
       // Don't remove the script on cleanup to prevent issues with multiple components
@@ -92,10 +132,12 @@ export default function GoogleMaps({ reports, onMarkerClick, className }: Google
         const { Map } = await window.google.maps.importLibrary("maps");
         const { AdvancedMarkerElement } = await window.google.maps.importLibrary("marker");
 
-        // Calculate center based on reports
-        let center = { lat: 52.2297, lng: 21.0122 }; // Default to Warsaw, Poland
-
+        // Calculate center and zoom based on reports
+        let center = { lat: 52.2, lng: 19.1 }; // Center of Poland
+        let zoom = 6; // Zoom level to show entire Poland
+        
         if (reports.length > 0) {
+          // Calculate center based on reports when they exist
           let validReports = 0;
           let totalLat = 0;
           let totalLng = 0;
@@ -125,12 +167,13 @@ export default function GoogleMaps({ reports, onMarkerClick, className }: Google
 
           if (validReports > 0) {
             center = { lat: totalLat / validReports, lng: totalLng / validReports };
+            zoom = reports.length > 1 ? 10 : 12; // Normal zoom for reports
           }
         }
 
         const mapOptions = {
           center,
-          zoom: reports.length > 1 ? 10 : 12,
+          zoom,
           mapId: "DEMO_MAP_ID", // Required for AdvancedMarkerElement
           mapTypeControl: true,
           streetViewControl: true,
@@ -165,9 +208,10 @@ export default function GoogleMaps({ reports, onMarkerClick, className }: Google
 
           // Create pin element
           const pinElement = document.createElement('div');
+          const pinColor = getPinColor(report.status);
           pinElement.innerHTML = `
             <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="20" cy="20" r="18" fill="#6366f1" stroke="white" stroke-width="3"/>
+              <circle cx="20" cy="20" r="18" fill="${pinColor}" stroke="white" stroke-width="3"/>
               <circle cx="20" cy="20" r="8" fill="white"/>
             </svg>
           `;
@@ -186,7 +230,7 @@ export default function GoogleMaps({ reports, onMarkerClick, className }: Google
           markersRef.current.push(marker);
         });
 
-        // Fit bounds
+        // Fit bounds only when there are multiple reports
         if (reports.length > 1) {
           const bounds = new window.google.maps.LatLngBounds();
           let validBoundsCount = 0;
@@ -213,7 +257,7 @@ export default function GoogleMaps({ reports, onMarkerClick, className }: Google
           if (validBoundsCount > 1) {
             googleMapRef.current.fitBounds(bounds);
             
-             const listener = window.google.maps.event.addListener(googleMapRef.current, 'idle', () => {
+            const listener = window.google.maps.event.addListener(googleMapRef.current, 'idle', () => {
               if (googleMapRef.current.getZoom() > 15) {
                 googleMapRef.current.setZoom(15);
               }
@@ -271,6 +315,21 @@ export default function GoogleMaps({ reports, onMarkerClick, className }: Google
   return (
     <div className={`relative ${className}`}>
       <div ref={mapRef} className="w-full h-full rounded-xl overflow-hidden" />
+      
+      {/* No reports message overlay */}
+      {reports.length === 0 && (
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-xl">
+          <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center shadow-lg max-w-sm mx-4">
+            <MapPin className="w-8 h-8 text-neutral-400 mx-auto mb-3" />
+            <h3 className="text-lg font-semibold text-neutral-700 mb-2">
+              No Reports Found
+            </h3>
+            <p className="text-neutral-500 text-sm">
+              No reports match your selected filters. Try adjusting your search criteria to see more results.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
