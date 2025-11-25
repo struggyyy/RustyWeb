@@ -1,6 +1,7 @@
 "use client";
 
-import { MapPin, User, LogOut } from "lucide-react";
+import Link from "next/link";
+import { MapPin, User, LogOut, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { collection, query, where, orderBy, onSnapshot, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebase";
@@ -95,9 +96,16 @@ export default function UserDashboardPage() {
                 <User className="w-4 h-4 md:w-5 md:h-5 text-neutral-400" />
              </div>
           </div>
+          <Link 
+            href="/settings"
+            className="p-2 text-neutral-400 hover:text-brand-primary hover:bg-neutral-50 rounded-lg transition-colors"
+            title="Settings"
+          >
+            <Settings className="w-4 h-4 md:w-5 md:h-5" />
+          </Link>
           <button 
             onClick={() => logOut()}
-            className="p-2 text-neutral-400 hover:text-brand-primary hover:bg-red-50 rounded-lg transition-colors"
+            className="p-2 text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
             title="Sign out"
           >
             <LogOut className="w-4 h-4 md:w-5 md:h-5" />
