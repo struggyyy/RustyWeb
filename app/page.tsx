@@ -25,7 +25,7 @@ export default function Page() {
 
             <div className="flex gap-3 md:gap-4 items-center mt-2 md:mt-6">
               <Link
-                href="/login"
+                href="/signup"
                 className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-brand-primary text-white text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-xl hover:opacity-90 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
               >
                 Join Us
