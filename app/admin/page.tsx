@@ -19,6 +19,7 @@ import ReportFilters from "@/components/features/ReportFilters";
 import GoogleMaps from "@/components/features/GoogleMaps";
 import MapReportModal from "@/components/features/MapReportModal";
 import { useRouter } from "next/navigation";
+import { updateReportStatus } from "@/lib/firebase/admin";
 
 export default function AdminDashboardPage() {
   const { user, isAdmin, logOut, loading: authLoading } = useAuth();
@@ -177,9 +178,23 @@ export default function AdminDashboardPage() {
     setShowReportModal(true);
   };
 
-  const handleStatusUpdate = async (newStatus: string) => {
-    // TODO: Implement status update functionality
-    console.log("Update status to:", newStatus);
+  const handleStatusUpdate = async (newStatus: ReportStatus) => {
+    if (!selectedReport) return;
+
+    try {
+      await updateReportStatus(
+        selectedReport.id,
+        selectedReport.userId,
+        selectedReport.status,
+        newStatus
+      );
+      
+      // Update local state to reflect change immediately
+      setSelectedReport(prev => prev ? { ...prev, status: newStatus } : null);
+    } catch (error) {
+      console.error("Failed to update status:", error);
+      alert("Failed to update status. Please try again.");
+    }
   };
 
   const handleMapMarkerClick = (report: Report) => {

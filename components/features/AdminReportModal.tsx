@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { Report, ReportStatus, reportStatuses } from "@/types/reports";
-import { X, Trash2 } from "lucide-react";
+import { X, Trash2, Loader2 } from "lucide-react";
 
 interface AdminReportModalProps {
   report: Report;
   onClose: () => void;
-  onStatusUpdate: (newStatus: ReportStatus) => void;
+  onStatusUpdate: (newStatus: ReportStatus) => Promise<void>;
   onDelete: () => void;
 }
 
@@ -18,6 +18,7 @@ export default function AdminReportModal({
   onDelete,
 }: AdminReportModalProps) {
   const [selectedStatus, setSelectedStatus] = useState<ReportStatus>(report.status);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const formatDate = (timestamp: any) => {
     if (!timestamp) return "";
@@ -39,9 +40,20 @@ export default function AdminReportModal({
     }
   };
 
-  const handleStatusClick = (status: ReportStatus) => {
+  const handleStatusClick = async (status: ReportStatus) => {
+    if (isUpdating) return;
+    
     setSelectedStatus(status);
-    onStatusUpdate(status);
+    setIsUpdating(true);
+    try {
+      await onStatusUpdate(status);
+    } catch (error) {
+      console.error("Failed to update status:", error);
+      // Revert selection on error
+      setSelectedStatus(report.status);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   return (
@@ -131,19 +143,22 @@ export default function AdminReportModal({
 
         {/* Status Update Section */}
         <div className="border-t border-neutral-100 p-6">
-          <label className="block text-sm font-semibold text-neutral-600 mb-3">
-            Update Status
+          <label className="block text-sm font-semibold text-neutral-600 mb-3 flex justify-between items-center">
+            <span>Update Status</span>
+            {isUpdating && <Loader2 className="w-4 h-4 animate-spin text-brand-primary" />}
           </label>
           <div className="grid grid-cols-2 gap-3">
             {reportStatuses.map((status) => (
               <button
                 key={status}
                 onClick={() => handleStatusClick(status)}
-                disabled={status === report.status}
+                disabled={status === report.status || isUpdating}
                 className={`px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
                   status === report.status
                     ? `${getStatusColor(status)} cursor-not-allowed opacity-75`
-                    : `bg-neutral-100 text-neutral-600 hover:bg-neutral-200`
+                    : isUpdating 
+                      ? "bg-neutral-50 text-neutral-400 cursor-not-allowed"
+                      : `bg-neutral-100 text-neutral-600 hover:bg-neutral-200`
                 }`}
               >
                 {status}
