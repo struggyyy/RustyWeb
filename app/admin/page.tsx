@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Filter, MoreVertical, Search, LogOut, MapPin } from "lucide-react";
+import { Filter, MoreVertical, Search, LogOut, MapPin, Menu, X } from "lucide-react";
 import {
   collection,
   query,
@@ -43,7 +43,11 @@ export default function AdminDashboardPage() {
   const [showMapModal, setShowMapModal] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const router = useRouter();
+
+  // Automatic sidebar toggling removed as per user request
+  // Sidebar is now purely manual via the toggle button
 
   useEffect(() => {
     // Wait for authentication to load before checking user state
@@ -234,10 +238,14 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen flex font-sans">
-      {/* Sidebar - Hidden on mobile, fixed on desktop */}
-      <aside className="hidden xl:block w-64 bg-white/80 backdrop-blur-md border-r border-neutral-100 fixed h-full z-20">
-        <div className="p-6 border-b border-neutral-100">
+    <div className="h-screen flex font-sans overflow-hidden">
+      {/* Sidebar */}
+      <aside 
+        className={`fixed top-0 left-0 h-full w-64 bg-white/80 backdrop-blur-md border-r border-neutral-100 z-30 transition-transform duration-300 ease-in-out ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">R</span>
@@ -246,6 +254,13 @@ export default function AdminDashboardPage() {
               Rusty Admin
             </span>
           </div>
+          {/* Mobile Close Button */}
+          <button 
+            onClick={() => setIsSidebarOpen(false)}
+            className="sidebar-break:hidden p-1 text-neutral-400 hover:text-neutral-600"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
         <nav className="p-4 space-y-1">
           <a
@@ -275,21 +290,42 @@ export default function AdminDashboardPage() {
         </nav>
       </aside>
 
+      {/* Overlay for mobile when sidebar is open */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-20 sidebar-break:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Main Content */}
-      <main className="xl:ml-64 flex-1 p-4 xl:p-8 overflow-x-hidden">
-        <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between mb-8 gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-neutral-700 mb-2">
-              Report Management
-            </h1>
-            <p className="text-neutral-400">
-              Review and update citizen reports.
-            </p>
+      <main 
+        className={`flex-1 flex flex-col p-4 sm:p-8 overflow-hidden transition-all duration-300 ease-in-out ${
+          isSidebarOpen ? "sidebar-break:ml-64" : ""
+        }`}
+      >
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="p-2 bg-white border border-neutral-200 rounded-lg text-neutral-500 hover:text-brand-primary hover:border-brand-primary transition-colors"
+              title={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <div>
+              <h1 className="text-2xl font-bold text-neutral-700 mb-1">
+                Report Management
+              </h1>
+              <p className="text-neutral-400 text-sm">
+                Review and update citizen reports.
+              </p>
+            </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 w-full sm:w-auto">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`px-4 py-2 backdrop-blur-sm border border-neutral-100 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-colors shadow-sm whitespace-nowrap ${
+              className={`flex-1 sm:flex-none px-4 py-2 backdrop-blur-sm border border-neutral-100 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-colors shadow-sm whitespace-nowrap ${
                 showFilters ||
                 selectedStatuses.length > 0 ||
                 dateFrom ||
@@ -304,7 +340,7 @@ export default function AdminDashboardPage() {
             </button>
             <button
               onClick={() => setShowMapView(!showMapView)}
-              className={`px-4 py-2 backdrop-blur-sm border border-neutral-100 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-colors shadow-sm whitespace-nowrap ${
+              className={`flex-1 sm:flex-none px-4 py-2 backdrop-blur-sm border border-neutral-100 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-colors shadow-sm whitespace-nowrap ${
                 showMapView
                   ? "bg-brand-primary text-white"
                   : "bg-white/80 text-neutral-400"
@@ -355,7 +391,7 @@ export default function AdminDashboardPage() {
             />
 
             {/* Date Range Filters */}
-            <div className="flex flex-col xl:flex-row gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
               <div className="flex-1">
                 <label className="block text-sm font-medium text-neutral-600 mb-2">
                   From Date
@@ -383,60 +419,55 @@ export default function AdminDashboardPage() {
         )}
 
         {/* Reports View - Map or List */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-neutral-100 shadow-sm overflow-hidden">
-          {showMapView ? (
-            <div className="h-[600px] relative">
-              <GoogleMaps
-                reports={filteredReports}
-                onMarkerClick={handleMapMarkerClick}
-                className="w-full h-full"
-              />
-            </div>
-          ) : (
-            <div className="p-6">
-              <div className="max-h-[600px] overflow-y-auto">
-                <div className="grid gap-4">
-                  {filteredReports.length === 0 ? (
-                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-12 text-center border border-neutral-100 shadow-sm">
-                      <div className="w-16 h-16 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Search className="w-8 h-8 text-neutral-300" />
-                      </div>
-                      <h3 className="text-lg font-bold text-neutral-600 mb-2">
-                        {searchQuery ||
-                        selectedStatuses.length > 0 ||
-                        dateFrom ||
-                        dateTo ||
-                        filterLocation ||
-                        (filterRadius && filterRadius > 0)
-                          ? "No reports found"
-                          : "No reports yet"}
-                      </h3>
-                      <p className="text-neutral-400">
-                        {searchQuery ||
-                        selectedStatuses.length > 0 ||
-                        dateFrom ||
-                        dateTo ||
-                        filterLocation ||
-                        (filterRadius && filterRadius > 0)
-                          ? "Try adjusting your search or filter criteria."
-                          : "Reports will appear here when submitted."}
-                      </p>
-                    </div>
-                  ) : (
-                    filteredReports.map((report) => (
-                      <ReportCard
-                        key={report.id}
-                        report={report}
-                        isAdmin={true}
-                        onDetailsPress={handleDetailsPress}
-                      />
-                    ))
-                  )}
+        {/* Reports View - Map or List */}
+        {showMapView ? (
+          <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-neutral-100 shadow-sm overflow-hidden flex-1 min-h-0 relative">
+            <GoogleMaps
+              reports={filteredReports}
+              onMarkerClick={handleMapMarkerClick}
+              className="w-full h-full"
+            />
+          </div>
+        ) : (
+          <div className="flex-1 overflow-y-auto min-h-0 grid gap-3 sm:gap-4 content-start pr-2">
+            {filteredReports.length === 0 ? (
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-8 sm:p-12 text-center border border-neutral-100 shadow-sm">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search className="w-6 h-6 sm:w-8 sm:h-8 text-neutral-300" />
                 </div>
+                <h3 className="text-base sm:text-lg font-bold text-neutral-600 mb-2">
+                  {searchQuery ||
+                  selectedStatuses.length > 0 ||
+                  dateFrom ||
+                  dateTo ||
+                  filterLocation ||
+                  (filterRadius && filterRadius > 0)
+                    ? "No reports found"
+                    : "No reports yet"}
+                </h3>
+                <p className="text-neutral-400 text-sm sm:text-base">
+                  {searchQuery ||
+                  selectedStatuses.length > 0 ||
+                  dateFrom ||
+                  dateTo ||
+                  filterLocation ||
+                  (filterRadius && filterRadius > 0)
+                    ? "Try adjusting your search or filter criteria."
+                    : "Reports will appear here when submitted."}
+                </p>
               </div>
-            </div>
-          )}
-        </div>
+            ) : (
+              filteredReports.map((report) => (
+                <ReportCard
+                  key={report.id}
+                  report={report}
+                  isAdmin={true}
+                  onDetailsPress={handleDetailsPress}
+                />
+              ))
+            )}
+          </div>
+        )}
       </main>
 
       {/* Report Modal */}

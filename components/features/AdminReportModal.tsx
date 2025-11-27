@@ -46,7 +46,7 @@ export default function AdminReportModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
+      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-neutral-100">
           <h2 className="text-xl font-bold text-neutral-700">Report Details</h2>
@@ -80,7 +80,7 @@ export default function AdminReportModal({
 
           {/* Image */}
           <div className="px-6">
-            <div className="w-full h-48 bg-neutral-100 rounded-xl overflow-hidden border border-neutral-200">
+            <div className="w-full aspect-[4/3] bg-neutral-100 rounded-xl overflow-hidden border border-neutral-200">
               {report.imageUrl ? (
                 <img
                   src={report.imageUrl}

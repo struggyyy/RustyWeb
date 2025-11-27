@@ -82,18 +82,18 @@ export default function UserDashboardPage() {
 
   return (
     <div className="min-h-screen font-sans">
-      <header className="bg-white/80 backdrop-blur-md border-b border-neutral-100 px-3 md:px-8 py-3 md:py-4 flex items-center justify-between sticky top-0 z-10">
-        <div className="flex items-center gap-2 md:gap-3">
-          <div className="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center shadow-sm">
-             <span className="text-white font-bold text-lg">R</span>
+      <header className="bg-white/80 backdrop-blur-md border-b border-neutral-100 px-3 sm:px-8 py-3 sm:py-4 flex items-center justify-between sticky top-0 z-10">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-brand-primary rounded-lg flex items-center justify-center shadow-sm">
+             <span className="text-white font-bold text-lg sm:text-xl">R</span>
           </div>
-          <span className="text-lg md:text-xl font-bold text-neutral-600">Rusty</span>
+          <span className="text-lg sm:text-2xl font-bold text-neutral-600">Rusty</span>
         </div>
-        <div className="flex items-center gap-2 md:gap-4">
-          <div className="flex items-center gap-2 md:gap-3">
-             <span className="text-xs md:text-sm font-medium text-neutral-500 truncate max-w-[80px] md:max-w-none">{user?.email}</span>
-             <div className="w-8 h-8 md:w-10 md:h-10 bg-neutral-100 rounded-full flex items-center justify-center border border-neutral-200">
-                <User className="w-4 h-4 md:w-5 md:h-5 text-neutral-400" />
+        <div className="flex items-center gap-2 sm:gap-6">
+          <div className="flex items-center gap-2 sm:gap-3">
+             <span className="text-xs sm:text-base font-medium text-neutral-500 truncate max-w-[80px] sm:max-w-none">{user?.email}</span>
+             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-neutral-100 rounded-full flex items-center justify-center border border-neutral-200">
+                <User className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-400" />
              </div>
           </div>
           <Link 
@@ -101,36 +101,36 @@ export default function UserDashboardPage() {
             className="p-2 text-neutral-400 hover:text-brand-primary hover:bg-neutral-50 rounded-lg transition-colors"
             title="Settings"
           >
-            <Settings className="w-4 h-4 md:w-5 md:h-5" />
+            <Settings className="w-4 h-4 sm:w-6 sm:h-6" />
           </Link>
           <button 
             onClick={() => logOut()}
             className="p-2 text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
             title="Sign out"
           >
-            <LogOut className="w-4 h-4 md:w-5 md:h-5" />
+            <LogOut className="w-4 h-4 sm:w-6 sm:h-6" />
           </button>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto p-3 md:p-8">
-        <div className="mb-6 md:mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-neutral-700 mb-2">My Reports</h1>
-          <p className="text-neutral-500 text-sm md:text-base">Track the status of your submitted reports.</p>
+      <main className="max-w-5xl sm:max-w-7xl mx-auto p-3 sm:p-8">
+        <div className="mb-6 sm:mb-10">
+          <h1 className="text-2xl sm:text-4xl font-bold text-neutral-700 mb-2">My Reports</h1>
+          <p className="text-neutral-500 text-sm sm:text-lg">Track the status of your submitted reports.</p>
         </div>
 
         {reports.length === 0 ? (
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl p-8 md:p-12 text-center border border-neutral-100 shadow-sm">
-            <div className="w-12 h-12 md:w-16 md:h-16 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MapPin className="w-6 h-6 md:w-8 md:h-8 text-neutral-300" />
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-8 sm:p-16 text-center border border-neutral-100 shadow-sm">
+            <div className="w-12 h-12 sm:w-20 sm:h-20 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <MapPin className="w-6 h-6 sm:w-10 sm:h-10 text-neutral-300" />
             </div>
-            <h3 className="text-base md:text-lg font-bold text-neutral-600 mb-2">No reports yet</h3>
-            <p className="text-neutral-400 max-w-md mx-auto text-sm md:text-base">
+            <h3 className="text-base sm:text-xl font-bold text-neutral-600 mb-2">No reports yet</h3>
+            <p className="text-neutral-400 max-w-md mx-auto text-sm sm:text-lg">
               You haven't submitted any reports yet. Use the mobile app to report issues in your city.
             </p>
           </div>
         ) : (
-          <div className="grid gap-3 md:gap-4">
+          <div className="grid gap-3 sm:gap-6">
             {reports.map((report) => (
               <ReportCard
                 key={report.id}

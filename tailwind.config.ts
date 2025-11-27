@@ -7,6 +7,14 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    screens: {
+      'sm': '900px',
+      'md': '768px', // Keeping standard md just in case, though we use sm mostly
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+      'sidebar-break': '1140px',
+    },
     extend: {
       colors: {
         brand: {
