@@ -28,17 +28,26 @@
   --animate-float: float 6s ease-in-out infinite;
   --animate-float-delayed: float 8s ease-in-out 3s infinite;
 
-  --text-fluid-title: clamp(1.875rem, 6vw, 4rem);
+  --text-fluid-title: clamp(2.25rem, 6vw, 4rem);
   --text-fluid-subtitle: clamp(1.25rem, 3.375vw, 2.25rem);
-  --text-fluid-button: clamp(0.625rem, 1.5vw, 1rem);
-  --padding-button-horizontal: clamp(0.5rem, 2.25vw, 1.5rem);
-  --padding-button-vertical: clamp(0.25rem, 1.125vw, 0.75rem);
+  --text-fluid-button: clamp(0.65rem, 1.5vw, 1rem);
+  --padding-button-horizontal: clamp(0.6rem, 2vw, 1.5rem);
+  --padding-button-vertical: clamp(0.4rem, 1vw, 0.75rem);
+
+  --gap-fluid: clamp(2rem, 18vw, 28rem);
 
   --button-container-width: 280px;
 
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-20px);
+    }
   }
 }
 
