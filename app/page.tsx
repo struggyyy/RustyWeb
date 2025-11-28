@@ -52,18 +52,32 @@ export default function Page() {
             {/* Phone Bezel - Responsive with maintained aspect ratio */}
             <div className="relative w-[320px] h-[640px] sm:w-[320px] sm:h-[640px] md:w-[320px] md:h-[640px] bg-neutral-900 rounded-[3.5rem] border-[12px] border-neutral-900 shadow-2xl overflow-hidden ring-4 ring-neutral-100/50 flex-shrink-0">
               {/* Dynamic Island / Notch */}
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-8 bg-black rounded-full z-30 flex items-center justify-center gap-3">
+              {/* <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-8 bg-black rounded-full z-30 flex items-center justify-center gap-3">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#1a1a1a]" />
                 <div className="w-12 h-1.5 rounded-full bg-[#1a1a1a]" />
+              </div> */}
+              {/* Punch Hole Camera */}
+              <div className="absolute top-6 left-1/2 -translate-x-1/2 w-4 h-4 bg-black rounded-full z-30 shadow-sm flex items-center justify-center ring-1 ring-white/5">
+                <div className="w-2 h-2 rounded-full bg-[#0a0a0a] ring-1 ring-white/10 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-gradient-to-tr from-transparent via-blue-400/20 to-transparent rounded-full" />
+                </div>
               </div>
 
               {/* Screen Content Placeholder */}
-              <div className="w-full h-full bg-neutral-100 flex items-center justify-center relative font-sans">
-                {/* Screenshot Placeholder */}
+              {/* <div className="w-full h-full bg-neutral-100 flex items-center justify-center relative font-sans">
                 <div className="text-neutral-300 font-bold text-2xl uppercase tracking-widest text-center px-8">
                   App Screenshot Placeholder
                 </div>
-              </div>
+              </div> */}
+              {/* Video Placeholder - Add 'app-demo.mp4' to your public folder */}
+              <video
+                src="/app-demo.mp4"
+                className="w-full h-full object-cover"
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
             </div>
           </div>
         </div>
