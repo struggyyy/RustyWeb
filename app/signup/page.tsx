@@ -48,7 +48,7 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-10 border border-neutral-100">
+      <div className="max-w-md w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 min-[540px]:p-10 border border-neutral-100">
         <div className="mb-10">
           <Link
             href="/"
@@ -56,8 +56,12 @@ export default function SignupPage() {
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
           </Link>
-          <h1 className="text-3xl font-extrabold text-text-dark mb-3">Create Account</h1>
-          <p className="text-text-primary">Join us to start reporting abandoned vehicles.</p>
+          <h1 className="text-3xl font-extrabold text-text-dark mb-3">
+            Create Account
+          </h1>
+          <p className="text-text-primary">
+            Join us to start reporting abandoned vehicles.
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -68,7 +72,9 @@ export default function SignupPage() {
           )}
 
           <div className="space-y-2">
-            <label className="text-sm font-bold text-text-dark uppercase tracking-wide">Nickname</label>
+            <label className="text-sm font-bold text-text-dark uppercase tracking-wide">
+              Nickname
+            </label>
             <div className="relative">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
               <input
@@ -84,7 +90,9 @@ export default function SignupPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-bold text-text-dark uppercase tracking-wide">Email</label>
+            <label className="text-sm font-bold text-text-dark uppercase tracking-wide">
+              Email
+            </label>
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
               <input
@@ -99,7 +107,9 @@ export default function SignupPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-bold text-text-dark uppercase tracking-wide">Password</label>
+            <label className="text-sm font-bold text-text-dark uppercase tracking-wide">
+              Password
+            </label>
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
               <input
@@ -114,7 +124,9 @@ export default function SignupPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-bold text-text-dark uppercase tracking-wide">Confirm Password</label>
+            <label className="text-sm font-bold text-text-dark uppercase tracking-wide">
+              Confirm Password
+            </label>
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
               <input
@@ -133,13 +145,20 @@ export default function SignupPage() {
             disabled={isSubmitting}
             className="w-full py-4 bg-brand-primary text-text-inverse rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all uppercase tracking-wide flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : "Create Account"}
+            {isSubmitting ? (
+              <Loader2 className="w-6 h-6 animate-spin" />
+            ) : (
+              "Create Account"
+            )}
           </button>
         </form>
 
         <div className="mt-8 text-center text-sm text-text-primary font-medium">
           Already have an account?{" "}
-          <Link href="/login" className="text-brand-primary font-bold hover:underline">
+          <Link
+            href="/login"
+            className="text-brand-primary font-bold hover:underline"
+          >
             Sign In
           </Link>
         </div>
