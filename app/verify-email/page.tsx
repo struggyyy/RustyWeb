@@ -36,9 +36,13 @@ export default function VerifyEmailPage() {
     } catch (err: any) {
       console.error("Resend Error:", err);
       if (err.message?.includes("Too many")) {
-        setResendMessage("Too many emails sent. Please wait before trying again.");
+        setResendMessage(
+          "Too many emails sent. Please wait before trying again."
+        );
       } else {
-        setResendMessage("Failed to send verification email. Please try again.");
+        setResendMessage(
+          "Failed to send verification email. Please try again."
+        );
       }
     } finally {
       setIsResending(false);
@@ -65,7 +69,7 @@ export default function VerifyEmailPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-10 border border-neutral-100">
+      <div className="max-w-md w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 min-[540px]:p-10 border border-neutral-100">
         <div className="mb-10">
           <Link
             href="/"
@@ -73,7 +77,9 @@ export default function VerifyEmailPage() {
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
           </Link>
-          <h1 className="text-3xl font-extrabold text-text-dark mb-3">Verify Your Email</h1>
+          <h1 className="text-3xl font-extrabold text-text-dark mb-3">
+            Verify Your Email
+          </h1>
           <p className="text-text-primary">
             We've sent a verification email to{" "}
             <span className="text-brand-primary font-bold">{email}</span>
@@ -96,7 +102,7 @@ export default function VerifyEmailPage() {
               <Loader2 className="w-6 h-6 animate-spin" />
             ) : (
               <>
-                <RefreshCw className="w-5 h-5 mr-2" />
+                <RefreshCw className="w-5 h-5 mr-2 hidden min-[540px]:block" />
                 Resend Verification Email
               </>
             )}
