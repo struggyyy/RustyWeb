@@ -8,6 +8,7 @@ import {
   signOut,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import {
   doc,
@@ -70,6 +71,7 @@ interface AuthContextType {
   ) => Promise<void>;
   logOut: () => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
   updateUserProfile: (updates: Partial<UserProfile>) => Promise<void>;
   updateUserAuth: (updates: {
     displayName?: string;
@@ -192,6 +194,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw new Error("Your email is already verified.");
     }
     await sendEmailVerification(auth.currentUser);
+  };
+
+  const resetPassword = async (email: string) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } catch (error: any) {
+      console.error("Error sending password reset email:", error);
+      throw error;
+    }
   };
 
   const updateUserProfile = async (updates: Partial<UserProfile>) => {
@@ -363,6 +374,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signUp,
         logOut,
         sendVerificationEmail,
+        resetPassword,
         updateUserProfile,
         updateUserAuth,
         uploadProfileImage,

@@ -95,12 +95,15 @@ export default function LoginPage() {
               />
               Remember me
             </label>
-            <a
-              href="#"
-              className="text-brand-primary hover:underline font-bold"
+          </div>
+
+          <div className="flex justify-end">
+            <Link
+              href={`/forgot-password?email=${encodeURIComponent(email)}`}
+              className="text-sm font-bold text-brand-primary hover:underline"
             >
-              Forgot password?
-            </a>
+              Forgot Password?
+            </Link>
           </div>
 
           <button
