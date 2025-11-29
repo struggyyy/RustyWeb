@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { User, MoreHorizontal } from "lucide-react";
+import CustomCursor from "@/components/ui/CustomCursor";
 
 export default function Page() {
   return (
-    <div className="min-h-screen flex flex-col relative overflow-x-hidden font-sans">
+    <div className="min-h-screen flex flex-col relative overflow-x-hidden font-sans cursor-none">
+      <CustomCursor />
       {/* Fixed Top Navigation - Invisible Safe Area */}
       <nav className="fixed top-0 left-0 right-0 px-4 pt-4 pb-2 md:px-10 md:pt-8 md:pb-10 z-50 flex justify-end gap-3 pointer-events-none">
         <button className="relative z-10 w-10 h-10 md:w-12 md:h-12 bg-white/40 backdrop-blur-xl border border-white/60 rounded-full flex items-center justify-center hover:bg-white/60 hover:scale-105 transition-all shadow-lg pointer-events-auto">
