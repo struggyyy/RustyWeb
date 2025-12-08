@@ -1,7 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Mail, Lock, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Mail,
+  Lock,
+  Loader2,
+  Eye,
+  EyeOff,
+  XCircle,
+} from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -9,24 +17,82 @@ import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [generalError, setGeneralError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: boolean;
+    password?: boolean;
+  }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { signIn } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLoginPress = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setGeneralError("");
+    setFieldErrors({});
+
+    let hasError = false;
+    const newFieldErrors: typeof fieldErrors = {};
+
+    // Check for empty email or invalid format
+    if (!email || !/\S+@\S+\.\S+/.test(email.trim())) {
+      newFieldErrors.email = true;
+      hasError = true;
+    }
+    if (!password) {
+      newFieldErrors.password = true;
+      hasError = true;
+    }
+
+    if (hasError) {
+      setFieldErrors(newFieldErrors);
+      if (!email) setGeneralError("Email is required.");
+      else if (newFieldErrors.email)
+        setGeneralError("Please enter a valid email address.");
+      else if (!password) setGeneralError("Password is required.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       await signIn(email, password);
       // Redirect handled in AuthContext
     } catch (err: any) {
-      setError("Invalid email or password. Please try again.");
+      if (
+        err.code === "auth/user-not-found" ||
+        err.code === "auth/invalid-credential"
+      ) {
+        // Generic security message, highlight both if possible or neither (to avoid leaking existence)
+        // Mobile app highlights neither, just shows generic error. We will do the same.
+        setGeneralError("User not found or invalid credentials.");
+      } else if (err.code === "auth/wrong-password") {
+        setGeneralError("Incorrect password. Please try again.");
+        setFieldErrors({ password: true });
+      } else if (err.code === "auth/invalid-email") {
+        setGeneralError("Please enter a valid email address.");
+        setFieldErrors({ email: true });
+      } else if (err.code === "auth/too-many-requests") {
+        setGeneralError("Too many login attempts. Please try again later.");
+      } else {
+        setGeneralError(
+          err.message ||
+            "Login failed. Please check your connection and try again."
+        );
+      }
       setIsSubmitting(false);
     }
   };
+
+  const getInputClass = (isError?: boolean) => `
+    w-full pl-12 pr-12 py-4 bg-neutral-50 border-2 rounded-xl focus:outline-none transition-all font-medium
+    ${
+      isError
+        ? "border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:bg-red-50"
+        : "border-neutral-200 text-text-dark placeholder:text-text-tertiary focus:border-neutral-400 focus:bg-white"
+    }
+  `;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
@@ -46,10 +112,10 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
+        <form onSubmit={handleLoginPress} className="space-y-6">
+          {generalError && (
             <div className="p-4 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 font-medium">
-              {error}
+              {generalError}
             </div>
           )}
 
@@ -58,15 +124,32 @@ export default function LoginPage() {
               Email
             </label>
             <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="name@example.com"
-                className="w-full pl-12 pr-4 py-4 bg-neutral-50 border-2 border-transparent rounded-xl focus:outline-none focus:border-brand-primary focus:bg-white transition-all text-text-dark placeholder:text-text-tertiary font-medium"
+              <Mail
+                className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${
+                  fieldErrors.email ? "text-red-400" : "text-text-tertiary"
+                }`}
               />
+              <input
+                type="text"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (fieldErrors.email)
+                    setFieldErrors((prev) => ({ ...prev, email: false }));
+                  if (generalError) setGeneralError("");
+                }}
+                placeholder="name@example.com"
+                className={getInputClass(fieldErrors.email)}
+              />
+              {email && (
+                <button
+                  type="button"
+                  onClick={() => setEmail("")}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+                >
+                  <XCircle className="w-5 h-5" />
+                </button>
+              )}
             </div>
           </div>
 
@@ -75,15 +158,34 @@ export default function LoginPage() {
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="••••••••"
-                className="w-full pl-12 pr-4 py-4 bg-neutral-50 border-2 border-transparent rounded-xl focus:outline-none focus:border-brand-primary focus:bg-white transition-all text-text-dark placeholder:text-text-tertiary font-medium"
+              <Lock
+                className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${
+                  fieldErrors.password ? "text-red-400" : "text-text-tertiary"
+                }`}
               />
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (fieldErrors.password)
+                    setFieldErrors((prev) => ({ ...prev, password: false }));
+                  if (generalError) setGeneralError("");
+                }}
+                placeholder="••••••••"
+                className={getInputClass(fieldErrors.password)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
             </div>
           </div>
 

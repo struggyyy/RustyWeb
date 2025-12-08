@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Mail, Loader2, Send } from "lucide-react";
+import { ArrowLeft, Mail, Loader2, Send, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-
 import { useSearchParams } from "next/navigation";
 
 export default function ForgotPasswordPage() {
@@ -15,42 +14,62 @@ export default function ForgotPasswordPage() {
     type: "success" | "error";
     text: string;
   } | null>(null);
+  const [isEmailError, setIsEmailError] = useState(false);
   const { resetPassword } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
+    setIsEmailError(false);
+
+    // Validate email
+    if (!email || !/\S+@\S+\.\S+/.test(email.trim())) {
+      setMessage({
+        type: "error",
+        text: "Please enter a valid email address.",
+      });
+      setIsEmailError(true);
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       await resetPassword(email);
       setMessage({
         type: "success",
-        text: "Password reset link sent! Check your email.",
+        text: "Link for password reset was sent to your email.",
       });
       setEmail(""); // Clear input on success
     } catch (err: any) {
       console.error("Reset Password Error:", err);
+
+      let errorText = "Password reset failed.";
+
       if (err.code === "auth/user-not-found") {
-        setMessage({
-          type: "error",
-          text: "No account found with this email address.",
-        });
+        errorText = "User not found or invalid credentials.";
       } else if (err.code === "auth/invalid-email") {
-        setMessage({
-          type: "error",
-          text: "Please enter a valid email address.",
-        });
-      } else {
-        setMessage({
-          type: "error",
-          text: "Failed to send reset link. Please try again.",
-        });
+        errorText = "Please enter a valid email address.";
+        setIsEmailError(true);
       }
+
+      setMessage({
+        type: "error",
+        text: errorText,
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const getInputClass = (isError?: boolean) => `
+    w-full pl-12 pr-12 py-4 bg-neutral-50 border-2 rounded-xl focus:outline-none transition-all font-medium
+    ${
+      isError
+        ? "border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:bg-red-50"
+        : "border-neutral-200 text-text-dark placeholder:text-text-tertiary focus:border-neutral-400 focus:bg-white"
+    }
+  `;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
@@ -89,15 +108,31 @@ export default function ForgotPasswordPage() {
               Email
             </label>
             <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="name@example.com"
-                className="w-full pl-12 pr-4 py-4 bg-neutral-50 border-2 border-transparent rounded-xl focus:outline-none focus:border-brand-primary focus:bg-white transition-all text-text-dark placeholder:text-text-tertiary font-medium"
+              <Mail
+                className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${
+                  isEmailError ? "text-red-400" : "text-text-tertiary"
+                }`}
               />
+              <input
+                type="text"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (isEmailError) setIsEmailError(false);
+                  if (message && message.type === "error") setMessage(null);
+                }}
+                placeholder="name@example.com"
+                className={getInputClass(isEmailError)}
+              />
+              {email && (
+                <button
+                  type="button"
+                  onClick={() => setEmail("")}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+                >
+                  <XCircle className="w-5 h-5" />
+                </button>
+              )}
             </div>
           </div>
 

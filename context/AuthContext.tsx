@@ -9,13 +9,14 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   sendPasswordResetEmail,
+  updateProfile,
+  deleteUser,
 } from "firebase/auth";
 import {
   doc,
   getDoc,
   setDoc,
   updateDoc,
-  deleteDoc,
   writeBatch,
   collection,
   query,
@@ -29,9 +30,8 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { updateProfile, deleteUser } from "firebase/auth";
 import { auth, db, storage } from "@/lib/firebase/firebase";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Report } from "@/types/reports";
 
 interface UserProfile {
@@ -62,6 +62,7 @@ interface AuthContextType {
   profile: UserProfile | null;
   loading: boolean;
   isAdmin: boolean;
+  profileLoaded: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (
     email: string,
@@ -92,19 +93,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [profileLoaded, setProfileLoaded] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
 
+      // Define protected routes
+      const protectedPaths = ["/dashboard", "/settings", "/admin"];
+      const isProtected = protectedPaths.some((path) =>
+        pathname?.startsWith(path)
+      );
+
       if (user) {
-        // Check if user is trying to access dashboard without verification
-        if (!user.emailVerified && window.location.pathname === "/dashboard") {
+        // 1. Check Email Verification for protected routes
+        if (!user.emailVerified && isProtected) {
           router.replace(
             `/verify-email?email=${encodeURIComponent(user.email || "")}`
           );
-          return;
+          // Wait for profile to load before returning?
+          // Mobile logic continues, so we continue too.
         }
 
         try {
@@ -112,25 +122,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (userDoc.exists()) {
             const userData = userDoc.data() as UserProfile;
             setProfile(userData);
-            setIsAdmin(userData.role === "admin");
+            const isUserAdmin = userData.role === "admin";
+            setIsAdmin(isUserAdmin);
+            setProfileLoaded(true);
+
+            // 2. Strict Admin Redirect (Match Mobile Case 5)
+            // If user is Admin, they MUST be on /admin routes.
+            if (isUserAdmin && !pathname?.startsWith("/admin")) {
+              router.replace("/admin");
+            }
           } else {
             setProfile(null);
             setIsAdmin(false);
+            setProfileLoaded(true);
           }
         } catch (error) {
           console.error("Error fetching user profile:", error);
           setProfile(null);
           setIsAdmin(false);
+          setProfileLoaded(true);
         }
       } else {
+        // 3. Redirect to Login if trying to access protected route while logged out
+        if (isProtected) {
+          router.replace("/login");
+        }
+        setProfile(null);
         setIsAdmin(false);
+        setProfileLoaded(false);
       }
 
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, [router, pathname]);
 
   const signUp = async (
     email: string,
@@ -159,10 +185,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     await setDoc(userDocRef, initialProfileData);
 
+    // Optimistically update local state to match Mobile App behavior (prevents race conditions)
+    setProfile(initialProfileData);
+    setProfileLoaded(true);
+
     // Send verification email automatically
     await sendEmailVerification(newUser.user);
 
-    // Navigation is handled by the component calling signUp or by the auth state change
     router.push(`/verify-email?email=${encodeURIComponent(email)}`);
   };
 
@@ -173,7 +202,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       password
     );
 
-    // Check if user is verified and redirect accordingly
     if (userCredential.user.emailVerified) {
       router.push("/dashboard");
     } else {
@@ -213,7 +241,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const updateData = { ...updates, updatedAt: serverTimestamp() };
     await updateDoc(userDocRef, updateData);
 
-    // Update local profile state
     setProfile((prev: UserProfile | null) =>
       prev ? { ...prev, ...updateData } : null
     );
@@ -228,12 +255,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw new Error("User not authenticated for auth update.");
     }
 
-    // Note: Email updates are not implemented in this version
-    // if (updates.email && updates.email !== auth.currentUser.email) {
-    //   await auth.currentUser.updateEmail(updates.email);
-    //   delete updates.email;
-    // }
-
     if (updates.displayName !== undefined || updates.photoURL !== undefined) {
       await updateProfile(auth.currentUser, {
         displayName:
@@ -247,7 +268,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
     }
 
-    // Refresh local user state
     setUser(auth.currentUser);
   };
 
@@ -262,7 +282,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const snapshot = await uploadBytes(storageRef, file);
     const downloadURL = await getDownloadURL(snapshot.ref);
 
-    // Update user profile (both Auth and Firestore)
     await updateUserAuth({ photoURL: downloadURL });
     await updateUserProfile({ profileImage: downloadURL });
 
@@ -310,7 +329,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         imageDeletionPromises.push(deleteObject(profileImageRef));
       }
 
-      // Execute all image deletions - if any fail, the entire process fails
       if (imageDeletionPromises.length > 0) {
         await Promise.all(imageDeletionPromises);
         console.log(
@@ -332,7 +350,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         "[deleteAccount] All Firestore documents (reports and user profile) deleted."
       );
 
-      // 5. Delete Firebase Auth user (only after all data is successfully deleted)
+      // 5. Delete Firebase Auth user
       await deleteUser(currentUser);
       console.log(
         `[deleteAccount] Firebase Auth user deleted successfully: ${currentUser.uid}`
@@ -340,17 +358,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (e: any) {
       console.error("[deleteAccount] Account deletion process failed:", e);
 
-      // Handle specific Firebase Auth errors
       if (e.code === "auth/requires-recent-login") {
         throw new Error("Please sign in again before deleting your account.");
       }
 
-      // Handle storage deletion errors
       if (e.message?.includes("storage") || e.code?.startsWith("storage/")) {
         throw new Error("Failed to delete profile data. Please try again.");
       }
 
-      // Handle Firestore deletion errors
       if (
         e.message?.includes("firestore") ||
         e.code?.startsWith("firestore/")
@@ -358,7 +373,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error("Failed to delete account records. Please try again.");
       }
 
-      // Generic error
       throw new Error("Account deletion failed. Please try again.");
     }
   };
@@ -370,6 +384,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         profile,
         loading,
         isAdmin,
+        profileLoaded,
         signIn,
         signUp,
         logOut,

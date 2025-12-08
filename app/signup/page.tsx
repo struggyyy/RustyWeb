@@ -1,7 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Mail, Lock, Loader2, User } from "lucide-react";
+import {
+  ArrowLeft,
+  Mail,
+  Lock,
+  Loader2,
+  User,
+  Eye,
+  EyeOff,
+  XCircle,
+} from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -11,27 +20,76 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [generalError, setGeneralError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{
+    nickname?: boolean;
+    email?: boolean;
+    password?: boolean;
+    confirmPassword?: boolean;
+  }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { signUp } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSignupPress = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setGeneralError("");
+    setFieldErrors({});
+
+    let hasError = false;
+    const newFieldErrors: typeof fieldErrors = {};
+    let firstErrorMessage = "";
 
     // Nickname validation
-    if (nickname.length < 2) {
-      setError("Nickname must be at least 2 characters long.");
-      return;
-    }
-    if (nickname.length > 15) {
-      setError("Nickname must be no more than 15 characters long.");
-      return;
+    if (!nickname || nickname.length < 2 || nickname.length > 15) {
+      newFieldErrors.nickname = true;
+      if (!firstErrorMessage) {
+        if (!nickname) firstErrorMessage = "Nickname is required.";
+        else if (nickname.length < 2)
+          firstErrorMessage = "Nickname must be at least 2 characters.";
+        else
+          firstErrorMessage = "Nickname cannot be longer than 15 characters.";
+      }
+      hasError = true;
     }
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match. Please try again.");
+    // Email validation
+    if (!email || !/\S+@\S+\.\S+/.test(email.trim())) {
+      newFieldErrors.email = true;
+      if (!firstErrorMessage)
+        firstErrorMessage = "Please enter a valid email address.";
+      hasError = true;
+    }
+
+    // Password validation
+    const complexityRegex = /^(?=.*[A-Z])(?=.*\d)/;
+    if (
+      !password ||
+      password.length < 6 ||
+      !complexityRegex.test(password) ||
+      password !== confirmPassword
+    ) {
+      newFieldErrors.password = true;
+      newFieldErrors.confirmPassword = true;
+
+      if (!firstErrorMessage) {
+        if (!password) firstErrorMessage = "Password is required.";
+        else if (password !== confirmPassword)
+          firstErrorMessage = "Passwords do not match.";
+        else if (password.length < 6)
+          firstErrorMessage = "Password must be at least 6 characters.";
+        else
+          firstErrorMessage =
+            "Password must contain at least one uppercase letter and one number.";
+      }
+      hasError = true;
+    }
+
+    if (hasError) {
+      setFieldErrors(newFieldErrors);
+      setGeneralError(firstErrorMessage);
       return;
     }
 
@@ -39,12 +97,35 @@ export default function SignupPage() {
 
     try {
       await signUp(email, password, nickname, "en");
-      // Redirect handled in AuthContext
     } catch (err: any) {
-      setError("Failed to create account. Please try again.");
+      if (err.code === "auth/email-already-in-use") {
+        setGeneralError(
+          "This email address is already registered. Try logging in?"
+        );
+      } else {
+        setGeneralError(err.message || "Sign up failed. Please try again.");
+      }
       setIsSubmitting(false);
     }
   };
+
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value;
+    if (text.length <= 15) {
+      setNickname(text);
+      if (fieldErrors.nickname)
+        setFieldErrors((prev) => ({ ...prev, nickname: false }));
+    }
+  };
+
+  const getInputClass = (isError?: boolean) => `
+    w-full pl-12 pr-12 py-4 bg-neutral-50 border-2 rounded-xl focus:outline-none transition-all font-medium
+    ${
+      isError
+        ? "border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:bg-red-50"
+        : "border-neutral-200 text-text-dark placeholder:text-text-tertiary focus:border-neutral-400 focus:bg-white"
+    }
+  `;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
@@ -64,10 +145,10 @@ export default function SignupPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
+        <form onSubmit={handleSignupPress} className="space-y-6">
+          {generalError && (
             <div className="p-4 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 font-medium">
-              {error}
+              {generalError}
             </div>
           )}
 
@@ -76,16 +157,28 @@ export default function SignupPage() {
               Nickname
             </label>
             <div className="relative">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
+              <User
+                className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${
+                  fieldErrors.nickname ? "text-red-400" : "text-text-tertiary"
+                }`}
+              />
               <input
                 type="text"
                 value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-                required
+                onChange={handleNicknameChange}
                 placeholder="Your nickname"
                 maxLength={15}
-                className="w-full pl-12 pr-4 py-4 bg-neutral-50 border-2 border-transparent rounded-xl focus:outline-none focus:border-brand-primary focus:bg-white transition-all text-text-dark placeholder:text-text-tertiary font-medium"
+                className={getInputClass(fieldErrors.nickname)}
               />
+              {nickname && (
+                <button
+                  type="button"
+                  onClick={() => setNickname("")}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+                >
+                  <XCircle className="w-5 h-5" />
+                </button>
+              )}
             </div>
           </div>
 
@@ -94,15 +187,31 @@ export default function SignupPage() {
               Email
             </label>
             <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="name@example.com"
-                className="w-full pl-12 pr-4 py-4 bg-neutral-50 border-2 border-transparent rounded-xl focus:outline-none focus:border-brand-primary focus:bg-white transition-all text-text-dark placeholder:text-text-tertiary font-medium"
+              <Mail
+                className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${
+                  fieldErrors.email ? "text-red-400" : "text-text-tertiary"
+                }`}
               />
+              <input
+                type="text"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (fieldErrors.email)
+                    setFieldErrors((prev) => ({ ...prev, email: false }));
+                }}
+                placeholder="name@example.com"
+                className={getInputClass(fieldErrors.email)}
+              />
+              {email && (
+                <button
+                  type="button"
+                  onClick={() => setEmail("")}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+                >
+                  <XCircle className="w-5 h-5" />
+                </button>
+              )}
             </div>
           </div>
 
@@ -111,15 +220,37 @@ export default function SignupPage() {
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="••••••••"
-                className="w-full pl-12 pr-4 py-4 bg-neutral-50 border-2 border-transparent rounded-xl focus:outline-none focus:border-brand-primary focus:bg-white transition-all text-text-dark placeholder:text-text-tertiary font-medium"
+              <Lock
+                className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${
+                  fieldErrors.password ? "text-red-400" : "text-text-tertiary"
+                }`}
               />
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (fieldErrors.password)
+                    setFieldErrors((prev) => ({
+                      ...prev,
+                      password: false,
+                      confirmPassword: false,
+                    }));
+                }}
+                placeholder="••••••••"
+                className={getInputClass(fieldErrors.password)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
             </div>
           </div>
 
@@ -128,15 +259,38 @@ export default function SignupPage() {
               Confirm Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                placeholder="••••••••"
-                className="w-full pl-12 pr-4 py-4 bg-neutral-50 border-2 border-transparent rounded-xl focus:outline-none focus:border-brand-primary focus:bg-white transition-all text-text-dark placeholder:text-text-tertiary font-medium"
+              <Lock
+                className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${
+                  fieldErrors.confirmPassword
+                    ? "text-red-400"
+                    : "text-text-tertiary"
+                }`}
               />
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  if (fieldErrors.confirmPassword)
+                    setFieldErrors((prev) => ({
+                      ...prev,
+                      confirmPassword: false,
+                    }));
+                }}
+                placeholder="••••••••"
+                className={getInputClass(fieldErrors.confirmPassword)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
             </div>
           </div>
 

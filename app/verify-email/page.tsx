@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Mail, Loader2, RefreshCw } from "lucide-react";
+import { ArrowLeft, Loader2, RefreshCw } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -9,40 +9,89 @@ import { useRouter, useSearchParams } from "next/navigation";
 export default function VerifyEmailPage() {
   const [isResending, setIsResending] = useState(false);
   const [resendMessage, setResendMessage] = useState("");
-  const [lastResendTime, setLastResendTime] = useState<number>(0);
+  const [cooldown, setCooldown] = useState(0);
   const { user, sendVerificationEmail, logOut } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || user?.email || "";
 
-  const handleResendVerification = async () => {
-    // Prevent rapid clicking - minimum 10 seconds between requests
-    const now = Date.now();
-    const timeSinceLastResend = now - lastResendTime;
-    const minDelay = 10000; // 10 seconds
+  // Load cooldown from localStorage on mount
+  useEffect(() => {
+    if (!email) return;
+    try {
+      const normalizedEmail = email.trim().toLowerCase();
+      const key = `emailResendCooldownExpiry_${normalizedEmail}`;
+      const expiryString = localStorage.getItem(key);
 
-    if (timeSinceLastResend < minDelay) {
-      setResendMessage("Please wait a moment before requesting another email.");
+      if (expiryString) {
+        const expiryTime = parseInt(expiryString, 10);
+        const now = Date.now();
+        if (expiryTime > now) {
+          const remaining = Math.ceil((expiryTime - now) / 1000);
+          setCooldown(remaining);
+        } else {
+          localStorage.removeItem(key);
+        }
+      }
+    } catch (e) {
+      // Silently fail if localStorage is not available
+    }
+  }, [email]);
+
+  // Handle cooldown timer
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (cooldown > 0) {
+      interval = setInterval(() => {
+        setCooldown((prev) => {
+          if (prev <= 1) {
+            if (email) {
+              const normalizedEmail = email.trim().toLowerCase();
+              localStorage.removeItem(
+                `emailResendCooldownExpiry_${normalizedEmail}`
+              );
+            }
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [cooldown, email]);
+
+  const handleResendVerification = async () => {
+    if (cooldown > 0) {
+      setResendMessage(`Please wait ${cooldown}s before trying again.`);
       return;
     }
 
     setIsResending(true);
     setResendMessage("");
-    setLastResendTime(now);
 
     try {
       await sendVerificationEmail();
-      setResendMessage("Verification email sent successfully!");
+      setResendMessage("Email sent successfully!");
+
+      const COOLDOWN_SECONDS = 60;
+      setCooldown(COOLDOWN_SECONDS);
+
+      if (email) {
+        const normalizedEmail = email.trim().toLowerCase();
+        const expiryTime = Date.now() + COOLDOWN_SECONDS * 1000;
+        localStorage.setItem(
+          `emailResendCooldownExpiry_${normalizedEmail}`,
+          expiryTime.toString()
+        );
+      }
     } catch (err: any) {
       console.error("Resend Error:", err);
-      if (err.message?.includes("Too many")) {
+      if (err.message && err.message.includes("Too many")) {
         setResendMessage(
-          "Too many emails sent. Please wait before trying again."
+          "Too many verification emails sent. Please wait a few minutes before trying again."
         );
       } else {
-        setResendMessage(
-          "Failed to send verification email. Please try again."
-        );
+        setResendMessage("Failed to resend verification email.");
       }
     } finally {
       setIsResending(false);
@@ -81,13 +130,19 @@ export default function VerifyEmailPage() {
             Verify Your Email
           </h1>
           <p className="text-text-primary">
-            We've sent a verification email to{" "}
-            <span className="text-brand-primary font-bold">{email}</span>
+            We've sent a verification link to your email. Please check your
+            inbox and click the link to verify your account.
           </p>
         </div>
 
         {resendMessage && (
-          <div className="p-4 bg-blue-50 text-blue-600 text-sm rounded-xl border border-blue-100 font-medium mb-6">
+          <div
+            className={`p-4 text-sm rounded-xl border font-medium mb-6 ${
+              resendMessage.includes("successfully")
+                ? "bg-green-50 text-green-600 border-green-100"
+                : "bg-blue-50 text-blue-600 border-blue-100"
+            }`}
+          >
             {resendMessage}
           </div>
         )}
@@ -95,7 +150,7 @@ export default function VerifyEmailPage() {
         <div className="space-y-4">
           <button
             onClick={handleResendVerification}
-            disabled={isResending}
+            disabled={isResending || cooldown > 0}
             className="w-full py-4 bg-neutral-100 text-text-dark rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all uppercase tracking-wide flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isResending ? (
@@ -103,7 +158,9 @@ export default function VerifyEmailPage() {
             ) : (
               <>
                 <RefreshCw className="w-5 h-5 mr-2 hidden min-[540px]:block" />
-                Resend Verification Email
+                {cooldown > 0
+                  ? `Resend available in ${cooldown}s`
+                  : "Resend Verification Email"}
               </>
             )}
           </button>
@@ -117,7 +174,7 @@ export default function VerifyEmailPage() {
         </div>
 
         <div className="mt-8 text-center text-sm text-text-tertiary font-medium">
-          Check your spam folder if you don't see the email in your inbox.
+          Check your spam folder if you don't see the email.
         </div>
       </div>
     </div>
