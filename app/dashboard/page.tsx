@@ -33,7 +33,6 @@ export default function UserDashboardPage() {
     }
 
     if (!user) {
-      router.push("/login");
       return;
     }
 

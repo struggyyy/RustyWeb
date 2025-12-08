@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
 import {
   User,
   onAuthStateChanged,
@@ -96,6 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profileLoaded, setProfileLoaded] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const isClosingSessionRef = useRef(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -108,6 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       );
 
       if (user) {
+        isClosingSessionRef.current = false;
         // 1. Check Email Verification for protected routes
         if (!user.emailVerified && isProtected) {
           router.replace(
@@ -144,7 +146,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       } else {
         // 3. Redirect to Login if trying to access protected route while logged out
-        if (isProtected) {
+        if (isProtected && !isClosingSessionRef.current) {
           router.replace("/login");
         }
         setProfile(null);
@@ -210,8 +212,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logOut = async () => {
-    await signOut(auth);
-    router.push("/login");
+    isClosingSessionRef.current = true;
+    try {
+      await signOut(auth);
+      router.push("/");
+    } catch (error) {
+      isClosingSessionRef.current = false;
+      throw error;
+    }
   };
 
   const sendVerificationEmail = async () => {
@@ -298,6 +306,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       `[deleteAccount] Starting comprehensive account deletion for user: ${currentUser.uid}`
     );
 
+    isClosingSessionRef.current = true;
+
     try {
       // 1. Get all user reports
       const reportsQuery = query(
@@ -352,10 +362,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // 5. Delete Firebase Auth user
       await deleteUser(currentUser);
+      router.push("/");
       console.log(
         `[deleteAccount] Firebase Auth user deleted successfully: ${currentUser.uid}`
       );
     } catch (e: any) {
+      isClosingSessionRef.current = false;
       console.error("[deleteAccount] Account deletion process failed:", e);
 
       if (e.code === "auth/requires-recent-login") {

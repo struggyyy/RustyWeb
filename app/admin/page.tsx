@@ -2,7 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Filter, MoreVertical, Search, LogOut, MapPin, Menu, X } from "lucide-react";
+import {
+  Filter,
+  MoreVertical,
+  Search,
+  LogOut,
+  MapPin,
+  Menu,
+  X,
+} from "lucide-react";
 import {
   collection,
   query,
@@ -57,7 +65,6 @@ export default function AdminDashboardPage() {
     }
 
     if (!user) {
-      router.push("/login");
       return;
     }
 
@@ -133,7 +140,8 @@ export default function AdminDashboardPage() {
     // Filter by location and radius
     if (filterLocation) {
       // Use explicit radius if set, otherwise use default 50km for city + nearby areas
-      const effectiveRadius = filterRadius !== null && filterRadius > 0 ? filterRadius : 50;
+      const effectiveRadius =
+        filterRadius !== null && filterRadius > 0 ? filterRadius : 50;
       filtered = filtered.filter((report) => {
         if (!report.location) return false;
         const distance = calculateDistance(
@@ -188,9 +196,11 @@ export default function AdminDashboardPage() {
         selectedReport.status,
         newStatus
       );
-      
+
       // Update local state to reflect change immediately
-      setSelectedReport(prev => prev ? { ...prev, status: newStatus } : null);
+      setSelectedReport((prev) =>
+        prev ? { ...prev, status: newStatus } : null
+      );
     } catch (error) {
       console.error("Failed to update status:", error);
       alert("Failed to update status. Please try again.");
@@ -255,7 +265,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="h-screen flex font-sans overflow-hidden">
       {/* Sidebar */}
-      <aside 
+      <aside
         className={`fixed top-0 left-0 h-full w-64 bg-white/80 backdrop-blur-md border-r border-neutral-100 z-30 transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
@@ -270,7 +280,7 @@ export default function AdminDashboardPage() {
             </span>
           </div>
           {/* Mobile Close Button */}
-          <button 
+          <button
             onClick={() => setIsSidebarOpen(false)}
             className="sidebar-break:hidden p-1 text-neutral-400 hover:text-neutral-600"
           >
@@ -307,14 +317,14 @@ export default function AdminDashboardPage() {
 
       {/* Overlay for mobile when sidebar is open */}
       {isSidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/20 backdrop-blur-sm z-20 sidebar-break:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
       {/* Main Content */}
-      <main 
+      <main
         className={`flex-1 flex flex-col p-4 sm:p-8 overflow-hidden transition-all duration-300 ease-in-out ${
           isSidebarOpen ? "sidebar-break:ml-64" : ""
         }`}
