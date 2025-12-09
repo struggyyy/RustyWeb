@@ -40,7 +40,7 @@ export default function PublicHeader() {
     <nav className="fixed top-0 left-0 right-0 px-4 pt-4 pb-2 md:px-10 md:pt-8 md:pb-10 z-50 flex justify-between items-start pointer-events-none">
       {/* Left Side - Back Button */}
       <div className="pointer-events-auto">
-        {pathname === "/download" && (
+        {(pathname === "/download" || pathname === "/privacy") && (
           <Link
             href="/"
             className="w-10 h-10 md:w-12 md:h-12 bg-white/60 backdrop-blur-2xl border border-white/60 rounded-full flex items-center justify-center hover:bg-white/80 hover:scale-105 transition-all shadow-xl"
@@ -89,10 +89,14 @@ export default function PublicHeader() {
 
               <div className="relative z-10 space-y-1">
                 {/* Privacy Policy */}
-                <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 hover:bg-white/50 rounded-xl transition-colors group">
+                <Link
+                  href="/privacy"
+                  onClick={() => setIsOpen(false)}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 hover:bg-white/50 rounded-xl transition-colors group"
+                >
                   <Shield className="w-4 h-4 text-neutral-400 group-hover:text-brand-primary transition-colors" />
                   Privacy Policy
-                </button>
+                </Link>
 
                 {/* Request Admin Access */}
                 <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 hover:bg-white/50 rounded-xl transition-colors group">
