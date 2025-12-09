@@ -5,13 +5,13 @@ export default function DownloadPage() {
     <div className="min-h-screen flex flex-col relative overflow-x-hidden font-sans cursor-none">
       <CustomCursor />
 
-      <main className="flex-1 w-full max-w-screen-2xl mx-auto px-4 sm:px-8 py-8 flex flex-col items-center justify-center pt-24 overflow-x-hidden">
+      <main className="flex-1 w-full max-w-screen-2xl mx-auto px-4 sm:px-8 py-8 flex flex-col items-center justify-center pt-16 overflow-x-hidden">
         {/* Hero Description */}
-        <div className="text-center max-w-3xl mx-auto mb-8 space-y-6">
-          <h1 className="text-4xl md:text-6xl font-black text-neutral-900 tracking-tighter uppercase leading-[0.9]">
+        <div className="text-center max-w-5xl mx-auto mb-8 space-y-6">
+          <h1 className="text-fluid-title font-black text-neutral-900 tracking-tighter uppercase leading-[0.9]">
             Reclaim Your <span className="text-brand-primary">Space</span>
           </h1>
-          <p className="text-lg md:text-xl text-neutral-500 font-medium leading-relaxed max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-neutral-500 font-medium leading-relaxed max-w-4xl mx-auto">
             Report abandoned vehicles to free up parking spaces and improve your
             neighborhood. Join the community effort to create cleaner, safer,
             and more eco-friendly surroundings for everyone.
@@ -19,16 +19,11 @@ export default function DownloadPage() {
         </div>
 
         {/* Download Columns */}
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8 w-full max-w-4xl px-2">
+        <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 w-full max-w-3xl px-2">
           {/* Android Column (First - Green) */}
-          <a
-            href="https://play.google.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex flex-col items-center p-6 sm:p-8 bg-white/60 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl hover:scale-[1.02] hover:bg-white/80 transition-all duration-300 w-full"
-          >
+          <div className="flex flex-col items-center p-6 sm:p-8 bg-white/60 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl transition-all duration-300 w-full max-w-[320px] mx-auto transform hover:scale-[1.02] hover:shadow-2xl">
             {/* QR Placeholder */}
-            <div className="w-full aspect-square max-w-[250px] bg-[#3DDC84]/10 rounded-2xl flex items-center justify-center mb-6 shadow-inner group-hover:shadow-2xl transition-all border border-[#3DDC84]/20 relative overflow-hidden">
+            <div className="w-full aspect-square max-w-[250px] bg-[#3DDC84]/10 rounded-2xl flex items-center justify-center mb-6 shadow-inner transition-all border border-[#3DDC84]/20 relative overflow-hidden">
               <div className="text-center p-4 z-10 w-full flex flex-col items-center">
                 {/* Google Play Logo SVG - Filled */}
                 <svg
@@ -45,7 +40,12 @@ export default function DownloadPage() {
             </div>
 
             {/* Store Button */}
-            <div className="flex items-center gap-3 px-4 sm:px-6 py-3 bg-[#3DDC84] text-white rounded-xl w-full max-w-[250px] justify-center transition-transform group-hover:bg-[#35c274]">
+            <a
+              href="https://play.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 px-4 sm:px-6 py-3 bg-[#3DDC84] text-white rounded-xl w-full max-w-[250px] justify-center transition-all transform hover:scale-105 hover:opacity-90 shadow-xl hover:bg-[#35c274]"
+            >
               <div className="w-6 h-6 sm:w-7 sm:h-7 relative flex-shrink-0">
                 <svg
                   viewBox="0 0 16 16"
@@ -59,22 +59,17 @@ export default function DownloadPage() {
                 <span className="text-[10px] uppercase font-bold opacity-90">
                   Get it on
                 </span>
-                <span className="text-lg sm:text-xl font-bold">
+                <span className="text-base font-bold whitespace-nowrap">
                   Google Play
                 </span>
               </div>
-            </div>
-          </a>
+            </a>
+          </div>
 
           {/* iOS Column (Second - Black) */}
-          <a
-            href="https://apps.apple.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex flex-col items-center p-6 sm:p-8 bg-white/60 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl hover:scale-[1.02] hover:bg-white/80 transition-all duration-300 w-full"
-          >
+          <div className="flex flex-col items-center p-6 sm:p-8 bg-white/60 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl transition-all duration-300 w-full max-w-[320px] mx-auto transform hover:scale-[1.02] hover:shadow-2xl">
             {/* QR Placeholder */}
-            <div className="w-full aspect-square max-w-[250px] bg-neutral-900 rounded-2xl flex items-center justify-center mb-6 shadow-inner group-hover:shadow-2xl transition-all relative overflow-hidden">
+            <div className="w-full aspect-square max-w-[250px] bg-neutral-900 rounded-2xl flex items-center justify-center mb-6 shadow-inner transition-all relative overflow-hidden">
               <div className="text-center p-4 z-10 w-full flex flex-col items-center">
                 {/* Apple Logo SVG - Filled */}
                 <svg
@@ -84,14 +79,19 @@ export default function DownloadPage() {
                 >
                   <path d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516s1.52.087 2.475-1.258.762-2.391.728-2.43m3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422s1.675-2.789 1.698-2.854-.597-.79-1.254-1.157a3.7 3.7 0 0 0-1.563-.434c-.108-.003-.483-.095-1.254.116-.508.139-1.653.589-1.968.607-.316.018-1.256-.522-2.267-.665-.647-.125-1.333.131-1.824.328-.49.196-1.422.754-2.074 2.237-.652 1.482-.311 3.83-.067 4.56s.625 1.924 1.273 2.796c.576.984 1.34 1.667 1.659 1.899s1.219.386 1.843.067c.502-.308 1.408-.485 1.766-.472.357.013 1.061.154 1.782.539.571.197 1.111.115 1.652-.105.541-.221 1.324-1.059 2.238-2.758q.52-1.185.473-1.282" />
                 </svg>
-                <span className="text-neutral-400 font-bold uppercase tracking-widest text-xs sm:text-sm">
+                <span className="text-white font-bold uppercase tracking-widest text-xs sm:text-sm">
                   Coming Soon
                 </span>
               </div>
             </div>
 
             {/* Store Button */}
-            <div className="flex items-center gap-3 px-4 sm:px-6 py-3 bg-black text-white rounded-xl w-full max-w-[250px] justify-center transition-transform group-hover:bg-neutral-800">
+            <a
+              href="https://apps.apple.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 px-4 sm:px-6 py-3 bg-black text-white rounded-xl w-full max-w-[250px] justify-center transition-all transform hover:scale-105 hover:opacity-90 shadow-xl hover:bg-neutral-800"
+            >
               <div className="w-6 h-6 sm:w-7 sm:h-7 relative flex-shrink-0">
                 <svg
                   viewBox="0 0 16 16"
@@ -107,8 +107,8 @@ export default function DownloadPage() {
                 </span>
                 <span className="text-lg sm:text-xl font-bold">App Store</span>
               </div>
-            </div>
-          </a>
+            </a>
+          </div>
         </div>
       </main>
 
