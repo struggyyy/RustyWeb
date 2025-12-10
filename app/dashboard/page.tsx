@@ -1,8 +1,24 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
-import Link from "next/link";
-import { MapPin, User, LogOut, Settings } from "lucide-react";
+// React specific imports
 import { useEffect, useState } from "react";
+
+// External libraries
+import { useRouter } from "next/navigation";
+import { MapPin } from "lucide-react";
 import {
   collection,
   query,
@@ -11,12 +27,14 @@ import {
   onSnapshot,
   Timestamp,
 } from "firebase/firestore";
+
+// Internal imports
 import { db } from "@/lib/firebase/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { Report } from "@/types/reports";
 import ReportCard from "@/components/features/ReportCard";
 import UserReportModal from "@/components/features/UserReportModal";
-import { useRouter } from "next/navigation";
+import DashboardHeader from "@/components/layout/DashboardHeader";
 
 export default function UserDashboardPage() {
   const { user, logOut, isAdmin, loading: authLoading } = useAuth();
@@ -87,81 +105,62 @@ export default function UserDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen font-sans">
-      <header className="bg-white/80 backdrop-blur-md border-b border-neutral-100 px-3 sm:px-8 py-3 sm:py-4 flex items-center justify-between sticky top-0 z-10">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center">
-            <img
-              src="/logo.svg"
-              alt="Rusty Logo"
-              className="w-full h-full object-contain"
-            />
-          </div>
-          <span className="text-lg sm:text-2xl font-bold text-neutral-600">
-            Rusty
-          </span>
-        </div>
-        <div className="flex items-center gap-2 sm:gap-6">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <span className="text-xs sm:text-base font-medium text-neutral-500 truncate max-w-[80px] sm:max-w-none">
-              {user?.email}
-            </span>
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-neutral-100 rounded-full flex items-center justify-center border border-neutral-200">
-              <User className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-400" />
-            </div>
-          </div>
-          <Link
-            href="/settings"
-            className="p-2 text-neutral-400 hover:text-brand-primary hover:bg-neutral-50 rounded-lg transition-colors"
-            title="Settings"
-          >
-            <Settings className="w-4 h-4 sm:w-6 sm:h-6" />
-          </Link>
-          <button
-            onClick={() => logOut()}
-            className="p-2 text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-            title="Sign out"
-          >
-            <LogOut className="w-4 h-4 sm:w-6 sm:h-6" />
-          </button>
-        </div>
-      </header>
+    <div className="h-screen w-full relative overflow-hidden font-sans">
+      <DashboardHeader />
 
-      <main className="max-w-5xl sm:max-w-7xl mx-auto p-3 sm:p-8">
-        <div className="mb-6 sm:mb-10">
-          <h1 className="text-2xl sm:text-4xl font-bold text-neutral-700 mb-2">
+      {/* Fixed Title Section */}
+      <div className="absolute top-0 left-0 w-full pt-4 md:pt-8 px-4 md:px-10 z-10 pointer-events-none">
+        <div className="max-w-7xl mx-auto flex items-center h-10 md:h-12">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-neutral-800 tracking-tight">
             My Reports
           </h1>
-          <p className="text-neutral-500 text-sm sm:text-lg">
+        </div>
+        <div className="max-w-7xl mx-auto mt-1 sm:mt-2">
+          <p className="text-neutral-500 text-sm sm:text-base lg:text-lg font-medium">
             Track the status of your submitted reports.
           </p>
         </div>
+      </div>
 
-        {reports.length === 0 ? (
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-8 sm:p-16 text-center border border-neutral-100 shadow-sm">
-            <div className="w-12 h-12 sm:w-20 sm:h-20 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MapPin className="w-6 h-6 sm:w-10 sm:h-10 text-neutral-300" />
-            </div>
-            <h3 className="text-base sm:text-xl font-bold text-neutral-600 mb-2">
-              No reports yet
-            </h3>
-            <p className="text-neutral-400 max-w-md mx-auto text-sm sm:text-lg">
-              You haven't submitted any reports yet. Use the mobile app to
-              report issues in your city.
-            </p>
+      {/* Scrollable Content Area */}
+      <main className="absolute top-28 md:top-36 bottom-0 left-0 right-0 overflow-y-auto px-4 sm:px-10 pb-6">
+        <div className="max-w-7xl mx-auto flex flex-col min-h-full">
+          <div className="flex-1">
+            {reports.length === 0 ? (
+              <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 sm:p-16 text-center border-2 border-dashed border-neutral-200 mt-4">
+                <div className="w-16 h-16 sm:w-24 sm:h-24 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <MapPin className="w-8 h-8 sm:w-12 sm:h-12 text-neutral-300" />
+                </div>
+                <h3 className="text-lg sm:text-2xl font-bold text-neutral-700 mb-3">
+                  No reports yet
+                </h3>
+                <p className="text-neutral-400 max-w-md mx-auto text-sm sm:text-lg font-medium">
+                  You haven't submitted any reports yet. Use the mobile app to
+                  report issues in your city.
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-4 sm:gap-6">
+                {reports.map((report) => (
+                  <div
+                    key={report.id}
+                    className="transform transition-all duration-300 hover:scale-[1.01]"
+                  >
+                    <ReportCard
+                      report={report}
+                      isAdmin={false}
+                      onDetailsPress={handleDetailsPress}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="grid gap-3 sm:gap-6">
-            {reports.map((report) => (
-              <ReportCard
-                key={report.id}
-                report={report}
-                isAdmin={false}
-                onDetailsPress={handleDetailsPress}
-              />
-            ))}
-          </div>
-        )}
+
+          <footer className="w-full py-6 text-center text-neutral-400 text-sm font-bold uppercase tracking-widest mt-8">
+            © 2025 Created by struggyyy
+          </footer>
+        </div>
       </main>
 
       {/* Report Modal */}
