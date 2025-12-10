@@ -35,6 +35,7 @@ import { Report } from "@/types/reports";
 import ReportCard from "@/components/features/ReportCard";
 import UserReportModal from "@/components/features/UserReportModal";
 import DashboardHeader from "@/components/layout/DashboardHeader";
+import ReportCardSkeleton from "@/components/features/ReportCardSkeleton";
 
 export default function UserDashboardPage() {
   const { user, logOut, isAdmin, loading: authLoading } = useAuth();
@@ -96,7 +97,7 @@ export default function UserDashboardPage() {
     console.log("Delete report:", reportId);
   };
 
-  if (authLoading || loading) {
+  if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-primary" />
@@ -125,7 +126,13 @@ export default function UserDashboardPage() {
       <main className="absolute top-20 md:top-28 lg:top-32 bottom-0 left-0 right-0 overflow-y-auto px-4 sm:px-10 pb-6 pt-6 [mask-image:linear-gradient(to_bottom,transparent,black_20px)]">
         <div className="max-w-4xl mx-auto flex flex-col min-h-full">
           <div className="flex-1">
-            {reports.length === 0 ? (
+            {loading ? (
+              <div className="grid gap-4 sm:gap-6 max-w-4xl">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <ReportCardSkeleton key={i} />
+                ))}
+              </div>
+            ) : reports.length === 0 ? (
               <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 sm:p-16 text-center border-2 border-dashed border-neutral-200 mt-4 max-w-4xl mx-auto">
                 <div className="w-16 h-16 sm:w-24 sm:h-24 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-6">
                   <MapPin className="w-8 h-8 sm:w-12 sm:h-12 text-neutral-300" />
@@ -134,8 +141,7 @@ export default function UserDashboardPage() {
                   No reports yet
                 </h3>
                 <p className="text-neutral-400 max-w-md mx-auto text-sm sm:text-lg font-medium">
-                  You haven't submitted any reports yet. Use the mobile app to
-                  report issues in your city.
+                  You haven't submitted any reports.
                 </p>
               </div>
             ) : (
