@@ -109,7 +109,7 @@ export default function UserDashboardPage() {
     <div className="h-screen w-full relative overflow-hidden font-sans">
       <DashboardHeader />
 
-      <div className="absolute top-0 left-0 w-full pt-4 md:pt-8 px-4 md:px-10 z-10 pointer-events-none">
+      <div className="absolute top-0 left-0 w-full pt-4 md:pt-8 px-4 sm:px-10 z-10 pointer-events-none">
         <div className="max-w-4xl mx-auto flex items-center h-10 md:h-12">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-neutral-800 tracking-tight">
             My Reports
