@@ -35,6 +35,7 @@ export default function ReportCard({
   onDetailsPress,
 }: ReportCardProps) {
   const [cityName, setCityName] = useState<string>("Loading...");
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     async function fetchCity() {
@@ -102,13 +103,23 @@ export default function ReportCard({
     >
       <div className="flex flex-row items-center gap-3 md:gap-4">
         {/* Image Section - Fluid Size */}
-        <div className="w-24 h-24 min-[450px]:w-32 min-[450px]:h-28 sm:w-40 sm:h-32 bg-white/50 rounded-xl overflow-hidden flex-shrink-0 border border-white/50 relative shadow-inner">
+        <div
+          className={`w-24 h-24 min-[450px]:w-32 min-[450px]:h-28 sm:w-40 sm:h-32 bg-white/50 rounded-xl overflow-hidden flex-shrink-0 border border-white/50 relative shadow-inner ${
+            !imageLoaded && report.imageUrl ? "animate-pulse" : ""
+          }`}
+        >
           <div className="absolute inset-0">
+            {report.imageUrl && !imageLoaded && (
+              <div className="absolute inset-0 bg-neutral-200" />
+            )}
             {report.imageUrl ? (
               <img
                 src={report.imageUrl}
                 alt="Report"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ease-in-out ${
+                  imageLoaded ? "opacity-100" : "opacity-0"
+                }`}
+                onLoad={() => setImageLoaded(true)}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">

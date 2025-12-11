@@ -15,7 +15,8 @@ import React from "react";
 
 export default function ReportCardSkeleton() {
   return (
-    <div className="bg-white/40 backdrop-blur-md border border-white/40 shadow-sm p-3 sm:p-5 rounded-2xl animate-pulse">
+    <div className="bg-white/60 backdrop-blur-2xl border border-white/60 shadow-xl p-3 sm:p-5 rounded-2xl animate-pulse relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
       <div className="flex flex-row items-center gap-3 md:gap-4">
         {/* Image Placeholder */}
         <div className="w-24 h-24 min-[450px]:w-32 min-[450px]:h-28 sm:w-40 sm:h-32 bg-neutral-200/50 rounded-xl flex-shrink-0" />
