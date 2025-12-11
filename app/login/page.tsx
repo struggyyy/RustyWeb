@@ -1,6 +1,24 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
+// React specific imports
+import { useState } from "react";
+
+// External libraries
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   Mail,
@@ -9,10 +27,11 @@ import {
   Eye,
   EyeOff,
   XCircle,
+  Check,
 } from "lucide-react";
-import { useState } from "react";
+
+// Internal imports
 import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -85,22 +104,27 @@ export default function LoginPage() {
     }
   };
 
-  const getInputClass = (isError?: boolean) => `
-    w-full pl-12 pr-12 py-4 bg-neutral-50 border-2 rounded-xl focus:outline-none transition-all font-medium
+  const getInputWrapperClass = (isError?: boolean) => `
+    relative w-full rounded-xl transition-all duration-300 font-medium
     ${
       isError
-        ? "border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:bg-red-50"
-        : "border-neutral-200 text-text-dark placeholder:text-text-tertiary focus:border-neutral-400 focus:bg-white"
+        ? "bg-red-50/50 shadow-[0_8px_30px_rgb(239,68,68,0.15)] ring-1 ring-red-100"
+        : "bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus-within:shadow-[0_8px_30px_rgb(var(--brand-primary),0.15)]"
     }
   `;
 
+  const inputClass =
+    "w-full pl-12 pr-12 py-4 bg-transparent outline-none rounded-xl text-text-dark placeholder:text-text-tertiary placeholder:font-normal";
+  const errorInputClass =
+    "w-full pl-12 pr-12 py-4 bg-transparent outline-none rounded-xl text-red-900 placeholder:text-red-300 placeholder:font-normal";
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 min-[540px]:p-10 border border-neutral-100">
-        <div className="mb-10">
+      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-6 min-[540px]:p-10 border border-white/60">
+        <div className="mb-6">
           <Link
             href="/"
-            className="inline-flex items-center text-text-tertiary hover:text-brand-primary transition-colors mb-8 font-medium"
+            className="inline-flex items-center text-text-tertiary hover:text-brand-primary transition-colors mb-4 font-medium"
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
           </Link>
@@ -119,13 +143,13 @@ export default function LoginPage() {
             </div>
           )}
 
-          <div className="space-y-2">
+          <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
             <label className="text-sm font-bold text-text-dark uppercase tracking-wide">
               Email
             </label>
-            <div className="relative">
+            <div className={getInputWrapperClass(fieldErrors.email)}>
               <Mail
-                className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${
+                className={`absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
                   fieldErrors.email ? "text-red-400" : "text-text-tertiary"
                 }`}
               />
@@ -139,13 +163,13 @@ export default function LoginPage() {
                   if (generalError) setGeneralError("");
                 }}
                 placeholder="name@example.com"
-                className={getInputClass(fieldErrors.email)}
+                className={fieldErrors.email ? errorInputClass : inputClass}
               />
               {email && (
                 <button
                   type="button"
                   onClick={() => setEmail("")}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+                  className="absolute z-10 right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
                 >
                   <XCircle className="w-5 h-5" />
                 </button>
@@ -153,13 +177,13 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
             <label className="text-sm font-bold text-text-dark uppercase tracking-wide">
               Password
             </label>
-            <div className="relative">
+            <div className={getInputWrapperClass(fieldErrors.password)}>
               <Lock
-                className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${
+                className={`absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
                   fieldErrors.password ? "text-red-400" : "text-text-tertiary"
                 }`}
               />
@@ -173,12 +197,12 @@ export default function LoginPage() {
                   if (generalError) setGeneralError("");
                 }}
                 placeholder="••••••••"
-                className={getInputClass(fieldErrors.password)}
+                className={fieldErrors.password ? errorInputClass : inputClass}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+                className="absolute z-10 right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
               >
                 {showPassword ? (
                   <EyeOff className="w-5 h-5" />
@@ -190,12 +214,18 @@ export default function LoginPage() {
           </div>
 
           <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center text-text-primary font-medium cursor-pointer">
-              <input
-                type="checkbox"
-                className="mr-3 w-4 h-4 rounded border-neutral-200 text-brand-primary focus:ring-brand-primary"
-              />
-              Remember me
+            <label className="flex items-center text-text-primary font-medium cursor-pointer group select-none relative z-10">
+              <div className="relative mr-3 flex items-center justify-center w-5 h-5">
+                <input
+                  type="checkbox"
+                  className="peer appearance-none w-5 h-5 rounded-full border-2 border-neutral-300 checked:bg-brand-primary checked:border-brand-primary transition-all duration-200 cursor-pointer"
+                />
+                <Check
+                  className="absolute w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity duration-200 pointer-events-none"
+                  strokeWidth={3}
+                />
+              </div>
+              <span className="text-sm">Remember me</span>
             </label>
           </div>
 

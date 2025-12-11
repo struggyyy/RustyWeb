@@ -1,10 +1,28 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft, Mail, Loader2, Send, XCircle } from "lucide-react";
+// React specific imports
 import { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+
+// External libraries
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { ArrowLeft, Mail, Loader2, Send, XCircle } from "lucide-react";
+
+// Internal imports
+import { useAuth } from "@/context/AuthContext";
 
 export default function ForgotPasswordPage() {
   const searchParams = useSearchParams();
@@ -62,22 +80,27 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  const getInputClass = (isError?: boolean) => `
-    w-full pl-12 pr-12 py-4 bg-neutral-50 border-2 rounded-xl focus:outline-none transition-all font-medium
+  const getInputWrapperClass = (isError?: boolean) => `
+    relative w-full rounded-xl transition-all duration-300 font-medium
     ${
       isError
-        ? "border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:bg-red-50"
-        : "border-neutral-200 text-text-dark placeholder:text-text-tertiary focus:border-neutral-400 focus:bg-white"
+        ? "bg-red-50/50 shadow-[0_8px_30px_rgb(239,68,68,0.15)] ring-1 ring-red-100"
+        : "bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus-within:shadow-[0_8px_30px_rgb(var(--brand-primary),0.15)]"
     }
   `;
 
+  const inputClass =
+    "w-full pl-12 pr-12 py-4 bg-transparent outline-none rounded-xl text-text-dark placeholder:text-text-tertiary placeholder:font-normal";
+  const errorInputClass =
+    "w-full pl-12 pr-12 py-4 bg-transparent outline-none rounded-xl text-red-900 placeholder:text-red-300 placeholder:font-normal";
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 min-[540px]:p-10 border border-neutral-100">
-        <div className="mb-10">
+      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-6 min-[540px]:p-10 border border-white/60">
+        <div className="mb-6">
           <Link
             href="/login"
-            className="inline-flex items-center text-text-tertiary hover:text-brand-primary transition-colors mb-8 font-medium"
+            className="inline-flex items-center text-text-tertiary hover:text-brand-primary transition-colors mb-4 font-medium"
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Login
           </Link>
@@ -103,13 +126,13 @@ export default function ForgotPasswordPage() {
             </div>
           )}
 
-          <div className="space-y-2">
+          <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
             <label className="text-sm font-bold text-text-dark uppercase tracking-wide">
               Email
             </label>
-            <div className="relative">
+            <div className={getInputWrapperClass(isEmailError)}>
               <Mail
-                className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${
+                className={`absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
                   isEmailError ? "text-red-400" : "text-text-tertiary"
                 }`}
               />
@@ -122,13 +145,13 @@ export default function ForgotPasswordPage() {
                   if (message && message.type === "error") setMessage(null);
                 }}
                 placeholder="name@example.com"
-                className={getInputClass(isEmailError)}
+                className={isEmailError ? errorInputClass : inputClass}
               />
               {email && (
                 <button
                   type="button"
                   onClick={() => setEmail("")}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+                  className="absolute z-10 right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
                 >
                   <XCircle className="w-5 h-5" />
                 </button>

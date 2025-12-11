@@ -1,10 +1,28 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft, Loader2, RefreshCw } from "lucide-react";
+// React specific imports
 import { useState, useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
+
+// External libraries
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowLeft, Loader2, RefreshCw } from "lucide-react";
+
+// Internal imports
+import { useAuth } from "@/context/AuthContext";
 
 export default function VerifyEmailPage() {
   const [isResending, setIsResending] = useState(false);
@@ -118,11 +136,11 @@ export default function VerifyEmailPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 min-[540px]:p-10 border border-neutral-100">
-        <div className="mb-10">
+      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-6 min-[540px]:p-10 border border-white/60">
+        <div className="mb-6">
           <Link
             href="/"
-            className="inline-flex items-center text-text-tertiary hover:text-brand-primary transition-colors mb-8 font-medium"
+            className="inline-flex items-center text-text-tertiary hover:text-brand-primary transition-colors mb-4 font-medium"
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
           </Link>
