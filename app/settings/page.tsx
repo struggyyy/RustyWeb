@@ -1,7 +1,24 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
+// React specific imports
 import { useState, useRef } from "react";
+
+// External libraries
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   User,
@@ -12,8 +29,10 @@ import {
   Trash2,
   Globe,
 } from "lucide-react";
+
+// Internal imports
 import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
+import ProfileImageModal from "@/components/features/settings/ProfileImageModal";
 
 export default function SettingsPage() {
   const {
@@ -29,6 +48,7 @@ export default function SettingsPage() {
 
   // Form state
   const [isEditing, setIsEditing] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [nickname, setNickname] = useState(profile?.displayName || "");
   const [language, setLanguage] = useState(profile?.language || "en");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -121,245 +141,219 @@ export default function SettingsPage() {
   if (!user || !profile) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-primary" />
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-neutral-200 border-t-brand-primary" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen font-sans bg-neutral-50">
-      <header className="bg-white/80 backdrop-blur-md border-b border-neutral-100 px-4 sm:px-8 py-4 flex items-center gap-4 sticky top-0 z-10">
+    <div className="min-h-screen font-sans relative">
+      {/* Fixed Back Button */}
+      <div className="fixed top-4 left-4 sm:top-8 sm:left-8 z-50">
         <Link
           href="/dashboard"
-          className="p-2 -ml-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-50 rounded-lg transition-colors"
+          className="w-10 h-10 md:w-12 md:h-12 bg-white/60 backdrop-blur-2xl border border-white/60 rounded-full flex items-center justify-center hover:bg-white/80 hover:scale-105 transition-all shadow-xl text-neutral-500 hover:text-brand-primary"
         >
-          <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+          <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />
         </Link>
-        <h1 className="text-xl sm:text-2xl font-bold text-neutral-700">
-          Settings
-        </h1>
-      </header>
+      </div>
 
-      <main className="max-w-2xl mx-auto p-4 sm:p-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-neutral-100 overflow-hidden">
-          {/* Header / Actions */}
-          <div className="p-6 border-b border-neutral-100 flex items-center justify-between bg-neutral-50/50">
-            <h2 className="text-lg sm:text-xl font-bold text-neutral-700">
-              Profile Settings
-            </h2>
+      <main className="max-w-xl mx-auto p-4 sm:p-8 pt-20 sm:pt-24">
+        {/* Glassy Card */}
+        <div className="bg-white/50 backdrop-blur-xl border border-white/60 shadow-xl rounded-3xl overflow-hidden relative">
+          {/* Edit Button (Top Right) */}
+          <div className="absolute top-6 right-6 z-10">
             {!isEditing ? (
               <button
                 onClick={() => setIsEditing(true)}
-                className="px-4 py-2 bg-white border border-neutral-200 text-neutral-600 rounded-lg font-medium hover:bg-neutral-50 transition-colors shadow-sm text-sm sm:text-base"
+                className="px-4 py-2 bg-white/50 hover:bg-white/80 border border-white/60 text-neutral-700 rounded-xl font-bold text-sm transition-all shadow-sm hover:shadow-md"
               >
                 Edit Profile
               </button>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex gap-2">
                 <button
                   onClick={handleCancel}
-                  disabled={isSubmitting}
-                  className="p-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-lg transition-colors"
+                  className="p-2 bg-white/50 hover:bg-white/80 text-neutral-500 hover:text-neutral-700 rounded-xl transition-all"
+                  title="Cancel"
                 >
                   <X className="w-5 h-5" />
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={isSubmitting}
-                  className="px-4 py-2 bg-brand-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2 text-sm sm:text-base"
+                  className="p-2 bg-brand-primary text-white rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100"
+                  title="Save Changes"
                 >
                   {isSubmitting ? (
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    <>
-                      <Save className="w-4 h-4" />
-                      Save
-                    </>
+                    <Save className="w-5 h-5" />
                   )}
                 </button>
               </div>
             )}
           </div>
 
-          <div className="p-6 space-y-8">
-            {error && (
-              <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm">
-                {error}
-              </div>
-            )}
-
-            {/* Profile Image */}
-            <div className="flex flex-col sm:flex-row items-center gap-6">
-              <div className="relative group">
-                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-neutral-100 border-4 border-white shadow-md">
-                  {profile.profileImage ? (
-                    <img
-                      src={profile.profileImage}
-                      alt="Profile"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <User className="w-8 h-8 sm:w-12 sm:h-12 text-neutral-300" />
-                    </div>
-                  )}
-
-                  {/* Upload Overlay */}
-                  <div
-                    className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <Camera className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-                  </div>
-                </div>
-                {uploadingImage && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-full">
-                    <div className="w-6 h-6 border-2 border-brand-primary border-t-transparent rounded-full animate-spin" />
+          <div className="p-8 sm:p-10 flex flex-col items-center">
+            {/* Profile Image Section */}
+            <div className="relative mb-6">
+              <div
+                className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden bg-neutral-100 border-4 border-white shadow-2xl cursor-pointer transition-transform hover:scale-[1.02] group"
+                onClick={() =>
+                  profile.profileImage ? setIsModalOpen(true) : null
+                }
+              >
+                {profile.profileImage ? (
+                  <img
+                    src={profile.profileImage}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-neutral-50 text-neutral-300">
+                    <User className="w-16 h-16" />
                   </div>
                 )}
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                />
+
+                {/* Hover Overlay for View */}
+                {profile.profileImage && (
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center rounded-full"></div>
+                )}
               </div>
 
-              <div className="text-center sm:text-left">
-                <h3 className="text-lg sm:text-xl font-bold text-neutral-700 mb-1">
-                  {profile.displayName || "User"}
-                </h3>
-                <p className="text-neutral-400 text-sm sm:text-base">
-                  {user.email}
-                </p>
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="mt-3 text-brand-primary font-medium text-sm hover:underline"
-                >
-                  Change Profile Picture
-                </button>
+              {/* Upload Button (Floating) */}
+              <div
+                className="absolute bottom-1 right-1 w-9 h-9 bg-neutral-900 text-white rounded-full shadow-lg cursor-pointer hover:bg-neutral-800 hover:scale-110 transition-all border-4 border-white flex items-center justify-center"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {uploadingImage ? (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Camera className="w-4 h-4" />
+                )}
               </div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleImageUpload}
+              />
             </div>
 
-            {/* Form Fields */}
-            <div className="space-y-6">
-              {/* Nickname */}
-              <div className="space-y-2">
-                <label className="text-sm sm:text-base font-bold text-neutral-700 uppercase tracking-wide">
-                  Nickname
-                </label>
-                {isEditing ? (
-                  <div className="flex items-center gap-3 px-4 py-3 bg-neutral-50 rounded-xl border border-neutral-200 focus-within:border-brand-primary focus-within:ring-1 focus-within:ring-brand-primary transition-all">
-                    <User className="w-5 h-5 text-neutral-400" />
+            {/* User Info / Edit Forms */}
+            <div className="w-full space-y-6 text-center">
+              {/* Display Mode */}
+              {!isEditing ? (
+                <div className="space-y-1 animate-in fade-in duration-300">
+                  <h2 className="text-2xl sm:text-3xl font-black text-neutral-800 tracking-tight">
+                    {profile.displayName || "Anonymous User"}
+                  </h2>
+                  <p className="text-neutral-500 font-medium">{user.email}</p>
+
+                  <div className="pt-6 flex justify-center">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-100/50 rounded-full border border-neutral-200/50">
+                      <Globe className="w-4 h-4 text-neutral-400" />
+                      <span className="text-sm font-bold text-neutral-600">
+                        {language === "en" ? "English" : "Polski"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Edit Mode */
+                <div className="space-y-4 max-w-sm mx-auto animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <div className="space-y-2 text-left">
+                    <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider ml-1">
+                      Nickname
+                    </label>
                     <input
                       type="text"
                       value={nickname}
                       onChange={(e) => setNickname(e.target.value)}
-                      className="flex-1 bg-transparent focus:outline-none text-neutral-700 font-medium placeholder-neutral-300 text-sm sm:text-base"
-                      placeholder="Enter your nickname"
+                      className="w-full px-4 py-3 bg-white/50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary font-bold text-neutral-800 placeholder:text-neutral-300 transition-all"
+                      placeholder="Your nickname"
                     />
                   </div>
-                ) : (
-                  <div className="flex items-center gap-3 px-4 py-3 bg-neutral-50 rounded-xl">
-                    <User className="w-5 h-5 text-neutral-400" />
-                    <span className="text-neutral-700 font-medium text-sm sm:text-base">
-                      {profile.displayName || "Not set"}
-                    </span>
-                  </div>
-                )}
-              </div>
 
-              {/* Email */}
-              <div className="space-y-2">
-                <label className="text-sm sm:text-base font-bold text-neutral-700 uppercase tracking-wide">
-                  Email Address
-                </label>
-                <div className="flex items-center gap-3 px-4 py-3 bg-neutral-50 rounded-xl opacity-75 cursor-not-allowed">
-                  <Mail className="w-5 h-5 text-neutral-400" />
-                  <span className="text-neutral-500 font-medium text-sm sm:text-base">
-                    {user.email}
-                  </span>
+                  <div className="space-y-2 text-left">
+                    <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider ml-1">
+                      Language
+                    </label>
+                    <div className="grid grid-cols-2 gap-2 p-1 bg-neutral-100/50 rounded-xl border border-neutral-200/50">
+                      <button
+                        onClick={() => setLanguage("en")}
+                        className={`py-2 px-4 rounded-lg text-sm font-bold transition-all ${
+                          language === "en"
+                            ? "bg-white shadow-sm text-neutral-900"
+                            : "text-neutral-400 hover:text-neutral-600"
+                        }`}
+                      >
+                        English
+                      </button>
+                      <button
+                        onClick={() => setLanguage("pl")}
+                        className={`py-2 px-4 rounded-lg text-sm font-bold transition-all ${
+                          language === "pl"
+                            ? "bg-white shadow-sm text-neutral-900"
+                            : "text-neutral-400 hover:text-neutral-600"
+                        }`}
+                      >
+                        Polski
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-xs sm:text-sm text-neutral-500">
-                  Email cannot be changed
-                </p>
-              </div>
+              )}
 
-              {/* Language */}
-              <div className="space-y-2">
-                <label className="text-sm sm:text-base font-bold text-neutral-700 uppercase tracking-wide">
-                  Language
-                </label>
-                {isEditing ? (
-                  <div className="flex items-center gap-3 px-4 py-3 bg-neutral-50 rounded-xl">
-                    <Globe className="w-5 h-5 text-neutral-400" />
-                    <select
-                      value={language}
-                      onChange={(e) => setLanguage(e.target.value)}
-                      className="flex-1 bg-transparent focus:outline-none text-neutral-700 font-medium text-sm sm:text-base"
-                    >
-                      <option value="en">English</option>
-                      <option value="pl">Polski</option>
-                    </select>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3 px-4 py-3 bg-neutral-50 rounded-xl">
-                    <Globe className="w-5 h-5 text-neutral-400" />
-                    <span className="text-neutral-700 font-medium text-sm sm:text-base">
-                      {profile.language === "pl" ? "Polski" : "English"}
-                    </span>
-                  </div>
-                )}
-              </div>
+              {error && (
+                <div className="mt-4 p-3 bg-red-50 text-red-600 text-sm font-medium rounded-xl border border-red-100">
+                  {error}
+                </div>
+              )}
             </div>
 
-            {/* Account Actions */}
-            <div className="border-t border-neutral-200 pt-6 space-y-4">
-              <h3 className="text-lg sm:text-xl font-bold text-neutral-700">
-                Account Actions
-              </h3>
+            {/* Divider */}
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent my-10" />
 
+            {/* Account Actions */}
+            <div className="w-full">
               {!showDeleteConfirm ? (
                 <button
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="w-full px-4 py-3 bg-red-50 text-red-600 rounded-xl font-medium hover:bg-red-100 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
+                  className="w-full text-center text-red-500 hover:text-red-700 font-bold text-sm transition-colors py-2"
                 >
-                  <Trash2 className="w-5 h-5" />
                   Delete Account
                 </button>
               ) : (
-                <div className="space-y-3">
-                  <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
-                    <p className="text-red-700 font-medium mb-2 text-sm sm:text-base">
-                      Are you sure you want to delete your account?
-                    </p>
-                    <p className="text-red-600 text-sm">
-                      This action cannot be undone. All your data will be
-                      permanently removed.
+                <div className="bg-red-50/80 border border-red-100 rounded-2xl p-6 text-center space-y-4 animate-in fade-in zoom-in-95 duration-200">
+                  <div className="space-y-1">
+                    <h4 className="text-red-800 font-bold">Are you sure?</h4>
+                    <p className="text-red-600 text-xs">
+                      This action is permanent.
                     </p>
                   </div>
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      onClick={() => setShowDeleteConfirm(false)}
+                      className="px-4 py-2 bg-white text-neutral-600 rounded-xl text-sm font-bold shadow-sm hover:bg-neutral-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
                     <button
                       onClick={handleDeleteAccount}
                       disabled={isSubmitting}
-                      className="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 text-sm sm:text-base"
+                      className="px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-bold shadow-md hover:bg-red-700 transition-colors flex items-center gap-2"
                     >
                       {isSubmitting ? (
-                        <div className="w-4 h-4 border border-white border-t-transparent rounded-full animate-spin" />
+                        <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       ) : (
                         <>
-                          <Trash2 className="w-4 h-4" />
-                          Yes, Delete Account
+                          <Trash2 className="w-3 h-3" />
+                          Delete
                         </>
                       )}
-                    </button>
-                    <button
-                      onClick={() => setShowDeleteConfirm(false)}
-                      disabled={isSubmitting}
-                      className="flex-1 px-4 py-3 bg-neutral-200 text-neutral-700 rounded-xl font-medium hover:bg-neutral-300 transition-colors disabled:opacity-50 text-sm sm:text-base"
-                    >
-                      Cancel
                     </button>
                   </div>
                 </div>
@@ -368,6 +362,13 @@ export default function SettingsPage() {
           </div>
         </div>
       </main>
+
+      <ProfileImageModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        imageUrl={profile.profileImage || null}
+        title={profile.displayName || "Profile Picture"}
+      />
     </div>
   );
 }

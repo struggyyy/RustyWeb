@@ -129,8 +129,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setProfileLoaded(true);
 
             // 2. Strict Admin Redirect (Match Mobile Case 5)
-            // If user is Admin, they MUST be on /admin routes.
-            if (isUserAdmin && !pathname?.startsWith("/admin")) {
+            // If user is Admin, they MUST be on /admin routes OR /settings.
+            if (
+              isUserAdmin &&
+              !pathname?.startsWith("/admin") &&
+              !pathname?.startsWith("/settings")
+            ) {
               router.replace("/admin");
             }
           } else {
