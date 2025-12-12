@@ -16,6 +16,7 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { Filter, Search, MapPin, X, Menu, LogOut } from "lucide-react";
+import { DatePicker } from "@/components/ui/DatePicker";
 import {
   collection,
   query,
@@ -243,13 +244,13 @@ export default function AdminDashboardPage() {
 
     // 2. Date Filter
     if (dateFrom) {
-      filtered = filtered.filter(
-        (r) => r.createdAt.toDate() >= new Date(dateFrom)
-      );
+      // Force local start of day
+      const fromDate = new Date(dateFrom + "T00:00:00");
+      filtered = filtered.filter((r) => r.createdAt.toDate() >= fromDate);
     }
     if (dateTo) {
-      const toDate = new Date(dateTo);
-      toDate.setHours(23, 59, 59, 999);
+      // Force local end of day
+      const toDate = new Date(dateTo + "T23:59:59.999");
       filtered = filtered.filter((r) => r.createdAt.toDate() <= toDate);
     }
 
@@ -626,6 +627,15 @@ export default function AdminDashboardPage() {
               )}
             </div>
 
+            <DatePicker
+              dateFrom={dateFrom}
+              dateTo={dateTo}
+              onChange={(from, to) => {
+                setDateFrom(from);
+                setDateTo(to);
+              }}
+            />
+
             {/* Status Buttons */}
             <div className="flex flex-wrap gap-2 items-center">
               <button
@@ -677,27 +687,6 @@ export default function AdminDashboardPage() {
             </button>
 
             {/* Date Filters (Inline) */}
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <input
-                  type="date"
-                  value={dateFrom}
-                  onChange={(e) => setDateFrom(e.target.value)}
-                  className="px-3 py-2 border border-neutral-200 rounded-lg bg-white shadow-sm text-xs sm:text-sm text-neutral-600 focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary w-32 sm:w-auto"
-                  placeholder="From"
-                />
-              </div>
-              <span className="text-neutral-400 text-xs">-</span>
-              <div className="relative">
-                <input
-                  type="date"
-                  value={dateTo}
-                  onChange={(e) => setDateTo(e.target.value)}
-                  className="px-3 py-2 border border-neutral-200 rounded-lg bg-white shadow-sm text-xs sm:text-sm text-neutral-600 focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary w-32 sm:w-auto"
-                  placeholder="To"
-                />
-              </div>
-            </div>
 
             <button
               onClick={() => setShowMapView(!showMapView)}
