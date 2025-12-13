@@ -1,6 +1,6 @@
 {
   "common": {
-    "seeDetails": "Zobacz szczegóły",
+    "seeDetails": "Wiecej",
     "navigate": "Nawiguj",
     "clear": "Wyczyść",
     "done": "Gotowe",
@@ -44,7 +44,7 @@
     "managementTitle": "Panel Admina",
     "managementSubtitle": "Przeglądaj i aktualizuj zgłoszenia.",
     "updateStatus": "Status",
-    "manage": "Zarządzaj zgłoszeniem",
+    "manage": "Edytuj zgłoszenie",
     "submittedBy": "Zgłoszone przez",
     "deleteReport": "Usuń zgłoszenie"
   },
@@ -62,10 +62,23 @@
     "loading": "Ładowanie...",
     "unknownLocation": "Nieznana lokalizacja",
     "noLocation": "Brak lokalizacji",
-    "pts": "pkt"
+    "pts": "pkt",
+    "points": "Punkty",
+    "reportDetails": "Szczegóły zgłoszenia",
+    "noImageAvailable": "Brak zdjęcia",
+    "noteSubmitted": "Twoje zgłoszenie zostało otrzymane i jest teraz weryfikowane. Powiadomimy Cię, gdy status się zmieni.",
+    "noteAccepted": "Twoje zgłoszenie zostało przyjęte. Nasz zespół teraz je przetwarza, co może zająć trochę czasu, ponieważ kontaktujemy się z właścicielem pojazdu i kompletujemy niezbędną dokumentację.",
+    "noteCompleted": "Zgłoszony pojazd został usunięty z ulicy i jest teraz poddawany recyklingowi, przekazywany osobom potrzebującym lub przygotowywany do miejskiej licytacji.",
+    "noteCanceled": "Nie byliśmy w stanie zweryfikować Twojego zgłoszenia z powodu niewystarczających informacji lub potencjalnych niedokładności. Możesz przesłać nowe zgłoszenie, jeśli uważasz, że to był błąd."
+  },
+  "dashboard": {
+    "title": "Moje zgłoszenia",
+    "subtitle": "Śledź status swoich przesłanych zgłoszeń.",
+    "noReportsTitle": "Brak zgłoszeń",
+    "noReportsDesc": "Nie przesłałeś jeszcze żadnych zgłoszeń."
   },
   "map": {
-    "preview": "Podgląd mapy",
+    "preview": "Podgląd zgłoszenia",
     "multipleHere": "Więcej zgłoszeń"
   },
   "privacy": {

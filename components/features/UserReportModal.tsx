@@ -13,6 +13,7 @@
  ************************************************************************** */
 // React specific imports
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 // Internal imports
 import { Report } from "@/types/reports";
@@ -30,11 +31,12 @@ export default function UserReportModal({
   onDelete,
 }: UserReportModalProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const { t, i18n } = useTranslation();
 
   const formatDate = (timestamp: any) => {
     if (!timestamp) return "";
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString("en-US", {
+    return date.toLocaleDateString(i18n.language, {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -74,13 +76,13 @@ export default function UserReportModal({
   const getStatusNote = (status: string) => {
     switch (status) {
       case "Submitted":
-        return "Your report has been submitted and is awaiting review by our team.";
+        return t("reports.noteSubmitted");
       case "Accepted":
-        return "Your report has been accepted and is being processed.";
+        return t("reports.noteAccepted");
       case "Completed":
-        return "Your report has been completed successfully. Thank you for helping improve your community!";
+        return t("reports.noteCompleted");
       case "Canceled":
-        return "This report has been canceled.";
+        return t("reports.noteCanceled");
       default:
         return "";
     }
@@ -92,13 +94,13 @@ export default function UserReportModal({
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-8 border-b border-neutral-100 flex-shrink-0">
           <h2 className="text-xl sm:text-3xl font-black text-neutral-800 tracking-tight">
-            Report Details
+            {t("reports.reportDetails")}
           </h2>
           <div className="flex items-center gap-1 sm:gap-2">
             <button
               onClick={onDelete}
               className="p-2 sm:p-2.5 text-red-500 hover:bg-red-50 rounded-xl transition-all hover:scale-105 active:scale-95"
-              title="Delete report"
+              title={t("admin.deleteReport")}
             >
               <Trash2 className="w-4 h-4 sm:w-6 sm:h-6" />
             </button>
@@ -150,7 +152,7 @@ export default function UserReportModal({
                   />
                 ) : (
                   <div className="w-full aspect-video flex items-center justify-center bg-neutral-100 text-neutral-400 font-medium">
-                    No image available
+                    {t("reports.noImageAvailable")}
                   </div>
                 )}
               </div>
@@ -162,7 +164,7 @@ export default function UserReportModal({
             <div className="space-y-6">
               <div className="space-y-0.5">
                 <label className="block text-xs font-bold text-neutral-500 uppercase tracking-wider ml-1">
-                  Description
+                  {t("reports.description")}
                 </label>
                 <p className="text-neutral-700 text-sm sm:text-base break-words whitespace-pre-wrap leading-relaxed px-1">
                   {report.description}
@@ -175,7 +177,7 @@ export default function UserReportModal({
                     report.status
                   )} bg-current/10`}
                 >
-                  {report.status}
+                  {t(`reports.status${report.status}`)}
                 </div>
                 {getStatusNote(report.status) && (
                   <p className="text-sm text-neutral-500 italic mt-1 ml-1">
@@ -186,7 +188,7 @@ export default function UserReportModal({
 
               <div className="px-1">
                 <span className="font-bold text-neutral-500 uppercase tracking-wider text-xs">
-                  Points:{" "}
+                  {t("reports.points")}:{" "}
                 </span>
                 <span className="text-neutral-700 font-medium text-sm sm:text-base ml-2">
                   {report.points}

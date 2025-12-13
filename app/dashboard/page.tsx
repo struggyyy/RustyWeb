@@ -30,6 +30,7 @@ import {
 
 // Internal imports
 import { db } from "@/lib/firebase/firebase";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/context/AuthContext";
 import { Report } from "@/types/reports";
 import ReportCard from "@/components/features/ReportCard";
@@ -44,6 +45,7 @@ export default function UserDashboardPage() {
   const [showReportModal, setShowReportModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     // Wait for authentication to load before checking user state
@@ -80,7 +82,7 @@ export default function UserDashboardPage() {
 
   const formatDate = (timestamp: Timestamp) => {
     if (!timestamp) return "";
-    return timestamp.toDate().toLocaleDateString("en-US", {
+    return timestamp.toDate().toLocaleDateString(i18n.language, {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -112,12 +114,12 @@ export default function UserDashboardPage() {
       <div className="absolute top-0 left-0 w-full pt-4 md:pt-8 px-4 sm:px-10 z-10 pointer-events-none">
         <div className="max-w-4xl mx-auto flex items-center h-10 md:h-12">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-neutral-800 tracking-tight">
-            My Reports
+            {t("dashboard.title")}
           </h1>
         </div>
         <div className="max-w-4xl mx-auto mt-1 sm:mt-2">
           <p className="text-neutral-500 text-sm sm:text-base lg:text-lg font-medium">
-            Track the status of your submitted reports.
+            {t("dashboard.subtitle")}
           </p>
         </div>
       </div>
@@ -138,10 +140,10 @@ export default function UserDashboardPage() {
                   <MapPin className="w-8 h-8 sm:w-12 sm:h-12 text-neutral-300" />
                 </div>
                 <h3 className="text-lg sm:text-2xl font-bold text-neutral-700 mb-3">
-                  No reports yet
+                  {t("dashboard.noReportsTitle")}
                 </h3>
                 <p className="text-neutral-400 max-w-md mx-auto text-sm sm:text-lg font-medium">
-                  You haven't submitted any reports.
+                  {t("dashboard.noReportsDesc")}
                 </p>
               </div>
             ) : (
@@ -163,7 +165,7 @@ export default function UserDashboardPage() {
           </div>
 
           <footer className="w-full py-6 text-center text-neutral-400 text-sm font-bold uppercase tracking-widest mt-8">
-            © 2025 Created by struggyyy
+            {t("common.footer")}
           </footer>
         </div>
       </main>
