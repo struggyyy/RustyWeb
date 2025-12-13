@@ -1,6 +1,22 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
+// React specific imports
 import { useState, useRef, useEffect } from "react";
+
+// External libraries
 import {
   Calendar as CalendarIcon,
   ChevronLeft,
@@ -204,113 +220,122 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
     <div className="relative" ref={containerRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-3 py-2 border rounded-lg transition-all shadow-sm ${
+        className={`h-10 flex-shrink-0 flex items-center gap-2 px-3 py-2 border rounded-lg transition-all shadow-sm ${
           dateFrom || dateTo
             ? "border-brand-primary bg-brand-primary/5 text-brand-primary"
             : "border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50"
         }`}
       >
         <CalendarIcon className="w-4 h-4" />
-        <span className="hidden sm:inline text-xs font-medium">
-          {dateFrom && dateTo && dateFrom === dateTo
-            ? dateFrom
-            : !dateFrom && dateTo
-            ? `Up to ${dateTo}`
-            : dateFrom || dateTo
-            ? `${dateFrom} ${dateTo ? "- " + dateTo : ""}`
-            : "Filter Date"}
-        </span>
+        {(dateFrom || dateTo) && (
+          <span className="hidden sm:inline text-xs font-medium">
+            {dateFrom && dateTo && dateFrom === dateTo
+              ? dateFrom
+              : !dateFrom && dateTo
+              ? `Up to ${dateTo}`
+              : `${dateFrom} ${dateTo ? "- " + dateTo : ""}`}
+          </span>
+        )}
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 p-4 bg-white border border-neutral-100 rounded-2xl shadow-xl z-50 flex flex-col gap-4 min-w-[320px] sm:min-w-[600px] animate-in fade-in zoom-in-95 duration-200">
-          {/* Header Controls */}
-          <div className="flex items-center justify-between pb-2 border-b border-neutral-50">
-            <button
-              onClick={() => changeMonth(-1)}
-              className="p-1 hover:bg-neutral-100 rounded-full"
-            >
-              <ChevronLeft className="w-5 h-5 text-neutral-500" />
-            </button>
-            <div className="flex gap-8 font-bold text-neutral-700">
-              <span className="w-32 text-center">
-                {MONTHS[calLeft.month]} {calLeft.year}
-              </span>
-              <span className="w-32 text-center hidden sm:block">
-                {MONTHS[calRight.month]} {calRight.year}
-              </span>
-            </div>
-            <button
-              onClick={() => changeMonth(1)}
-              className="p-1 hover:bg-neutral-100 rounded-full"
-            >
-              <ChevronRight className="w-5 h-5 text-neutral-500" />
-            </button>
-          </div>
+        <>
+          {/* Mobile Backdrop */}
+          <div
+            className="fixed inset-0 z-[60] bg-black/20 backdrop-blur-sm sm:hidden"
+            onClick={() => setIsOpen(false)}
+          />
 
-          <div className="flex flex-col sm:flex-row gap-8">
-            {/* Left Calendar */}
-            <div className="flex-1">
-              <div className="grid grid-cols-7 mb-2">
-                {DAYS.map((d) => (
-                  <div
-                    key={d}
-                    className="text-center text-xs font-medium text-neutral-400"
-                  >
-                    {d}
-                  </div>
-                ))}
+          {/* Dropdown / Modal Card */}
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] w-[90vw] max-w-[340px] sm:absolute sm:inset-auto sm:top-full sm:right-0 sm:left-auto sm:translate-x-0 sm:translate-y-0 sm:mt-2 sm:z-50 sm:w-auto sm:max-w-none sm:min-w-[600px] p-4 bg-white border border-neutral-100 rounded-2xl shadow-xl flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
+            {/* Header Controls */}
+            <div className="flex items-center justify-between pb-2 border-b border-neutral-50">
+              <button
+                onClick={() => changeMonth(-1)}
+                className="p-1 hover:bg-neutral-100 rounded-full"
+              >
+                <ChevronLeft className="w-5 h-5 text-neutral-500" />
+              </button>
+              <div className="flex gap-8 font-bold text-neutral-700">
+                <span className="w-32 text-center hidden sm:block">
+                  {MONTHS[calLeft.month]} {calLeft.year}
+                </span>
+                <span className="w-32 text-center">
+                  {MONTHS[calRight.month]} {calRight.year}
+                </span>
               </div>
-              <div className="grid grid-cols-7 gap-y-1 justify-items-center">
-                {calLeft.days}
-              </div>
+              <button
+                onClick={() => changeMonth(1)}
+                className="p-1 hover:bg-neutral-100 rounded-full"
+              >
+                <ChevronRight className="w-5 h-5 text-neutral-500" />
+              </button>
             </div>
 
-            {/* Right Calendar (Hidden on mobile usually or stacked) */}
-            <div className="flex-1 hidden sm:block">
-              <div className="grid grid-cols-7 mb-2">
-                {DAYS.map((d) => (
-                  <div
-                    key={d}
-                    className="text-center text-xs font-medium text-neutral-400"
-                  >
-                    {d}
-                  </div>
-                ))}
+            <div className="flex flex-col sm:flex-row gap-8">
+              {/* Left Calendar */}
+              <div className="flex-1 hidden sm:block">
+                <div className="grid grid-cols-7 mb-2">
+                  {DAYS.map((d) => (
+                    <div
+                      key={d}
+                      className="text-center text-xs font-medium text-neutral-400"
+                    >
+                      {d}
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-7 gap-y-1 justify-items-center">
+                  {calLeft.days}
+                </div>
               </div>
-              <div className="grid grid-cols-7 gap-y-1 justify-items-center">
-                {calRight.days}
-              </div>
-            </div>
-          </div>
 
-          <div className="flex justify-between items-center pt-2 border-t border-neutral-50">
-            <button
-              onClick={() => {
-                setTempFrom("");
-                setTempTo("");
-              }}
-              className="text-xs text-neutral-400 hover:text-neutral-600 font-medium"
-            >
-              Clear Selection
-            </button>
-            <div className="text-xs text-neutral-400">
-              {!tempFrom && tempTo && `Up to ${tempTo}`}
-              {tempFrom && !tempTo && tempFrom}
-              {tempFrom && tempTo && tempFrom === tempTo && tempFrom}
-              {tempFrom &&
-                tempTo &&
-                tempFrom !== tempTo &&
-                `${tempFrom} - ${tempTo}`}
+              {/* Right Calendar (Hidden on mobile usually or stacked) */}
+              <div className="flex-1">
+                <div className="grid grid-cols-7 mb-2">
+                  {DAYS.map((d) => (
+                    <div
+                      key={d}
+                      className="text-center text-xs font-medium text-neutral-400"
+                    >
+                      {d}
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-7 gap-y-1 justify-items-center">
+                  {calRight.days}
+                </div>
+              </div>
             </div>
-            <button
-              onClick={handleApply}
-              className="bg-brand-primary text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow-md shadow-brand-primary/20 hover:opacity-90 transition-opacity"
-            >
-              Apply Filter
-            </button>
+
+            <div className="flex justify-between items-center pt-2 border-t border-neutral-50">
+              <button
+                onClick={() => {
+                  setTempFrom("");
+                  setTempTo("");
+                }}
+                className="text-xs text-neutral-400 hover:text-neutral-600 font-medium"
+              >
+                Clear Selection
+              </button>
+              <div className="text-xs text-neutral-400">
+                {!tempFrom && tempTo && `Up to ${tempTo}`}
+                {tempFrom && !tempTo && tempFrom}
+                {tempFrom && tempTo && tempFrom === tempTo && tempFrom}
+                {tempFrom &&
+                  tempTo &&
+                  tempFrom !== tempTo &&
+                  `${tempFrom} - ${tempTo}`}
+              </div>
+              <button
+                onClick={handleApply}
+                className="bg-brand-primary text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow-md shadow-brand-primary/20 hover:opacity-90 transition-opacity"
+              >
+                Apply Filter
+              </button>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

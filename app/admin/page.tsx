@@ -13,10 +13,12 @@
  ************************************************************************** */
 "use client";
 
+// React specific imports
 import { useEffect, useState, useRef } from "react";
-import Link from "next/link";
-import { Filter, Search, MapPin, X, Menu, LogOut } from "lucide-react";
-import { DatePicker } from "@/components/ui/DatePicker";
+
+// External libraries
+import { useRouter } from "next/navigation";
+import { Filter, Search, MapPin, X, List } from "lucide-react";
 import {
   collection,
   query,
@@ -24,20 +26,22 @@ import {
   onSnapshot,
   Timestamp,
 } from "firebase/firestore";
+
+// Internal imports
 import { db } from "@/lib/firebase/firebase";
+import { updateReportStatus } from "@/lib/firebase/admin";
 import { useAuth } from "@/context/AuthContext";
 import { Report, ReportStatus, reportStatuses } from "@/types/reports";
+import { DatePicker } from "@/components/ui/DatePicker";
+import { RadiusPicker } from "@/components/ui/RadiusPicker";
 import ReportCard from "@/components/features/ReportCard";
 import DashboardHeader from "@/components/layout/DashboardHeader";
 import AdminReportModal from "@/components/features/AdminReportModal";
-
 import GoogleMaps from "@/components/features/GoogleMaps";
 import MapReportModal from "@/components/features/MapReportModal";
-import { useRouter } from "next/navigation";
-import { updateReportStatus } from "@/lib/firebase/admin";
 
 export default function AdminDashboardPage() {
-  const { user, isAdmin, logOut, loading: authLoading } = useAuth();
+  const { user, isAdmin, loading: authLoading } = useAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [filteredReports, setFilteredReports] = useState<Report[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -59,7 +63,7 @@ export default function AdminDashboardPage() {
   const [showMapModal, setShowMapModal] = useState(false);
 
   const [loading, setLoading] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -122,6 +126,24 @@ export default function AdminDashboardPage() {
   const [inputValue, setInputValue] = useState(""); // Typed text (visual)
   const searchInputRef = useRef<HTMLInputElement>(null);
   const lastSelectedRef = useRef<string>("");
+
+  const [searchPlaceholder, setSearchPlaceholder] = useState(
+    "Search reports or enter city..."
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setSearchPlaceholder("Search reports");
+      } else {
+        setSearchPlaceholder("Search reports or enter city...");
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Logic from ReportFilters: Geocoding
   const searchLocations = async (query: string) => {
@@ -429,79 +451,11 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="h-screen w-full relative overflow-hidden font-sans">
-      {/* Sidebar Overlay */}
-      <div
-        className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300 ${
-          isSidebarOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
-        onClick={() => setIsSidebarOpen(false)}
-      />
-
-      {/* Sidebar Drawer */}
-      <aside
-        className={`fixed top-0 left-0 h-full w-72 bg-white/80 backdrop-blur-2xl border-r border-white/60 shadow-2xl z-50 transition-transform duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-lg shadow-brand-primary/20">
-              <span className="text-white font-black text-xl">R</span>
-            </div>
-            <span className="text-xl font-black text-neutral-800 tracking-tight">
-              Rusty Admin
-            </span>
-          </div>
-          <button
-            onClick={() => setIsSidebarOpen(false)}
-            className="p-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100/50 rounded-xl transition-all"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        <nav className="p-4 space-y-2">
-          <button
-            onClick={() => setIsSidebarOpen(false)}
-            className="w-full flex items-center gap-3 px-4 py-3 bg-brand-primary/10 text-brand-primary font-bold rounded-xl transition-all"
-          >
-            <div className="w-2 h-2 rounded-full bg-brand-primary" />
-            Reports
-          </button>
-
-          <a
-            href="#"
-            className="w-full flex items-center gap-3 px-4 py-3 text-neutral-500 hover:bg-neutral-50 hover:text-neutral-800 font-medium rounded-xl transition-all group"
-          >
-            <div className="w-2 h-2 rounded-full bg-neutral-200 group-hover:bg-neutral-400 transition-colors" />
-            Users
-          </a>
-
-          <Link
-            href="/settings"
-            className="w-full flex items-center gap-3 px-4 py-3 text-neutral-500 hover:bg-neutral-50 hover:text-neutral-800 font-medium rounded-xl transition-all group"
-          >
-            <div className="w-2 h-2 rounded-full bg-neutral-200 group-hover:bg-neutral-400 transition-colors" />
-            Settings
-          </Link>
-
-          <button
-            onClick={() => logOut()}
-            className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 hover:text-red-600 font-medium rounded-xl transition-all mt-8"
-          >
-            <LogOut className="w-5 h-5" />
-            Sign Out
-          </button>
-        </nav>
-      </aside>
-
+    <div className="h-screen w-full flex flex-col relative overflow-hidden font-sans">
       <DashboardHeader />
 
       {/* Static Fixed Header Section */}
-      <div className="absolute top-0 left-0 w-full pt-4 md:pt-8 px-4 sm:px-10 z-20 pb-4 pointer-events-auto">
+      <div className="flex-shrink-0 w-full pt-4 md:pt-8 px-4 sm:px-10 z-20 pointer-events-auto">
         <div className="max-w-4xl mx-auto flex flex-col gap-4">
           {/* Title & Subtitle */}
           <div>
@@ -513,13 +467,12 @@ export default function AdminDashboardPage() {
             </p>
           </div>
 
-          {/* Row 1: Search & Status Filters */}
-          <div className="flex flex-col md:flex-row gap-3 items-start md:items-center">
-            {/* Search Group: Search Bar + Radius */}
-            <div className="flex flex-1 w-full md:w-auto gap-2">
+          {/* Row 1: Search, Date, Map Controls */}
+          <div className="flex flex-col gap-3">
+            <div className="flex w-full gap-2">
               {/* Combined Search & Location Bar */}
               <div
-                className={`relative z-30 flex-1 flex items-center bg-white border border-neutral-200 rounded-lg shadow-sm focus-within:border-brand-primary focus-within:ring-1 focus-within:ring-brand-primary transition-all ${
+                className={`relative z-30 flex-1 flex items-center bg-white border border-neutral-200 rounded-lg shadow-sm focus-within:border-brand-primary focus-within:ring-1 focus-within:ring-brand-primary transition-all h-10 ${
                   selectedLocationName ? "pl-2" : ""
                 }`}
               >
@@ -529,9 +482,11 @@ export default function AdminDashboardPage() {
 
                 {/* Location Chip */}
                 {selectedLocationName && (
-                  <div className="flex items-center gap-1 bg-brand-primary/10 text-brand-primary px-2 py-1 rounded-md text-xs font-bold whitespace-nowrap mr-2">
-                    <MapPin className="w-3 h-3" />
-                    {selectedLocationName}
+                  <div className="flex items-center gap-1 bg-brand-primary/10 text-brand-primary px-2 py-1 rounded-md text-xs font-bold whitespace-nowrap mr-1 sm:mr-2 flex-shrink min-w-0">
+                    <MapPin className="w-3 h-3 flex-shrink-0" />
+                    <span className="truncate max-w-[45px] min-[380px]:max-w-[100px] sm:max-w-none">
+                      {selectedLocationName}
+                    </span>
                     <button
                       onClick={handleClearLocation}
                       className="hover:bg-brand-primary/20 rounded-full p-0.5 ml-1"
@@ -544,11 +499,7 @@ export default function AdminDashboardPage() {
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder={
-                    selectedLocationName
-                      ? "Filter reports description..."
-                      : "Search reports or enter city..."
-                  }
+                  placeholder={selectedLocationName ? "" : searchPlaceholder}
                   value={inputValue}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   onKeyDown={(e) => {
@@ -578,7 +529,7 @@ export default function AdminDashboardPage() {
                   }}
                   className={`flex-1 w-full bg-transparent border-none focus:ring-0 text-sm text-neutral-600 py-2 ${
                     selectedLocationName ? "" : "pl-9"
-                  } pr-3 placeholder-neutral-400 focus:outline-none min-w-[50px]`}
+                  } pr-3 placeholder-neutral-400 focus:outline-none min-w-[20px]`}
                 />
 
                 {/* Location Suggestions Dropdown */}
@@ -606,37 +557,36 @@ export default function AdminDashboardPage() {
 
               {/* Radius Input - Conditional */}
               {selectedLocationName && (
-                <div className="w-20 sm:w-24 flex-shrink-0 animate-in fade-in slide-in-from-left-4 duration-300">
-                  <div className="relative h-full">
-                    <input
-                      type="number"
-                      value={filterRadius || ""}
-                      onChange={(e) =>
-                        setFilterRadius(
-                          e.target.value ? parseFloat(e.target.value) : null
-                        )
-                      }
-                      placeholder="50"
-                      className="w-full h-full px-3 py-2 bg-white border border-neutral-200 rounded-lg focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary text-sm text-neutral-600 shadow-sm text-center"
-                    />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-neutral-400 pointer-events-none hidden sm:inline">
-                      km
-                    </span>
-                  </div>
+                <div className="animate-in fade-in slide-in-from-left-4 duration-300">
+                  <RadiusPicker
+                    radius={filterRadius}
+                    onChange={(val) => setFilterRadius(val)}
+                  />
                 </div>
               )}
+              <DatePicker
+                dateFrom={dateFrom}
+                dateTo={dateTo}
+                onChange={(from, to) => {
+                  setDateFrom(from);
+                  setDateTo(to);
+                }}
+              />
+
+              <button
+                onClick={() => setShowMapView(!showMapView)}
+                className="h-10 w-10 flex-shrink-0 flex items-center justify-center border border-brand-primary bg-brand-primary text-white rounded-lg transition-all shadow-md shadow-brand-primary/20 hover:opacity-90"
+                title={showMapView ? "List View" : "Map View"}
+              >
+                {showMapView ? (
+                  <List className="w-5 h-5" />
+                ) : (
+                  <MapPin className="w-5 h-5" />
+                )}
+              </button>
             </div>
 
-            <DatePicker
-              dateFrom={dateFrom}
-              dateTo={dateTo}
-              onChange={(from, to) => {
-                setDateFrom(from);
-                setDateTo(to);
-              }}
-            />
-
-            {/* Status Buttons */}
+            {/* Row 2: Status Buttons (Always below) */}
             <div className="flex flex-wrap gap-2 items-center">
               <button
                 onClick={() => setSelectedStatuses([])}
@@ -674,56 +624,25 @@ export default function AdminDashboardPage() {
               })}
             </div>
           </div>
-
-          {/* Row 2: Action Buttons & Date Filters */}
-          <div className="flex gap-2 sm:gap-4 overflow-x-auto no-scrollbar pb-1 items-center">
-            <button
-              onClick={() => setIsSidebarOpen(true)}
-              className="flex-shrink-0 px-3 sm:px-4 py-2 border border-neutral-200 rounded-lg flex items-center justify-center gap-2 hover:bg-neutral-50 transition-colors shadow-sm bg-white text-neutral-600 text-sm font-medium"
-              title="Open Menu"
-            >
-              <Menu className="w-4 h-4" />{" "}
-              <span className="hidden sm:inline">Menu</span>
-            </button>
-
-            {/* Date Filters (Inline) */}
-
-            <button
-              onClick={() => setShowMapView(!showMapView)}
-              className={`flex-shrink-0 px-4 py-2 border rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-colors shadow-sm text-sm font-medium ${
-                showMapView
-                  ? "bg-brand-primary text-white border-brand-primary"
-                  : "bg-white border-neutral-200 text-neutral-600 hover:bg-neutral-50"
-              }`}
-            >
-              {showMapView ? (
-                <>
-                  <Filter className="w-4 h-4" /> List View
-                </>
-              ) : (
-                <>
-                  <MapPin className="w-4 h-4" /> Map View
-                </>
-              )}
-            </button>
-          </div>
         </div>
       </div>
 
       {/* Scrollable Content Area */}
       <main
-        className={`absolute top-[310px] sm:top-[290px] md:top-[270px] bottom-0 left-0 right-0 overflow-y-auto px-4 sm:px-10 pb-6 pt-10 ${
-          !showMapView
-            ? "[mask-image:linear-gradient(to_bottom,transparent,black_40px)]"
-            : ""
-        }`}
+        className={`flex-1 w-full px-4 sm:px-10 pb-6 pt-4 sm:pt-6 ${
+          showMapView ? "overflow-hidden" : "overflow-y-auto"
+        } [mask-image:linear-gradient(to_bottom,transparent,black_20px)]`}
       >
-        <div className="max-w-4xl mx-auto flex flex-col min-h-full">
+        <div
+          className={`max-w-4xl mx-auto flex flex-col ${
+            showMapView ? "h-full" : "min-h-full"
+          }`}
+        >
           {/* Controls Section REMOVED - moved to header */}
 
           {/* Reports View - Map or List */}
           {showMapView ? (
-            <div className="w-full h-[calc(100vh-250px)] rounded-xl overflow-hidden relative z-10 border border-neutral-200 shadow-sm bg-neutral-100">
+            <div className="w-full flex-1 min-h-0 rounded-xl overflow-hidden relative z-10 border border-neutral-200 shadow-sm bg-neutral-100">
               <GoogleMaps
                 reports={filteredReports}
                 onMarkerClick={handleMapMarkerClick}
@@ -775,9 +694,11 @@ export default function AdminDashboardPage() {
             </div>
           )}
 
-          <footer className="w-full py-6 text-center text-neutral-400 text-sm font-bold uppercase tracking-widest mt-8">
-            © 2025 Created by struggyyy
-          </footer>
+          {!showMapView && (
+            <footer className="w-full py-6 text-center text-neutral-400 text-sm font-bold uppercase tracking-widest mt-8">
+              © 2025 Created by struggyyy
+            </footer>
+          )}
         </div>
       </main>
 
