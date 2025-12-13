@@ -15,6 +15,7 @@
 
 // React specific imports
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 // External libraries
 import { X, Navigation, Eye, ChevronLeft, ChevronRight } from "lucide-react";
@@ -41,6 +42,7 @@ export default function MapReportModal({
   onPrev,
   onNext,
 }: MapReportModalProps) {
+  const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(false);
 
   if (!report) return null;
@@ -86,7 +88,7 @@ export default function MapReportModal({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-neutral-100 flex-shrink-0">
           <h2 className="text-xl font-black text-neutral-800 tracking-tight">
-            Map Preview
+            {t("map.preview")}
           </h2>
           <button
             onClick={onClose}
@@ -141,7 +143,7 @@ export default function MapReportModal({
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest">
-                Multiple Here
+                {t("map.multipleHere")}
               </span>
               <button
                 onClick={onNext}
@@ -160,14 +162,14 @@ export default function MapReportModal({
               className="flex-1 bg-brand-primary text-white px-4 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg shadow-brand-primary/20 hover:scale-[1.02] active:scale-[0.98]"
             >
               <Eye className="w-4 h-4" />
-              Details
+              {t("common.seeDetails")}
             </button>
             <button
               onClick={handleNavigate}
               className="flex-1 bg-white border border-neutral-200 text-neutral-700 px-4 py-3 rounded-xl font-bold hover:bg-neutral-50 transition-colors flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98]"
             >
               <Navigation className="w-4 h-4" />
-              Navigate
+              {t("common.navigate")}
             </button>
           </div>
         </div>

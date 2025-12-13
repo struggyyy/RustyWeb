@@ -18,6 +18,7 @@ import { useState, useRef, useEffect } from "react";
 
 // External libraries
 import { CircleDot } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface RadiusPickerProps {
   radius: number | null;
@@ -27,6 +28,7 @@ interface RadiusPickerProps {
 export const RadiusPicker = ({ radius, onChange }: RadiusPickerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -82,7 +84,7 @@ export const RadiusPicker = ({ radius, onChange }: RadiusPickerProps) => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <label className="text-sm font-bold text-neutral-700">
-                  Search Radius
+                  {t("common.radius")}
                 </label>
                 <span className="text-sm font-medium text-brand-primary bg-brand-primary/10 px-2 py-1 rounded-md">
                   {displayValue} km
@@ -114,13 +116,13 @@ export const RadiusPicker = ({ radius, onChange }: RadiusPickerProps) => {
                 }}
                 className="px-3 py-1.5 text-xs font-medium text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50 rounded-lg transition-colors"
               >
-                Clear
+                {t("common.clear")}
               </button>
               <button
                 onClick={() => setIsOpen(false)}
                 className="px-3 py-1.5 text-xs font-bold text-white bg-brand-primary rounded-lg shadow-sm shadow-brand-primary/20 hover:opacity-90 transition-opacity"
               >
-                Done
+                {t("common.done")}
               </button>
             </div>
           </div>

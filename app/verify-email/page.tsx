@@ -14,7 +14,7 @@
 "use client";
 
 // React specific imports
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 
 // External libraries
 import Link from "next/link";
@@ -24,7 +24,7 @@ import { ArrowLeft, Loader2, RefreshCw } from "lucide-react";
 // Internal imports
 import { useAuth } from "@/context/AuthContext";
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const [isResending, setIsResending] = useState(false);
   const [resendMessage, setResendMessage] = useState("");
   const [cooldown, setCooldown] = useState(0);
@@ -196,5 +196,13 @@ export default function VerifyEmailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }

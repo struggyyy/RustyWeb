@@ -1,0 +1,36 @@
+{
+  "common": {
+    "seeDetails": "See Details",
+    "navigate": "Navigate",
+    "clear": "Clear",
+    "done": "Done",
+    "radius": "Radius"
+  },
+  "auth": {
+    "logout": "Logout"
+  },
+  "nav": {
+    "privacyPolicy": "Privacy Policy",
+    "requestAdmin": "Request Admin Access",
+    "requestAccountDeletion": "Request Account Deletion"
+  },
+  "settings": {
+    "language": "Language",
+    "darkTheme": "Dark Theme"
+  },
+  "reports": {
+    "statusSubmitted": "Submitted",
+    "statusAccepted": "Accepted",
+    "statusCompleted": "Completed",
+    "statusCanceled": "Canceled",
+    "description": "Description",
+    "updateStatus": "Update Status",
+    "manage": "Manage Report",
+    "submittedBy": "Submitted By",
+    "location": "Location"
+  },
+  "map": {
+    "preview": "Map Preview",
+    "multipleHere": "Multiple Here"
+  }
+}

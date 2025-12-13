@@ -1,0 +1,36 @@
+{
+  "common": {
+    "seeDetails": "Zobacz szczegóły",
+    "navigate": "Nawiguj",
+    "clear": "Wyczyść",
+    "done": "Gotowe",
+    "radius": "Promień"
+  },
+  "auth": {
+    "logout": "Wyloguj się"
+  },
+  "nav": {
+    "privacyPolicy": "Polityka Prywatności",
+    "requestAdmin": "Poproś o dostęp",
+    "requestAccountDeletion": "Poproś o usunięcie konta"
+  },
+  "settings": {
+    "language": "Język",
+    "darkTheme": "Ciemny motyw"
+  },
+  "reports": {
+    "statusSubmitted": "Zgłoszone",
+    "statusAccepted": "Przyjęte",
+    "statusCompleted": "Ukończone",
+    "statusCanceled": "Anulowane",
+    "description": "Opis",
+    "updateStatus": "Status",
+    "manage": "Zarządzaj zgłoszeniem",
+    "submittedBy": "Zgłoszone przez",
+    "location": "Lokalizacja"
+  },
+  "map": {
+    "preview": "Podgląd mapy",
+    "multipleHere": "Wiele zgłoszeń tutaj"
+  }
+}

@@ -14,7 +14,7 @@
 "use client";
 
 // React specific imports
-import { useState } from "react";
+import { useState, Suspense } from "react";
 
 // External libraries
 import Link from "next/link";
@@ -24,7 +24,7 @@ import { ArrowLeft, Mail, Loader2, Send, XCircle } from "lucide-react";
 // Internal imports
 import { useAuth } from "@/context/AuthContext";
 
-export default function ForgotPasswordPage() {
+function ForgotPasswordContent() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState(searchParams.get("email") || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -176,5 +176,13 @@ export default function ForgotPasswordPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function ForgotPasswordPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ForgotPasswordContent />
+    </Suspense>
   );
 }

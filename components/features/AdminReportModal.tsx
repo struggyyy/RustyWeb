@@ -15,6 +15,7 @@
 
 // React specific imports
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 // External libraries
 import { X, Trash2, Loader2, MapPin, User } from "lucide-react";
@@ -44,6 +45,7 @@ export default function AdminReportModal({
   const [isUpdating, setIsUpdating] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [cityName, setCityName] = useState<string>("Loading...");
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function fetchCity() {
@@ -121,7 +123,7 @@ export default function AdminReportModal({
     <div className="pt-2">
       <div className="flex items-center justify-between mb-2 px-1">
         <label className="block text-xs font-bold text-neutral-500 uppercase tracking-wider">
-          Update Status
+          {t("reports.updateStatus")}
         </label>
         {isUpdating && (
           <Loader2 className="w-3 h-3 animate-spin text-brand-primary" />
@@ -142,7 +144,7 @@ export default function AdminReportModal({
                 : "bg-white border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:bg-neutral-50 shadow-sm"
             }`}
           >
-            {status}
+            {t(`reports.status${status}`)}
           </button>
         ))}
       </div>
@@ -155,7 +157,7 @@ export default function AdminReportModal({
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-8 border-b border-neutral-100 flex-shrink-0">
           <h2 className="text-xl sm:text-3xl font-black text-neutral-800 tracking-tight">
-            Manage Report
+            {t("reports.manage")}
           </h2>
           <div className="flex items-center gap-1 sm:gap-2">
             {report.status === "Canceled" && (
@@ -227,7 +229,7 @@ export default function AdminReportModal({
               {/* Description */}
               <div className="space-y-0.5">
                 <label className="block text-xs font-bold text-neutral-500 uppercase tracking-wider ml-1">
-                  Description
+                  {t("reports.description")}
                 </label>
                 <p className="text-neutral-700 text-sm sm:text-base break-words whitespace-pre-wrap leading-relaxed px-1">
                   {report.description}
@@ -237,7 +239,7 @@ export default function AdminReportModal({
               {/* User Details */}
               <div className="space-y-0.5">
                 <label className="block text-xs font-bold text-neutral-500 uppercase tracking-wider ml-1 mb-1">
-                  Submitted By
+                  {t("reports.submittedBy")}
                 </label>
                 <div className="bg-white border border-neutral-100 rounded-xl p-3 flex items-center gap-3 shadow-sm">
                   <div className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400">
@@ -257,7 +259,7 @@ export default function AdminReportModal({
               {/* Location Details */}
               <div className="space-y-0.5">
                 <label className="block text-xs font-bold text-neutral-500 uppercase tracking-wider ml-1 mb-1">
-                  Location
+                  {t("reports.location")}
                 </label>
                 <button
                   onClick={() => onShowOnMap(report)}

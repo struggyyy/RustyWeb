@@ -1,6 +1,24 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
+// React specific imports
 import { createContext, useContext, useEffect, useState, useRef } from "react";
+
+// External libraries
+import { useRouter, usePathname } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import {
   User,
   onAuthStateChanged,
@@ -30,8 +48,10 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
+
+// Internal imports
+import "../lib/i18n/i18n"; // Import i18n config side-effect
 import { auth, db, storage } from "@/lib/firebase/firebase";
-import { useRouter, usePathname } from "next/navigation";
 import { Report } from "@/types/reports";
 
 interface UserProfile {
@@ -97,6 +117,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const isClosingSessionRef = useRef(false);
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -124,6 +145,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (userDoc.exists()) {
             const userData = userDoc.data() as UserProfile;
             setProfile(userData);
+
+            // Sync language from profile
+            if (userData.language && userData.language !== i18n.language) {
+              i18n.changeLanguage(userData.language);
+            }
+
             const isUserAdmin = userData.role === "admin";
             setIsAdmin(isUserAdmin);
             setProfileLoaded(true);
@@ -256,6 +283,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setProfile((prev: UserProfile | null) =>
       prev ? { ...prev, ...updateData } : null
     );
+
+    if (updates.language) {
+      i18n.changeLanguage(updates.language);
+    }
   };
 
   const updateUserAuth = async (updates: {
