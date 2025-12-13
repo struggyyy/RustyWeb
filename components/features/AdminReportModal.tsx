@@ -45,7 +45,7 @@ export default function AdminReportModal({
   const [isUpdating, setIsUpdating] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [cityName, setCityName] = useState<string>("Loading...");
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     async function fetchCity() {
@@ -65,7 +65,7 @@ export default function AdminReportModal({
   const formatDate = (timestamp: any) => {
     if (!timestamp) return "";
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString("en-US", {
+    return date.toLocaleDateString(i18n.language, {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -123,7 +123,7 @@ export default function AdminReportModal({
     <div className="pt-2">
       <div className="flex items-center justify-between mb-2 px-1">
         <label className="block text-xs font-bold text-neutral-500 uppercase tracking-wider">
-          {t("reports.updateStatus")}
+          {t("admin.updateStatus")}
         </label>
         {isUpdating && (
           <Loader2 className="w-3 h-3 animate-spin text-brand-primary" />
@@ -157,14 +157,14 @@ export default function AdminReportModal({
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-8 border-b border-neutral-100 flex-shrink-0">
           <h2 className="text-xl sm:text-3xl font-black text-neutral-800 tracking-tight">
-            {t("reports.manage")}
+            {t("admin.manage")}
           </h2>
           <div className="flex items-center gap-1 sm:gap-2">
             {report.status === "Canceled" && (
               <button
                 onClick={onDelete}
                 className="p-2 sm:p-2.5 text-red-500 hover:bg-red-50 rounded-xl transition-all hover:scale-105 active:scale-95"
-                title="Delete report"
+                title={t("admin.deleteReport")}
               >
                 <Trash2 className="w-4 h-4 sm:w-6 sm:h-6" />
               </button>
@@ -239,7 +239,7 @@ export default function AdminReportModal({
               {/* User Details */}
               <div className="space-y-0.5">
                 <label className="block text-xs font-bold text-neutral-500 uppercase tracking-wider ml-1 mb-1">
-                  {t("reports.submittedBy")}
+                  {t("admin.submittedBy")}
                 </label>
                 <div className="bg-white border border-neutral-100 rounded-xl p-3 flex items-center gap-3 shadow-sm">
                   <div className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400">

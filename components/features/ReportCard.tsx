@@ -15,6 +15,7 @@
 
 // React specific imports
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 // External libraries
 import { MapPin, Check, X, Clock, FileCheck } from "lucide-react";
@@ -34,7 +35,8 @@ export default function ReportCard({
   isAdmin,
   onDetailsPress,
 }: ReportCardProps) {
-  const [cityName, setCityName] = useState<string>("Loading...");
+  const { t, i18n } = useTranslation();
+  const [cityName, setCityName] = useState<string>(t("reports.loading"));
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
@@ -46,7 +48,7 @@ export default function ReportCard({
         );
         setCityName(city);
       } else {
-        setCityName("Unknown Location");
+        setCityName(t("reports.unknownLocation"));
       }
     }
     fetchCity();
@@ -55,7 +57,7 @@ export default function ReportCard({
   const formatDate = (timestamp: any) => {
     if (!timestamp) return "";
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString("en-US", {
+    return date.toLocaleDateString(i18n.language, {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -152,7 +154,7 @@ export default function ReportCard({
                 ? `${report.location.latitude.toFixed(
                     2
                   )}, ${report.location.longitude.toFixed(2)}`
-                : "No location"}
+                : t("reports.noLocation")}
             </div>
           </div>
 
@@ -165,7 +167,7 @@ export default function ReportCard({
                   report.status
                 )} bg-current/10`}
               >
-                {report.status}
+                {t(`reports.status${report.status}`)}
               </span>
             </div>
 
@@ -179,7 +181,9 @@ export default function ReportCard({
                 ) : (
                   <>
                     {getStatusIcon(report.status)}
-                    <span>{report.points} pts</span>
+                    <span>
+                      {report.points} {t("reports.pts")}
+                    </span>
                   </>
                 )}
               </div>

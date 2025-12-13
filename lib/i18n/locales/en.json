@@ -4,7 +4,13 @@
     "navigate": "Navigate",
     "clear": "Clear",
     "done": "Done",
-    "radius": "Radius"
+    "radius": "Radius",
+    "all": "All",
+    "searchPlaceholder": "Search reports or enter city...",
+    "searchPlaceholderMobile": "Search reports...",
+    "listView": "List View",
+    "mapView": "Map View",
+    "footer": "© 2025 Created by struggyyy"
   },
   "auth": {
     "logout": "Logout"
@@ -12,11 +18,35 @@
   "nav": {
     "privacyPolicy": "Privacy Policy",
     "requestAdmin": "Request Admin Access",
-    "requestAccountDeletion": "Request Account Deletion"
-  },
-  "settings": {
+    "requestAccountDeletion": "Request Account Deletion",
     "language": "Language",
     "darkTheme": "Dark Theme"
+  },
+  "settings": {
+    "editProfile": "Edit Profile",
+    "nickname": "Nickname",
+    "profilePicture": "Profile Picture",
+    "anonymousUser": "Anonymous User",
+    "deleteAccount": "Delete Account",
+    "deleteConfirmationTitle": "Are you sure?",
+    "deleteConfirmationDesc": "This action is permanent.",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "saveChanges": "Save Changes",
+    "uploadError": "Failed to upload image",
+    "updateError": "Failed to update profile",
+    "deleteError": "Failed to delete account",
+    "emptyNicknameError": "Nickname cannot be empty",
+    "invalidImageError": "Please select a valid image file",
+    "imageSizeError": "Image file must be less than 5MB"
+  },
+  "admin": {
+    "managementTitle": "Admin Panel",
+    "managementSubtitle": "Review and update reports.",
+    "updateStatus": "Update Status",
+    "manage": "Manage Report",
+    "submittedBy": "Submitted By",
+    "deleteReport": "Delete Report"
   },
   "reports": {
     "statusSubmitted": "Submitted",
@@ -24,10 +54,15 @@
     "statusCompleted": "Completed",
     "statusCanceled": "Canceled",
     "description": "Description",
-    "updateStatus": "Update Status",
-    "manage": "Manage Report",
-    "submittedBy": "Submitted By",
-    "location": "Location"
+    "location": "Location",
+    "noReportsFound": "No reports found",
+    "noReportsFoundDesc": "Try adjusting your search or filter criteria.",
+    "noReportsYet": "No reports yet",
+    "noReportsDesc": "Reports will appear here when submitted.",
+    "loading": "Loading...",
+    "unknownLocation": "Unknown Location",
+    "noLocation": "No location",
+    "pts": "pts"
   },
   "map": {
     "preview": "Map Preview",

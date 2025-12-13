@@ -26,6 +26,7 @@ import {
   onSnapshot,
   Timestamp,
 } from "firebase/firestore";
+import { useTranslation } from "react-i18next";
 
 // Internal imports
 import { db } from "@/lib/firebase/firebase";
@@ -63,6 +64,7 @@ export default function AdminDashboardPage() {
   const [showMapModal, setShowMapModal] = useState(false);
 
   const [loading, setLoading] = useState(true);
+  const { t, i18n } = useTranslation();
 
   const router = useRouter();
 
@@ -134,16 +136,26 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
-        setSearchPlaceholder("Search reports");
+        setSearchPlaceholder(t("common.searchPlaceholderMobile"));
       } else {
-        setSearchPlaceholder("Search reports or enter city...");
+        setSearchPlaceholder(t("common.searchPlaceholder"));
       }
     };
 
     handleResize();
     window.addEventListener("resize", handleResize);
+    // Listen for language changes to update placeholder immediately
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [t]);
+
+  // Update placeholder when language changes
+  useEffect(() => {
+    if (window.innerWidth < 640) {
+      setSearchPlaceholder(t("common.searchPlaceholderMobile"));
+    } else {
+      setSearchPlaceholder(t("common.searchPlaceholder"));
+    }
+  }, [i18n.language, t]);
 
   // Logic from ReportFilters: Geocoding
   const searchLocations = async (query: string) => {
@@ -489,7 +501,7 @@ export default function AdminDashboardPage() {
 
   const formatDate = (timestamp: Timestamp) => {
     if (!timestamp) return "";
-    return timestamp.toDate().toLocaleDateString("en-US", {
+    return timestamp.toDate().toLocaleDateString(i18n.language, {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -529,10 +541,10 @@ export default function AdminDashboardPage() {
           {/* Title & Subtitle */}
           <div>
             <h1 className="text-lg min-[400px]:text-xl sm:text-4xl lg:text-5xl font-black text-neutral-800 tracking-tight">
-              Report Management
+              {t("admin.managementTitle")}
             </h1>
             <p className="text-neutral-500 text-xs min-[400px]:text-sm sm:text-base lg:text-lg font-medium mt-1">
-              Review and update reports.
+              {t("admin.managementSubtitle")}
             </p>
           </div>
 
@@ -645,7 +657,7 @@ export default function AdminDashboardPage() {
               <button
                 onClick={() => setShowMapView(!showMapView)}
                 className="h-10 w-10 flex-shrink-0 flex items-center justify-center border border-brand-primary bg-brand-primary text-white rounded-lg transition-all shadow-md shadow-brand-primary/20 hover:opacity-90"
-                title={showMapView ? "List View" : "Map View"}
+                title={showMapView ? t("common.listView") : t("common.mapView")}
               >
                 {showMapView ? (
                   <List className="w-5 h-5" />
@@ -665,7 +677,7 @@ export default function AdminDashboardPage() {
                     : "bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50"
                 }`}
               >
-                All
+                {t("common.all")}
               </button>
               {reportStatuses.map((status) => {
                 const isSelected = selectedStatuses.includes(status);
@@ -687,7 +699,7 @@ export default function AdminDashboardPage() {
                         : "bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50"
                     }`}
                   >
-                    {status}
+                    {t(`reports.status${status}`)}
                   </button>
                 );
               })}
@@ -731,8 +743,8 @@ export default function AdminDashboardPage() {
                     dateTo ||
                     filterLocation ||
                     (filterRadius && filterRadius > 0)
-                      ? "No reports found"
-                      : "No reports yet"}
+                      ? t("reports.noReportsFound")
+                      : t("reports.noReportsYet")}
                   </h3>
                   <p className="text-neutral-400 max-w-md mx-auto text-sm sm:text-lg font-medium">
                     {searchQuery ||
@@ -741,8 +753,8 @@ export default function AdminDashboardPage() {
                     dateTo ||
                     filterLocation ||
                     (filterRadius && filterRadius > 0)
-                      ? "Try adjusting your search or filter criteria."
-                      : "Reports will appear here when submitted."}
+                      ? t("reports.noReportsFoundDesc")
+                      : t("reports.noReportsDesc")}
                   </p>
                 </div>
               ) : (
@@ -764,7 +776,7 @@ export default function AdminDashboardPage() {
 
           {!showMapView && (
             <footer className="w-full py-6 text-center text-neutral-400 text-sm font-bold uppercase tracking-widest mt-8">
-              © 2025 Created by struggyyy
+              {t("common.footer")}
             </footer>
           )}
         </div>

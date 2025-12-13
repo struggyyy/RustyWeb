@@ -4,7 +4,13 @@
     "navigate": "Nawiguj",
     "clear": "Wyczyść",
     "done": "Gotowe",
-    "radius": "Promień"
+    "radius": "Promień",
+    "all": "Wszystkie",
+    "searchPlaceholder": "Szukaj zgłoszeń lub wpisz miasto...",
+    "searchPlaceholderMobile": "Szukaj zgłoszeń...",
+    "listView": "Widok listy",
+    "mapView": "Widok mapy",
+    "footer": "© 2025 Stworzone przez struggyyy"
   },
   "auth": {
     "logout": "Wyloguj się"
@@ -12,11 +18,35 @@
   "nav": {
     "privacyPolicy": "Polityka Prywatności",
     "requestAdmin": "Poproś o dostęp",
-    "requestAccountDeletion": "Poproś o usunięcie konta"
-  },
-  "settings": {
+    "requestAccountDeletion": "Poproś o usunięcie konta",
     "language": "Język",
     "darkTheme": "Ciemny motyw"
+  },
+  "settings": {
+    "editProfile": "Edytuj profil",
+    "nickname": "Nazwa użytkownika",
+    "profilePicture": "Zdjęcie profilowe",
+    "anonymousUser": "Anonimowy użytkownik",
+    "deleteAccount": "Usuń konto",
+    "deleteConfirmationTitle": "Czy jesteś pewien?",
+    "deleteConfirmationDesc": "Ta operacja jest nieodwracalna.",
+    "cancel": "Anuluj",
+    "delete": "Usuń",
+    "saveChanges": "Zapisz zmiany",
+    "uploadError": "Nie udało się przesłać zdjęcia",
+    "updateError": "Nie udało się zaktualizować profilu",
+    "deleteError": "Nie udało się usunąć konta",
+    "emptyNicknameError": "Nazwa użytkownika nie może być pusta",
+    "invalidImageError": "Wybierz poprawne zdjęcie",
+    "imageSizeError": "Rozmiar zdjęcia musi być mniejszy niż 5MB"
+  },
+  "admin": {
+    "managementTitle": "Panel Admina",
+    "managementSubtitle": "Przeglądaj i aktualizuj zgłoszenia.",
+    "updateStatus": "Status",
+    "manage": "Zarządzaj zgłoszeniem",
+    "submittedBy": "Zgłoszone przez",
+    "deleteReport": "Usuń zgłoszenie"
   },
   "reports": {
     "statusSubmitted": "Zgłoszone",
@@ -24,13 +54,18 @@
     "statusCompleted": "Ukończone",
     "statusCanceled": "Anulowane",
     "description": "Opis",
-    "updateStatus": "Status",
-    "manage": "Zarządzaj zgłoszeniem",
-    "submittedBy": "Zgłoszone przez",
-    "location": "Lokalizacja"
+    "location": "Lokalizacja",
+    "noReportsFound": "Nie znaleziono zgłoszeń",
+    "noReportsFoundDesc": "Spróbuj zmienić kryteria wyszukiwania lub filtry.",
+    "noReportsYet": "Brak zgłoszeń",
+    "noReportsDesc": "Zgłoszenia pojawią się tutaj po ich przesłaniu.",
+    "loading": "Ładowanie...",
+    "unknownLocation": "Nieznana lokalizacja",
+    "noLocation": "Brak lokalizacji",
+    "pts": "pkt"
   },
   "map": {
     "preview": "Podgląd mapy",
-    "multipleHere": "Wiele zgłoszeń tutaj"
+    "multipleHere": "Więcej zgłoszeń"
   }
 }

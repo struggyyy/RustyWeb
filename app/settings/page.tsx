@@ -15,6 +15,7 @@
 
 // React specific imports
 import { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 // External libraries
 import Link from "next/link";
@@ -43,6 +44,7 @@ export default function SettingsPage() {
     uploadProfileImage,
     deleteAccount,
   } = useAuth();
+  const { t } = useTranslation();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -58,7 +60,7 @@ export default function SettingsPage() {
 
   const handleSave = async () => {
     if (!nickname.trim()) {
-      setError("Nickname cannot be empty");
+      setError(t("settings.emptyNicknameError"));
       return;
     }
 
@@ -79,7 +81,7 @@ export default function SettingsPage() {
 
       setIsEditing(false);
     } catch (err: any) {
-      setError(err.message || "Failed to update profile");
+      setError(err.message || t("settings.updateError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -100,13 +102,13 @@ export default function SettingsPage() {
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      setError("Please select a valid image file");
+      setError(t("settings.invalidImageError"));
       return;
     }
 
     // Validate file size (5MB limit)
     if (file.size > 5 * 1024 * 1024) {
-      setError("Image file must be less than 5MB");
+      setError(t("settings.imageSizeError"));
       return;
     }
 
@@ -116,7 +118,7 @@ export default function SettingsPage() {
     try {
       await uploadProfileImage(user.uid, file);
     } catch (err: any) {
-      setError(err.message || "Failed to upload image");
+      setError(err.message || t("settings.uploadError"));
     } finally {
       setUploadingImage(false);
     }
@@ -132,7 +134,7 @@ export default function SettingsPage() {
     try {
       await deleteAccount();
     } catch (err: any) {
-      setError(err.message || "Failed to delete account");
+      setError(err.message || t("settings.deleteError"));
       setIsSubmitting(false);
       setShowDeleteConfirm(false);
     }
@@ -168,14 +170,14 @@ export default function SettingsPage() {
                 onClick={() => setIsEditing(true)}
                 className="px-4 py-2 bg-white/50 hover:bg-white/80 border border-white/60 text-neutral-700 rounded-xl font-bold text-sm transition-all shadow-sm hover:shadow-md"
               >
-                Edit Profile
+                {t("settings.editProfile")}
               </button>
             ) : (
               <div className="flex gap-2">
                 <button
                   onClick={handleCancel}
                   className="p-2 bg-white/50 hover:bg-white/80 text-neutral-500 hover:text-neutral-700 rounded-xl transition-all"
-                  title="Cancel"
+                  title={t("settings.cancel")}
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -183,7 +185,7 @@ export default function SettingsPage() {
                   onClick={handleSave}
                   disabled={isSubmitting}
                   className="p-2 bg-brand-primary text-white rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100"
-                  title="Save Changes"
+                  title={t("settings.saveChanges")}
                 >
                   {isSubmitting ? (
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -248,7 +250,7 @@ export default function SettingsPage() {
               {!isEditing ? (
                 <div className="space-y-1 animate-in fade-in duration-300">
                   <h2 className="text-2xl sm:text-3xl font-black text-neutral-800 tracking-tight">
-                    {profile.displayName || "Anonymous User"}
+                    {profile.displayName || t("settings.anonymousUser")}
                   </h2>
                   <p className="text-neutral-500 font-medium">{user.email}</p>
 
@@ -266,7 +268,7 @@ export default function SettingsPage() {
                 <div className="space-y-4 max-w-sm mx-auto animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <div className="space-y-2 text-left">
                     <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider ml-1">
-                      Nickname
+                      {t("settings.nickname")}
                     </label>
                     <input
                       type="text"
@@ -279,7 +281,7 @@ export default function SettingsPage() {
 
                   <div className="space-y-2 text-left">
                     <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider ml-1">
-                      Language
+                      {t("nav.language")}
                     </label>
                     <div className="grid grid-cols-2 gap-2 p-1 bg-neutral-100/50 rounded-xl border border-neutral-200/50">
                       <button
@@ -324,14 +326,16 @@ export default function SettingsPage() {
                   onClick={() => setShowDeleteConfirm(true)}
                   className="w-full text-center text-red-500 hover:text-red-700 font-bold text-sm transition-colors py-2"
                 >
-                  Delete Account
+                  {t("settings.deleteAccount")}
                 </button>
               ) : (
                 <div className="bg-red-50/80 border border-red-100 rounded-2xl p-6 text-center space-y-4 animate-in fade-in zoom-in-95 duration-200">
                   <div className="space-y-1">
-                    <h4 className="text-red-800 font-bold">Are you sure?</h4>
+                    <h4 className="text-red-800 font-bold">
+                      {t("settings.deleteConfirmationTitle")}
+                    </h4>
                     <p className="text-red-600 text-xs">
-                      This action is permanent.
+                      {t("settings.deleteConfirmationDesc")}
                     </p>
                   </div>
                   <div className="flex gap-3 justify-center">
@@ -339,7 +343,7 @@ export default function SettingsPage() {
                       onClick={() => setShowDeleteConfirm(false)}
                       className="px-4 py-2 bg-white text-neutral-600 rounded-xl text-sm font-bold shadow-sm hover:bg-neutral-50 transition-colors"
                     >
-                      Cancel
+                      {t("settings.cancel")}
                     </button>
                     <button
                       onClick={handleDeleteAccount}
@@ -351,7 +355,7 @@ export default function SettingsPage() {
                       ) : (
                         <>
                           <Trash2 className="w-3 h-3" />
-                          Delete
+                          {t("settings.delete")}
                         </>
                       )}
                     </button>
@@ -367,7 +371,7 @@ export default function SettingsPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         imageUrl={profile.profileImage || null}
-        title={profile.displayName || "Profile Picture"}
+        title={profile.displayName || t("settings.profilePicture")}
       />
     </div>
   );
