@@ -133,7 +133,7 @@ export default function PublicHeader() {
                 <div className="flex items-center justify-between px-3 py-2.5">
                   <div className="flex items-center gap-3 text-sm font-medium text-neutral-700">
                     <Globe className="w-4 h-4 text-neutral-400" />
-                    {t("settings.language")}
+                    {t("nav.language")}
                   </div>
                   <div className="flex bg-neutral-100/50 rounded-lg p-0.5 border border-white/40">
                     <button
@@ -163,7 +163,7 @@ export default function PublicHeader() {
                 <div className="flex items-center justify-between px-3 py-2.5">
                   <div className="flex items-center gap-3 text-sm font-medium text-neutral-700">
                     <Moon className="w-4 h-4 text-neutral-400" />
-                    {t("settings.darkTheme")}
+                    {t("nav.darkTheme")}
                   </div>
                   <button
                     onClick={() => setIsDark(!isDark)}

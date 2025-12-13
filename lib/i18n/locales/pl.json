@@ -67,5 +67,33 @@
   "map": {
     "preview": "Podgląd mapy",
     "multipleHere": "Więcej zgłoszeń"
+  },
+  "privacy": {
+    "title": "Polityka Prywatności",
+    "lastUpdated": "Ostatnia aktualizacja: 28 listopada 2025",
+    "intro": "Niniejsza Polityka Prywatności opisuje, w jaki sposób Rusty zbiera, wykorzystuje i udostępnia Twoje informacje podczas korzystania z naszej aplikacji mobilnej Rusty.",
+    "permissions_title": "1. Informacje, które zbieramy",
+    "permissions_subtitle": "1.1. Uprawnienia i dane urządzenia",
+    "permissions_desc": "Aby zapewnić podstawową funkcjonalność zgłaszania porzuconych pojazdów, Aplikacja wymaga dostępu do określonych funkcji Twojego urządzenia:",
+    "permissions_camera": "<0>Aparat:</0> Używamy uprawnień do aparatu, aby umożliwić Ci robienie zdjęć porzuconych pojazdów bezpośrednio w Aplikacji. Te zdjęcia są przesyłane na nasze serwery jako część Twojego zgłoszenia.",
+    "permissions_location": "<0>Lokalizacja:</0> Używamy usług lokalizacyjnych Twojego urządzenia (GPS), aby automatycznie oznaczyć dokładną lokalizację zgłoszonego pojazdu. Pomaga nam to zidentyfikować, gdzie znajduje się pojazd.",
+    "permissions_notifications": "<0>Powiadomienia:</0> Możemy używać powiadomień, aby informować Cię o statusie Twoich zgłoszeń.",
+    "personal_title": "1.2. Informacje Osobiste",
+    "personal_desc": "Kiedy tworzysz konto, zbieramy następujące informacje osobiste:",
+    "personal_email": "Adres e-mail",
+    "personal_creds": "Dane uwierzytelniające (poprzez email/hasło)",
+    "usage_title": "2. Jak wykorzystujemy Twoje informacje",
+    "usage_desc": "Wykorzystujemy zebrane informacje w następujących celach:",
+    "usage_service": "<0>Aby świadczyć Usługę:</0> Aby umożliwić Ci tworzenie, przesyłanie i śledzenie zgłoszeń porzuconych pojazdów.",
+    "usage_improve": "<0>Aby ulepszać Aplikację:</0> Analizujemy dane dotyczące użytkowania, aby poprawić funkcjonalność i doświadczenia użytkownika.",
+    "usage_auth": "<0>Uwierzytelnianie:</0> Aby zweryfikować Twoją tożsamość i zabezpieczyć Twoje konto.",
+    "thirdparty_title": "3. Usługi Stron Trzecich",
+    "thirdparty_desc": "Korzystamy z usług stron trzecich, które mogą zbierać informacje służące do identyfikacji Ciebie:",
+    "thirdparty_firebase": "<0>Google Firebase:</0> Używamy Firebase do uwierzytelniania, przechowywania bazy danych i analityki.",
+    "thirdparty_maps": "<0>Google Maps:</0> Używamy Google Maps do wyświetlania lokalizacji pojazdów.",
+    "retention_title": "4. Przechowywanie Danych",
+    "retention_desc": "Przechowujemy Twoje zgłoszenia i powiązane dane (zdjęcia, lokalizacja) tak długo, jak jest to konieczne do realizacji celu zgłoszenia lub zgodnie z wymogami prawa.",
+    "contact_title": "5. Kontakt",
+    "contact_desc": "Jeśli masz jakiekolwiek pytania dotyczące tej Polityki Prywatności, skontaktuj się z nami pod adresem:"
   }
 }

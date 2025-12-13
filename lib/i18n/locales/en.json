@@ -67,5 +67,33 @@
   "map": {
     "preview": "Map Preview",
     "multipleHere": "Multiple Here"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: November 28, 2025",
+    "intro": "This Privacy Policy describes how Rusty collects, uses, and discloses your information when you use our mobile application Rusty.",
+    "permissions_title": "1. Information We Collect",
+    "permissions_subtitle": "1.1. Permissions and Device Data",
+    "permissions_desc": "To provide the core functionality of reporting abandoned vehicles, the App requires access to certain features of your device:",
+    "permissions_camera": "<0>Camera:</0> We use the camera permission to allow you to take photographs of abandoned vehicles directly within the App. These images are uploaded to our servers as part of your report.",
+    "permissions_location": "<0>Location:</0> We use your device's location services (GPS) to automatically tag the precise location of the reported vehicle. This helps us identify where the vehicle is located.",
+    "permissions_notifications": "<0>Notifications:</0> We may use notifications to update you on the status of your reports.",
+    "personal_title": "1.2. Personal Information",
+    "personal_desc": "When you create an account, we collect the following personal information:",
+    "personal_email": "Email address",
+    "personal_creds": "Authentication credentials (via email/password)",
+    "usage_title": "2. How We Use Your Information",
+    "usage_desc": "We use the information we collect for the following purposes:",
+    "usage_service": "<0>To provide the Service:</0> To allow you to create, submit, and track reports of abandoned vehicles.",
+    "usage_improve": "<0>To improve the App:</0> We analyze usage data to improve the functionality and user experience.",
+    "usage_auth": "<0>Authentication:</0> To verify your identity and secure your account.",
+    "thirdparty_title": "3. Third-Party Services",
+    "thirdparty_desc": "We use third-party services that may collect information used to identify you:",
+    "thirdparty_firebase": "<0>Google Firebase:</0> We use Firebase for authentication, database storage, and analytics.",
+    "thirdparty_maps": "<0>Google Maps:</0> We use Google Maps to display vehicle locations.",
+    "retention_title": "4. Data Retention",
+    "retention_desc": "We retain your reports and associated data (photos, location) as long as necessary to fulfill the purpose of the report or as required by law.",
+    "contact_title": "5. Contact Us",
+    "contact_desc": "If you have any questions about this Privacy Policy, please contact us at:"
   }
 }
