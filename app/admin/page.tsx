@@ -14,7 +14,7 @@
 "use client";
 
 // React specific imports
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
 // External libraries
 import { useRouter } from "next/navigation";
@@ -317,11 +317,29 @@ export default function AdminDashboardPage() {
     dateFrom,
     dateTo,
     filterLocation,
+    filterLocation,
+    filterRadius,
+  ]);
+
+  // Reset map focus when filters change
+  useEffect(() => {
+    setFocusedMapLocation(null);
+  }, [
+    searchQuery,
+    selectedStatuses,
+    dateFrom,
+    dateTo,
+    filterLocation,
     filterRadius,
   ]);
 
   const handleSearchChange = (val: string) => {
     setInputValue(val); // Update input visually
+
+    // If cleared, reset search query immediately
+    if (val.trim() === "") {
+      setSearchQuery("");
+    }
 
     // If a location is already selected, we don't geocode
     if (selectedLocationName) {
@@ -332,7 +350,7 @@ export default function AdminDashboardPage() {
     }
 
     // Otherwise, we are searching for a location
-    if (val !== lastSelectedRef.current) {
+    if (val !== lastSelectedRef.current && filterLocation !== null) {
       setFilterLocation(null);
     }
 
@@ -366,7 +384,6 @@ export default function AdminDashboardPage() {
     lastSelectedRef.current = "";
     if (searchInputRef.current) searchInputRef.current.focus();
   };
-  // ... UI to be replaced in next step ...
 
   const handleDetailsPress = (report: Report) => {
     setSelectedReport(report);
@@ -394,9 +411,47 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const handleMapMarkerClick = (report: Report) => {
-    setSelectedMapReport(report);
-    setShowMapModal(true);
+  const [mapReportsAtLocation, setMapReportsAtLocation] = useState<Report[]>(
+    []
+  );
+  const [currentMapReportIndex, setCurrentMapReportIndex] = useState(0);
+  const [focusedMapLocation, setFocusedMapLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+
+  const handleMapMarkerClick = useCallback(
+    (report: Report) => {
+      // Find all reports at this exact location (or very close)
+      const matches = filteredReports.filter(
+        (r) =>
+          r.location &&
+          Math.abs(r.location.latitude - report.location.latitude) < 0.0001 &&
+          Math.abs(r.location.longitude - report.location.longitude) < 0.0001
+      );
+
+      setMapReportsAtLocation(matches);
+      setCurrentMapReportIndex(0); // Start at the first one found (or we could try to find the specific one clicked, but logic is simpler this way for now as markers usually overlap)
+      setSelectedMapReport(matches[0]);
+      setShowMapModal(true);
+    },
+    [filteredReports]
+  );
+
+  const handleNextMapReport = () => {
+    if (currentMapReportIndex < mapReportsAtLocation.length - 1) {
+      const nextIndex = currentMapReportIndex + 1;
+      setCurrentMapReportIndex(nextIndex);
+      setSelectedMapReport(mapReportsAtLocation[nextIndex]);
+    }
+  };
+
+  const handlePrevMapReport = () => {
+    if (currentMapReportIndex > 0) {
+      const prevIndex = currentMapReportIndex - 1;
+      setCurrentMapReportIndex(prevIndex);
+      setSelectedMapReport(mapReportsAtLocation[prevIndex]);
+    }
   };
 
   const handleViewReportFromMap = () => {
@@ -411,6 +466,20 @@ export default function AdminDashboardPage() {
   const handleMapModalClose = () => {
     setShowMapModal(false);
     setSelectedMapReport(null);
+    setMapReportsAtLocation([]);
+    setCurrentMapReportIndex(0);
+    setFocusedMapLocation(null);
+  };
+
+  const handleShowReportOnMap = (report: Report) => {
+    if (report.location) {
+      setFocusedMapLocation({
+        latitude: report.location.latitude,
+        longitude: report.location.longitude,
+      });
+      setShowReportModal(false);
+      setShowMapView(true);
+    }
   };
 
   const handleDeleteReport = async () => {
@@ -638,8 +707,6 @@ export default function AdminDashboardPage() {
             showMapView ? "h-full" : "min-h-full"
           }`}
         >
-          {/* Controls Section REMOVED - moved to header */}
-
           {/* Reports View - Map or List */}
           {showMapView ? (
             <div className="w-full flex-1 min-h-0 rounded-xl overflow-hidden relative z-10 border border-neutral-200 shadow-sm bg-neutral-100">
@@ -647,6 +714,7 @@ export default function AdminDashboardPage() {
                 reports={filteredReports}
                 onMarkerClick={handleMapMarkerClick}
                 className="w-full h-full"
+                focusedLocation={focusedMapLocation}
               />
             </div>
           ) : (
@@ -712,6 +780,7 @@ export default function AdminDashboardPage() {
           }}
           onStatusUpdate={handleStatusUpdate}
           onDelete={handleDeleteReport}
+          onShowOnMap={handleShowReportOnMap}
         />
       )}
 
@@ -721,7 +790,13 @@ export default function AdminDashboardPage() {
           report={selectedMapReport}
           onClose={handleMapModalClose}
           onViewReport={handleViewReportFromMap}
-          hasMultiple={filteredReports.length > 1}
+          hasMultiple={mapReportsAtLocation.length > 1}
+          onNext={
+            currentMapReportIndex < mapReportsAtLocation.length - 1
+              ? handleNextMapReport
+              : undefined
+          }
+          onPrev={currentMapReportIndex > 0 ? handlePrevMapReport : undefined}
         />
       )}
     </div>
