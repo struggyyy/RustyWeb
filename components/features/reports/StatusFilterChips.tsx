@@ -1,20 +1,28 @@
 "use client";
 
-import { ReportStatus, reportStatuses } from "@/types/reports";
+import { ReportStatus, reportStatuses } from "@/lib/types/reports";
 
 interface StatusFilterChipsProps {
   selectedStatuses: ReportStatus[];
   onStatusesChange: (statuses: ReportStatus[]) => void;
 }
 
-export default function StatusFilterChips({ selectedStatuses, onStatusesChange }: StatusFilterChipsProps) {
+export default function StatusFilterChips({
+  selectedStatuses,
+  onStatusesChange,
+}: StatusFilterChipsProps) {
   const getStatusColor = (status: ReportStatus) => {
     switch (status) {
-      case "Submitted": return "bg-status-Submitted/10 text-status-Submitted border-status-Submitted/20";
-      case "Accepted": return "bg-status-Accepted/10 text-status-Accepted border-status-Accepted/20";
-      case "Completed": return "bg-status-Completed/10 text-status-Completed border-status-Completed/20";
-      case "Canceled": return "bg-status-Canceled/10 text-status-Canceled border-status-Canceled/20";
-      default: return "bg-neutral-100 text-neutral-500 border-neutral-200";
+      case "Submitted":
+        return "bg-status-Submitted/10 text-status-Submitted border-status-Submitted/20";
+      case "Accepted":
+        return "bg-status-Accepted/10 text-status-Accepted border-status-Accepted/20";
+      case "Completed":
+        return "bg-status-Completed/10 text-status-Completed border-status-Completed/20";
+      case "Canceled":
+        return "bg-status-Canceled/10 text-status-Canceled border-status-Canceled/20";
+      default:
+        return "bg-neutral-100 text-neutral-500 border-neutral-200";
     }
   };
 

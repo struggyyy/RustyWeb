@@ -1,11 +1,11 @@
 import { doc, writeBatch, increment, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
-import { ReportStatus } from "@/types/reports";
-import { sendReportStatusNotification } from "../notifications";
+import { ReportStatus } from "@/lib/types/reports";
+import { sendReportStatusNotification } from "../services/notifications";
 
 /**
  * Updates the status of a report and adjusts the user's points accordingly.
- * 
+ *
  * Points Logic:
  * - Submitted: 0 pts
  * - Accepted: 10 pts

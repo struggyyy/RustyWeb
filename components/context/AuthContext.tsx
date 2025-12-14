@@ -50,9 +50,9 @@ import {
 } from "firebase/storage";
 
 // Internal imports
-import "../lib/i18n/i18n"; // Import i18n config side-effect
+import "../../lib/i18n/i18n"; // Import i18n config side-effect
 import { auth, db, storage } from "@/lib/firebase/firebase";
-import { Report } from "@/types/reports";
+import { Report } from "@/lib/types/reports";
 
 interface UserProfile {
   id: string;

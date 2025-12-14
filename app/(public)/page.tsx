@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import CustomCursor from "@/components/ui/CustomCursor";
+import CustomCursor from "@/components/common/CustomCursor";
 import { useTranslation } from "react-i18next";
 
 export default function Page() {

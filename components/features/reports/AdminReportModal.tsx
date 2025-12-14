@@ -21,8 +21,8 @@ import { useTranslation } from "react-i18next";
 import { X, Trash2, Loader2, MapPin, User } from "lucide-react";
 
 // Internal imports
-import { Report, ReportStatus, reportStatuses } from "@/types/reports";
-import { getCityFromCoordinates } from "@/lib/geocoding";
+import { Report, ReportStatus, reportStatuses } from "@/lib/types/reports";
+import { getCityFromCoordinates } from "@/lib/services/geocoding";
 
 interface AdminReportModalProps {
   report: Report;

@@ -64,7 +64,7 @@
     "verifyEmail": {
       "title": "Zweryfikuj Swój Email",
       "subtitle": "Wysłaliśmy link weryfikacyjny na Twój email. Sprawdź skrzynkę i kliknij w link, aby aktywować konto.",
-      "backToHome": "Powrót do strony głównej",
+      "backToHome": "Strona główna",
       "resendButton": "Wyślij ponownie",
       "resendCooldown": "Ponowne wysłanie za {{seconds}}s",
       "backToLogin": "Powrót do logowania",
@@ -77,7 +77,7 @@
     "forgotPassword": {
       "title": "Zresetuj Hasło",
       "subtitle": "Wpisz swój email, a wyślemy Ci link do resetowania hasła.",
-      "backToLogin": "Powrót do logowania",
+      "backToLogin": "Strona logowania",
       "emailLabel": "Email",
       "sendButton": "Wyślij link resetujący",
       "success": "Link do resetowania hasła został wysłany.",

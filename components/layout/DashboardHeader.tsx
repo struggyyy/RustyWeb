@@ -21,7 +21,7 @@ import Link from "next/link";
 import { User, MoreHorizontal, X, LogOut } from "lucide-react";
 
 // Internal imports
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/components/context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { Globe } from "lucide-react";
 

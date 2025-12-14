@@ -31,15 +31,15 @@ import { useTranslation } from "react-i18next";
 // Internal imports
 import { db } from "@/lib/firebase/firebase";
 import { updateReportStatus } from "@/lib/firebase/admin";
-import { useAuth } from "@/context/AuthContext";
-import { Report, ReportStatus, reportStatuses } from "@/types/reports";
+import { useAuth } from "@/components/context/AuthContext";
+import { Report, ReportStatus, reportStatuses } from "@/lib/types/reports";
 import { DatePicker } from "@/components/ui/DatePicker";
 import { RadiusPicker } from "@/components/ui/RadiusPicker";
-import ReportCard from "@/components/features/ReportCard";
+import ReportCard from "@/components/features/reports/ReportCard";
 import DashboardHeader from "@/components/layout/DashboardHeader";
-import AdminReportModal from "@/components/features/AdminReportModal";
-import GoogleMaps from "@/components/features/GoogleMaps";
-import MapReportModal from "@/components/features/MapReportModal";
+import AdminReportModal from "@/components/features/reports/AdminReportModal";
+import GoogleMaps from "@/components/features/maps/GoogleMaps";
+import MapReportModal from "@/components/features/reports/MapReportModal";
 
 export default function AdminDashboardPage() {
   const { user, isAdmin, loading: authLoading } = useAuth();

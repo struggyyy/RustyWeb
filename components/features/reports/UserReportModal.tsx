@@ -16,7 +16,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 // Internal imports
-import { Report } from "@/types/reports";
+import { Report } from "@/lib/types/reports";
 import { X, Trash2 } from "lucide-react";
 
 interface UserReportModalProps {

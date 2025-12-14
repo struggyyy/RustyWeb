@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from "react";
 import { MapPin } from "lucide-react";
 
 // Internal imports
-import { Report } from "@/types/reports";
+import { Report } from "@/lib/types/reports";
 
 interface GoogleMapsProps {
   reports: Report[];

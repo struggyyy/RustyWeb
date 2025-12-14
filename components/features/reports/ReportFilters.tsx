@@ -13,7 +13,7 @@
  ************************************************************************** */
 "use client";
 
-import { ReportStatus, reportStatuses } from "@/types/reports";
+import { ReportStatus, reportStatuses } from "@/lib/types/reports";
 import { useState, useEffect, useRef } from "react";
 import { X } from "lucide-react";
 

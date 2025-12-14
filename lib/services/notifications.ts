@@ -1,4 +1,4 @@
-import { ReportStatus } from "@/types/reports";
+import { ReportStatus } from "@/lib/types/reports";
 
 // Send push notification via Expo Push API (proxied through Next.js API route)
 export const sendPushNotification = async (
@@ -40,7 +40,7 @@ export const sendReportStatusNotification = async (
 ): Promise<void> => {
   const title = "Report Status Updated";
   const body = `Your report status has changed from ${oldStatus} to ${newStatus}.`;
-  
+
   const data = {
     type: "report_status_update",
     reportId,

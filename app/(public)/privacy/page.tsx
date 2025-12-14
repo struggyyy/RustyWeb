@@ -1,6 +1,6 @@
 "use client";
 
-import CustomCursor from "@/components/ui/CustomCursor";
+import CustomCursor from "@/components/common/CustomCursor";
 import { useTranslation, Trans } from "react-i18next";
 
 export default function PrivacyPolicy() {

@@ -22,7 +22,7 @@ import { useSearchParams } from "next/navigation";
 import { ArrowLeft, Mail, Loader2, Send, XCircle } from "lucide-react";
 
 // Internal imports
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/components/context/AuthContext";
 import { useTranslation } from "react-i18next";
 
 function ForgotPasswordContent() {

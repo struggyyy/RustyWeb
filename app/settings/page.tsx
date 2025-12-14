@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 
 // Internal imports
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/components/context/AuthContext";
 import ProfileImageModal from "@/components/features/settings/ProfileImageModal";
 
 export default function SettingsPage() {

@@ -25,90 +25,117 @@ import {
   Mail,
   Lock,
   Loader2,
+  User,
   Eye,
   EyeOff,
   XCircle,
-  Check,
 } from "lucide-react";
 
 // Internal imports
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/components/context/AuthContext";
 
-export default function LoginPage() {
+export default function SignupPage() {
+  const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [generalError, setGeneralError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<{
+    nickname?: boolean;
     email?: boolean;
     password?: boolean;
+    confirmPassword?: boolean;
   }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { signIn, updateUserProfile } = useAuth();
+  const { signUp } = useAuth();
   const router = useRouter();
   const { t, i18n } = useTranslation();
 
   const handleLanguageChange = (lang: string) => {
     i18n.changeLanguage(lang);
-    if (lang !== i18n.language) {
-      // Optional: Persist to user profile if we had a user object, but we are logging in.
-      // We can just rely on i18next local storage persistence here.
-    }
   };
 
-  const handleLoginPress = async (e: React.FormEvent) => {
+  const handleSignupPress = async (e: React.FormEvent) => {
     e.preventDefault();
     setGeneralError("");
     setFieldErrors({});
 
     let hasError = false;
     const newFieldErrors: typeof fieldErrors = {};
+    let firstErrorMessage = "";
 
-    // Check for empty email or invalid format
-    if (!email || !/\S+@\S+\.\S+/.test(email.trim())) {
-      newFieldErrors.email = true;
+    // Nickname validation
+    if (!nickname || nickname.length < 2 || nickname.length > 15) {
+      newFieldErrors.nickname = true;
+      if (!firstErrorMessage) {
+        if (!nickname)
+          firstErrorMessage = t("auth.signup.errors.nicknameRequired");
+        else if (nickname.length < 2)
+          firstErrorMessage = t("auth.signup.errors.nicknameLength");
+        else firstErrorMessage = t("auth.signup.errors.nicknameTooLong");
+      }
       hasError = true;
     }
-    if (!password) {
+
+    // Email validation
+    if (!email || !/\S+@\S+\.\S+/.test(email.trim())) {
+      newFieldErrors.email = true;
+      if (!firstErrorMessage)
+        firstErrorMessage = t("auth.signup.errors.emailInvalid");
+      hasError = true;
+    }
+
+    // Password validation
+    const complexityRegex = /^(?=.*[A-Z])(?=.*\d)/;
+    if (
+      !password ||
+      password.length < 6 ||
+      !complexityRegex.test(password) ||
+      password !== confirmPassword
+    ) {
       newFieldErrors.password = true;
+      newFieldErrors.confirmPassword = true;
+
+      if (!firstErrorMessage) {
+        if (!password)
+          firstErrorMessage = t("auth.signup.errors.passwordRequired");
+        else if (password !== confirmPassword)
+          firstErrorMessage = t("auth.signup.errors.passwordMismatch");
+        else if (password.length < 6)
+          firstErrorMessage = t("auth.signup.errors.passwordShort");
+        else firstErrorMessage = t("auth.signup.errors.passwordComplexity");
+      }
       hasError = true;
     }
 
     if (hasError) {
       setFieldErrors(newFieldErrors);
-      if (!email) setGeneralError(t("auth.login.errors.emailRequired"));
-      else if (newFieldErrors.email)
-        setGeneralError(t("auth.login.errors.emailInvalid"));
-      else if (!password)
-        setGeneralError(t("auth.login.errors.passwordRequired"));
+      setGeneralError(firstErrorMessage);
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      await signIn(email, password);
-      // Redirect handled in AuthContext
+      await signUp(email, password, nickname, i18n.language);
     } catch (err: any) {
-      if (
-        err.code === "auth/user-not-found" ||
-        err.code === "auth/invalid-credential"
-      ) {
-        // Generic security message, highlight both if possible or neither (to avoid leaking existence)
-        // Mobile app highlights neither, just shows generic error. We will do the same.
-        setGeneralError(t("auth.login.errors.userNotFound"));
-      } else if (err.code === "auth/wrong-password") {
-        setGeneralError(t("auth.login.errors.wrongPassword"));
-        setFieldErrors({ password: true });
-      } else if (err.code === "auth/invalid-email") {
-        setGeneralError(t("auth.login.errors.emailInvalid"));
-        setFieldErrors({ email: true });
-      } else if (err.code === "auth/too-many-requests") {
-        setGeneralError(t("auth.login.errors.tooManyRequests"));
+      if (err.code === "auth/email-already-in-use") {
+        setGeneralError(t("auth.signup.errors.emailInUse"));
       } else {
-        setGeneralError(err.message || t("auth.login.errors.generic"));
+        setGeneralError(err.message || t("auth.signup.errors.generic"));
       }
       setIsSubmitting(false);
+    }
+  };
+
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value;
+    if (text.length <= 15) {
+      setNickname(text);
+      if (fieldErrors.nickname)
+        setFieldErrors((prev) => ({ ...prev, nickname: false }));
     }
   };
 
@@ -168,18 +195,18 @@ export default function LoginPage() {
             suppressHydrationWarning
             className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark mb-2 min-[600px]:mb-3"
           >
-            {t("auth.login.title")}
+            {t("auth.signup.title")}
           </h1>
           <p
             suppressHydrationWarning
             className="text-text-primary text-sm min-[600px]:text-base"
           >
-            {t("auth.login.subtitle")}
+            {t("auth.signup.subtitle")}
           </p>
         </div>
 
         <form
-          onSubmit={handleLoginPress}
+          onSubmit={handleSignupPress}
           className="space-y-5 min-[600px]:space-y-6"
         >
           {generalError && (
@@ -190,7 +217,37 @@ export default function LoginPage() {
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
             <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
-              {t("auth.login.emailLabel")}
+              {t("auth.signup.nicknameLabel")}
+            </label>
+            <div className={getInputWrapperClass(fieldErrors.nickname)}>
+              <User
+                className={`absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
+                  fieldErrors.nickname ? "text-red-400" : "text-text-tertiary"
+                }`}
+              />
+              <input
+                type="text"
+                value={nickname}
+                onChange={handleNicknameChange}
+                placeholder={t("auth.signup.placeholders.nickname")}
+                maxLength={15}
+                className={fieldErrors.nickname ? errorInputClass : inputClass}
+              />
+              {nickname && (
+                <button
+                  type="button"
+                  onClick={() => setNickname("")}
+                  className="absolute z-10 right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+                >
+                  <XCircle className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
+            <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
+              {t("auth.signup.emailLabel")}
             </label>
             <div className={getInputWrapperClass(fieldErrors.email)}>
               <Mail
@@ -205,9 +262,8 @@ export default function LoginPage() {
                   setEmail(e.target.value);
                   if (fieldErrors.email)
                     setFieldErrors((prev) => ({ ...prev, email: false }));
-                  if (generalError) setGeneralError("");
                 }}
-                placeholder="name@example.com"
+                placeholder={t("auth.signup.placeholders.email")}
                 className={fieldErrors.email ? errorInputClass : inputClass}
               />
               {email && (
@@ -224,7 +280,7 @@ export default function LoginPage() {
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
             <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
-              {t("auth.login.passwordLabel")}
+              {t("auth.signup.passwordLabel")}
             </label>
             <div className={getInputWrapperClass(fieldErrors.password)}>
               <Lock
@@ -238,10 +294,13 @@ export default function LoginPage() {
                 onChange={(e) => {
                   setPassword(e.target.value);
                   if (fieldErrors.password)
-                    setFieldErrors((prev) => ({ ...prev, password: false }));
-                  if (generalError) setGeneralError("");
+                    setFieldErrors((prev) => ({
+                      ...prev,
+                      password: false,
+                      confirmPassword: false,
+                    }));
                 }}
-                placeholder="••••••••"
+                placeholder={t("auth.signup.placeholders.password")}
                 className={fieldErrors.password ? errorInputClass : inputClass}
               />
               <button
@@ -258,29 +317,46 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center text-text-primary font-medium cursor-pointer group select-none relative z-10">
-              <div className="relative mr-3 flex items-center justify-center w-5 h-5">
-                <input
-                  type="checkbox"
-                  className="peer appearance-none w-5 h-5 rounded-full border-2 border-neutral-300 checked:bg-brand-primary checked:border-brand-primary transition-all duration-200 cursor-pointer"
-                />
-                <Check
-                  className="absolute w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity duration-200 pointer-events-none"
-                  strokeWidth={3}
-                />
-              </div>
-              <span className="text-sm">{t("auth.login.rememberMe")}</span>
+          <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
+            <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
+              {t("auth.signup.confirmPasswordLabel")}
             </label>
-          </div>
-
-          <div className="flex justify-end">
-            <Link
-              href={`/forgot-password?email=${encodeURIComponent(email)}`}
-              className="text-sm font-bold text-brand-primary hover:underline"
-            >
-              {t("auth.login.forgotPassword")}
-            </Link>
+            <div className={getInputWrapperClass(fieldErrors.confirmPassword)}>
+              <Lock
+                className={`absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
+                  fieldErrors.confirmPassword
+                    ? "text-red-400"
+                    : "text-text-tertiary"
+                }`}
+              />
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  if (fieldErrors.confirmPassword)
+                    setFieldErrors((prev) => ({
+                      ...prev,
+                      confirmPassword: false,
+                    }));
+                }}
+                placeholder="••••••••"
+                className={
+                  fieldErrors.confirmPassword ? errorInputClass : inputClass
+                }
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute z-10 right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
+            </div>
           </div>
 
           <button
@@ -291,18 +367,18 @@ export default function LoginPage() {
             {isSubmitting ? (
               <Loader2 className="w-6 h-6 animate-spin" />
             ) : (
-              t("auth.login.signInButton")
+              t("auth.signup.createAccountButton")
             )}
           </button>
         </form>
 
         <div className="mt-8 text-center text-sm text-text-primary font-medium">
-          {t("auth.login.noAccount")}{" "}
+          {t("auth.signup.hasAccount")}{" "}
           <Link
-            href="/signup"
+            href="/login"
             className="text-brand-primary font-bold hover:underline"
           >
-            {t("auth.login.signUpLink")}
+            {t("auth.signup.signInLink")}
           </Link>
         </div>
       </div>

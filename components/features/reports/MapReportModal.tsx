@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import { X, Navigation, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 
 // Internal imports
-import { Report } from "@/types/reports";
+import { Report } from "@/lib/types/reports";
 
 interface MapReportModalProps {
   report: Report | null;

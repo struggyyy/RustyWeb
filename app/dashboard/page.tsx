@@ -31,12 +31,12 @@ import {
 // Internal imports
 import { db } from "@/lib/firebase/firebase";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "@/context/AuthContext";
-import { Report } from "@/types/reports";
-import ReportCard from "@/components/features/ReportCard";
-import UserReportModal from "@/components/features/UserReportModal";
+import { useAuth } from "@/components/context/AuthContext";
+import { Report } from "@/lib/types/reports";
+import ReportCard from "@/components/features/reports/ReportCard";
+import UserReportModal from "@/components/features/reports/UserReportModal";
 import DashboardHeader from "@/components/layout/DashboardHeader";
-import ReportCardSkeleton from "@/components/features/ReportCardSkeleton";
+import ReportCardSkeleton from "@/components/features/reports/ReportCardSkeleton";
 
 export default function UserDashboardPage() {
   const { user, logOut, isAdmin, loading: authLoading } = useAuth();
@@ -108,24 +108,24 @@ export default function UserDashboardPage() {
   }
 
   return (
-    <div className="h-screen w-full relative overflow-hidden font-sans">
+    <div className="h-screen w-full flex flex-col relative overflow-hidden font-sans">
       <DashboardHeader />
 
-      <div className="absolute top-0 left-0 w-full pt-4 md:pt-8 px-4 sm:px-10 z-10 pointer-events-none">
+      <div className="flex-shrink-0 w-full pt-4 md:pt-8 px-4 sm:px-10 z-10 pointer-events-auto">
         <div className="max-w-4xl mx-auto flex items-center h-10 md:h-12">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-neutral-800 tracking-tight">
+          <h1 className="text-lg min-[400px]:text-xl sm:text-4xl lg:text-5xl font-black text-neutral-800 tracking-tight">
             {t("dashboard.title")}
           </h1>
         </div>
         <div className="max-w-4xl mx-auto mt-1 sm:mt-2">
-          <p className="text-neutral-500 text-sm sm:text-base lg:text-lg font-medium">
+          <p className="text-neutral-500 text-xs min-[400px]:text-sm sm:text-base lg:text-lg font-medium">
             {t("dashboard.subtitle")}
           </p>
         </div>
       </div>
 
       {/* Scrollable Content Area */}
-      <main className="absolute top-20 md:top-28 lg:top-32 bottom-0 left-0 right-0 overflow-y-auto px-4 sm:px-10 pb-6 pt-6 [mask-image:linear-gradient(to_bottom,transparent,black_20px)]">
+      <main className="flex-1 w-full overflow-y-auto px-4 sm:px-10 pb-6 pt-4 sm:pt-6 [mask-image:linear-gradient(to_bottom,transparent,black_20px)]">
         <div className="max-w-4xl mx-auto flex flex-col min-h-full">
           <div className="flex-1">
             {loading ? (

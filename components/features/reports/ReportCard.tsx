@@ -21,8 +21,8 @@ import { useTranslation } from "react-i18next";
 import { MapPin, Check, X, Clock, FileCheck } from "lucide-react";
 
 // Internal imports
-import { Report } from "@/types/reports";
-import { getCityFromCoordinates } from "@/lib/geocoding";
+import { Report } from "@/lib/types/reports";
+import { getCityFromCoordinates } from "@/lib/services/geocoding";
 
 interface ReportCardProps {
   report: Report;
