@@ -13,6 +13,80 @@
     "footer": "© 2025 Stworzone przez struggyyy"
   },
   "auth": {
+    "login": {
+      "title": "Witaj Ponownie",
+      "subtitle": "Zaloguj się, aby zarządzać zgłoszeniami i profilem.",
+      "emailLabel": "Email",
+      "passwordLabel": "Hasło",
+      "rememberMe": "Zapamiętaj mnie",
+      "forgotPassword": "Nie pamiętasz hasła?",
+      "signInButton": "Zaloguj się",
+      "noAccount": "Nie masz konta?",
+      "signUpLink": "Zarejestruj się",
+      "errors": {
+        "emailRequired": "Email jest wymagany.",
+        "emailInvalid": "Wprowadź poprawny adres email.",
+        "passwordRequired": "Hasło jest wymagane.",
+        "userNotFound": "Użytkownik nie znaleziony lub błędne dane.",
+        "wrongPassword": "Błędne hasło. Spróbuj ponownie.",
+        "tooManyRequests": "Zbyt wiele prób logowania. Spróbuj później.",
+        "generic": "Logowanie nieudane. Sprawdź połączenie i spróbuj ponownie."
+      }
+    },
+    "signup": {
+      "title": "Załóż Konto",
+      "subtitle": "Dołącz do nas, aby zgłaszać porzucone pojazdy.",
+      "nicknameLabel": "Nazwa użytkownika",
+      "emailLabel": "Email",
+      "passwordLabel": "Hasło",
+      "confirmPasswordLabel": "Potwierdź hasło",
+      "createAccountButton": "Załóż Konto",
+      "hasAccount": "Masz już konto?",
+      "signInLink": "Zaloguj się",
+      "placeholders": {
+        "nickname": "Twój nick",
+        "email": "nazwa@example.com",
+        "password": "••••••••"
+      },
+      "errors": {
+        "nicknameRequired": "Nazwa użytkownika jest wymagana.",
+        "nicknameLength": "Nazwa musi mieć co najmniej 2 znaki.",
+        "nicknameTooLong": "Nazwa nie może być dłuższa niż 15 znaków.",
+        "emailInvalid": "Wprowadź poprawny adres email.",
+        "passwordRequired": "Hasło jest wymagane.",
+        "passwordMismatch": "Hasła nie są identyczne.",
+        "passwordShort": "Hasło musi mieć co najmniej 6 znaków.",
+        "passwordComplexity": "Hasło musi zawierać wielką literę i cyfrę.",
+        "emailInUse": "Ten email jest już zarejestrowany. Próbujesz się zalogować?",
+        "generic": "Rejestracja nieudana. Spróbuj ponownie."
+      }
+    },
+    "verifyEmail": {
+      "title": "Zweryfikuj Swój Email",
+      "subtitle": "Wysłaliśmy link weryfikacyjny na Twój email. Sprawdź skrzynkę i kliknij w link, aby aktywować konto.",
+      "backToHome": "Powrót do strony głównej",
+      "resendButton": "Wyślij ponownie",
+      "resendCooldown": "Ponowne wysłanie za {{seconds}}s",
+      "backToLogin": "Powrót do logowania",
+      "spamHint": "Sprawdź folder spam, jeśli nie widzisz wiadomości.",
+      "success": "Email wysłany pomyślnie!",
+      "pleaseWait": "Poczekaj {{seconds}}s przed kolejną próbą.",
+      "tooMany": "Zbyt wiele wysłanych emaili. Poczekaj kilka minut.",
+      "failed": "Nie udało się wysłać emaila weryfikacyjnego."
+    },
+    "forgotPassword": {
+      "title": "Zresetuj Hasło",
+      "subtitle": "Wpisz swój email, a wyślemy Ci link do resetowania hasła.",
+      "backToLogin": "Powrót do logowania",
+      "emailLabel": "Email",
+      "sendButton": "Wyślij link resetujący",
+      "success": "Link do resetowania hasła został wysłany.",
+      "errors": {
+        "emailInvalid": "Wprowadź poprawny adres email.",
+        "userNotFound": "Użytkownik nie znaleziony lub błędne dane.",
+        "generic": "Resetowanie hasła nie powiodło się."
+      }
+    },
     "logout": "Wyloguj się"
   },
   "nav": {

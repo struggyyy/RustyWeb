@@ -13,6 +13,80 @@
     "footer": "© 2025 Created by struggyyy"
   },
   "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to manage your reports and profile.",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot Password?",
+      "signInButton": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign Up",
+      "errors": {
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Please enter a valid email address.",
+        "passwordRequired": "Password is required.",
+        "userNotFound": "User not found or invalid credentials.",
+        "wrongPassword": "Incorrect password. Please try again.",
+        "tooManyRequests": "Too many login attempts. Please try again later.",
+        "generic": "Login failed. Please check your connection and try again."
+      }
+    },
+    "signup": {
+      "title": "Create Account",
+      "subtitle": "Join us to start reporting abandoned vehicles.",
+      "nicknameLabel": "Nickname",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Confirm Password",
+      "createAccountButton": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signInLink": "Sign In",
+      "placeholders": {
+        "nickname": "Your nickname",
+        "email": "name@example.com",
+        "password": "••••••••"
+      },
+      "errors": {
+        "nicknameRequired": "Nickname is required.",
+        "nicknameLength": "Nickname must be at least 2 characters.",
+        "nicknameTooLong": "Nickname cannot be longer than 15 characters.",
+        "emailInvalid": "Please enter a valid email address.",
+        "passwordRequired": "Password is required.",
+        "passwordMismatch": "Passwords do not match.",
+        "passwordShort": "Password must be at least 6 characters.",
+        "passwordComplexity": "Password must contain at least one uppercase letter and one number.",
+        "emailInUse": "This email address is already registered. Try logging in?",
+        "generic": "Sign up failed. Please try again."
+      }
+    },
+    "verifyEmail": {
+      "title": "Verify Your Email",
+      "subtitle": "We've sent a verification link to your email. Please check your inbox and click the link to verify your account.",
+      "backToHome": "Back to Home",
+      "resendButton": "Resend Verification Email",
+      "resendCooldown": "Resend available in {{seconds}}s",
+      "backToLogin": "Back to Login",
+      "spamHint": "Check your spam folder if you don't see the email.",
+      "success": "Email sent successfully!",
+      "pleaseWait": "Please wait {{seconds}}s before trying again.",
+      "tooMany": "Too many verification emails sent. Please wait a few minutes before trying again.",
+      "failed": "Failed to resend verification email."
+    },
+    "forgotPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter your email address and we'll send you a link to reset your password.",
+      "backToLogin": "Back to Login",
+      "emailLabel": "Email",
+      "sendButton": "Send Reset Link",
+      "success": "Link for password reset was sent to your email.",
+      "errors": {
+        "emailInvalid": "Please enter a valid email address.",
+        "userNotFound": "User not found or invalid credentials.",
+        "generic": "Password reset failed."
+      }
+    },
     "logout": "Logout"
   },
   "nav": {

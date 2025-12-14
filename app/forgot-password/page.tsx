@@ -23,6 +23,7 @@ import { ArrowLeft, Mail, Loader2, Send, XCircle } from "lucide-react";
 
 // Internal imports
 import { useAuth } from "@/context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 function ForgotPasswordContent() {
   const searchParams = useSearchParams();
@@ -34,6 +35,11 @@ function ForgotPasswordContent() {
   } | null>(null);
   const [isEmailError, setIsEmailError] = useState(false);
   const { resetPassword } = useAuth();
+  const { t, i18n } = useTranslation();
+
+  const handleLanguageChange = (lang: string) => {
+    i18n.changeLanguage(lang);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +50,7 @@ function ForgotPasswordContent() {
     if (!email || !/\S+@\S+\.\S+/.test(email.trim())) {
       setMessage({
         type: "error",
-        text: "Please enter a valid email address.",
+        text: t("auth.forgotPassword.errors.emailInvalid"),
       });
       setIsEmailError(true);
       return;
@@ -56,19 +62,18 @@ function ForgotPasswordContent() {
       await resetPassword(email);
       setMessage({
         type: "success",
-        text: "Link for password reset was sent to your email.",
+        text: t("auth.forgotPassword.success"),
       });
       setEmail(""); // Clear input on success
     } catch (err: any) {
-      console.error("Reset Password Error:", err);
-
-      let errorText = "Password reset failed.";
-
+      let errorText = "";
       if (err.code === "auth/user-not-found") {
-        errorText = "User not found or invalid credentials.";
+        errorText = t("auth.forgotPassword.errors.userNotFound");
       } else if (err.code === "auth/invalid-email") {
-        errorText = "Please enter a valid email address.";
+        errorText = t("auth.forgotPassword.errors.emailInvalid");
         setIsEmailError(true);
+      } else {
+        errorText = t("auth.forgotPassword.errors.generic");
       }
 
       setMessage({
@@ -96,20 +101,53 @@ function ForgotPasswordContent() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60">
+      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60 relative">
+        <div className="absolute top-4 right-4 flex bg-neutral-100/50 rounded-lg p-0.5 border border-white/40 z-10">
+          <button
+            suppressHydrationWarning
+            onClick={() => handleLanguageChange("en")}
+            className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
+              i18n.language === "en"
+                ? "bg-white shadow-sm text-neutral-900"
+                : "text-neutral-400 hover:text-neutral-600"
+            }`}
+          >
+            EN
+          </button>
+          <button
+            suppressHydrationWarning
+            onClick={() => handleLanguageChange("pl")}
+            className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
+              i18n.language === "pl"
+                ? "bg-white shadow-sm text-neutral-900"
+                : "text-neutral-400 hover:text-neutral-600"
+            }`}
+          >
+            PL
+          </button>
+        </div>
+
         <div className="mb-5 min-[600px]:mb-6">
           <Link
             href="/login"
             className="inline-flex items-center text-text-tertiary hover:text-brand-primary transition-colors mb-4 font-medium"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Login
+            <ArrowLeft className="w-4 h-4 mr-2" />{" "}
+            <span suppressHydrationWarning>
+              {t("auth.forgotPassword.backToLogin")}
+            </span>
           </Link>
-          <h1 className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark mb-2 min-[600px]:mb-3">
-            Reset Password
+          <h1
+            suppressHydrationWarning
+            className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark mb-2 min-[600px]:mb-3"
+          >
+            {t("auth.forgotPassword.title")}
           </h1>
-          <p className="text-text-primary text-sm min-[600px]:text-base">
-            Enter your email address and we'll send you a link to reset your
-            password.
+          <p
+            suppressHydrationWarning
+            className="text-text-primary text-sm min-[600px]:text-base"
+          >
+            {t("auth.forgotPassword.subtitle")}
           </p>
         </div>
 
@@ -131,7 +169,7 @@ function ForgotPasswordContent() {
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
             <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
-              Email
+              {t("auth.forgotPassword.emailLabel")}
             </label>
             <div className={getInputWrapperClass(isEmailError)}>
               <Mail
@@ -147,7 +185,7 @@ function ForgotPasswordContent() {
                   if (isEmailError) setIsEmailError(false);
                   if (message && message.type === "error") setMessage(null);
                 }}
-                placeholder="name@example.com"
+                placeholder={t("auth.signup.placeholders.email")}
                 className={isEmailError ? errorInputClass : inputClass}
               />
               {email && (
@@ -172,7 +210,7 @@ function ForgotPasswordContent() {
             ) : (
               <>
                 <Send className="w-5 h-5 mr-2" />
-                Send Reset Link
+                {t("auth.forgotPassword.sendButton")}
               </>
             )}
           </button>

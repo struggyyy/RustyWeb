@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   },
 };
 
+import I18nProvider from "@/components/providers/I18nProvider";
+
 export default function RootLayout({
   children,
 }: {
@@ -22,10 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
-        <AuthProvider>
-          <BackgroundPattern pattern="checker" />
-          {children}
-        </AuthProvider>
+        <I18nProvider>
+          <AuthProvider>
+            <BackgroundPattern pattern="checker" />
+            {children}
+          </AuthProvider>
+        </I18nProvider>
       </body>
     </html>
   );

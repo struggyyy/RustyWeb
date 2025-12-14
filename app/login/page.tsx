@@ -15,6 +15,7 @@
 
 // React specific imports
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 // External libraries
 import Link from "next/link";
@@ -43,8 +44,17 @@ export default function LoginPage() {
     password?: boolean;
   }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { signIn } = useAuth();
+  const { signIn, updateUserProfile } = useAuth();
   const router = useRouter();
+  const { t, i18n } = useTranslation();
+
+  const handleLanguageChange = (lang: string) => {
+    i18n.changeLanguage(lang);
+    if (lang !== i18n.language) {
+      // Optional: Persist to user profile if we had a user object, but we are logging in.
+      // We can just rely on i18next local storage persistence here.
+    }
+  };
 
   const handleLoginPress = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,10 +76,11 @@ export default function LoginPage() {
 
     if (hasError) {
       setFieldErrors(newFieldErrors);
-      if (!email) setGeneralError("Email is required.");
+      if (!email) setGeneralError(t("auth.login.errors.emailRequired"));
       else if (newFieldErrors.email)
-        setGeneralError("Please enter a valid email address.");
-      else if (!password) setGeneralError("Password is required.");
+        setGeneralError(t("auth.login.errors.emailInvalid"));
+      else if (!password)
+        setGeneralError(t("auth.login.errors.passwordRequired"));
       return;
     }
 
@@ -85,20 +96,17 @@ export default function LoginPage() {
       ) {
         // Generic security message, highlight both if possible or neither (to avoid leaking existence)
         // Mobile app highlights neither, just shows generic error. We will do the same.
-        setGeneralError("User not found or invalid credentials.");
+        setGeneralError(t("auth.login.errors.userNotFound"));
       } else if (err.code === "auth/wrong-password") {
-        setGeneralError("Incorrect password. Please try again.");
+        setGeneralError(t("auth.login.errors.wrongPassword"));
         setFieldErrors({ password: true });
       } else if (err.code === "auth/invalid-email") {
-        setGeneralError("Please enter a valid email address.");
+        setGeneralError(t("auth.login.errors.emailInvalid"));
         setFieldErrors({ email: true });
       } else if (err.code === "auth/too-many-requests") {
-        setGeneralError("Too many login attempts. Please try again later.");
+        setGeneralError(t("auth.login.errors.tooManyRequests"));
       } else {
-        setGeneralError(
-          err.message ||
-            "Login failed. Please check your connection and try again."
-        );
+        setGeneralError(err.message || t("auth.login.errors.generic"));
       }
       setIsSubmitting(false);
     }
@@ -120,19 +128,53 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60">
+      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60 relative">
+        <div className="absolute top-4 right-4 flex bg-neutral-100/50 rounded-lg p-0.5 border border-white/40 z-10">
+          <button
+            suppressHydrationWarning
+            onClick={() => handleLanguageChange("en")}
+            className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
+              i18n.language === "en"
+                ? "bg-white shadow-sm text-neutral-900"
+                : "text-neutral-400 hover:text-neutral-600"
+            }`}
+          >
+            EN
+          </button>
+          <button
+            suppressHydrationWarning
+            onClick={() => handleLanguageChange("pl")}
+            className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
+              i18n.language === "pl"
+                ? "bg-white shadow-sm text-neutral-900"
+                : "text-neutral-400 hover:text-neutral-600"
+            }`}
+          >
+            PL
+          </button>
+        </div>
+
         <div className="mb-5 min-[600px]:mb-6">
           <Link
             href="/"
             className="inline-flex items-center text-text-tertiary hover:text-brand-primary transition-colors mb-4 font-medium"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
+            <ArrowLeft className="w-4 h-4 mr-2" />{" "}
+            <span suppressHydrationWarning>
+              {t("auth.verifyEmail.backToHome")}
+            </span>
           </Link>
-          <h1 className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark mb-2 min-[600px]:mb-3">
-            Welcome Back
+          <h1
+            suppressHydrationWarning
+            className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark mb-2 min-[600px]:mb-3"
+          >
+            {t("auth.login.title")}
           </h1>
-          <p className="text-text-primary text-sm min-[600px]:text-base">
-            Sign in to manage your reports and profile.
+          <p
+            suppressHydrationWarning
+            className="text-text-primary text-sm min-[600px]:text-base"
+          >
+            {t("auth.login.subtitle")}
           </p>
         </div>
 
@@ -148,7 +190,7 @@ export default function LoginPage() {
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
             <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
-              Email
+              {t("auth.login.emailLabel")}
             </label>
             <div className={getInputWrapperClass(fieldErrors.email)}>
               <Mail
@@ -182,7 +224,7 @@ export default function LoginPage() {
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
             <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
-              Password
+              {t("auth.login.passwordLabel")}
             </label>
             <div className={getInputWrapperClass(fieldErrors.password)}>
               <Lock
@@ -228,7 +270,7 @@ export default function LoginPage() {
                   strokeWidth={3}
                 />
               </div>
-              <span className="text-sm">Remember me</span>
+              <span className="text-sm">{t("auth.login.rememberMe")}</span>
             </label>
           </div>
 
@@ -237,7 +279,7 @@ export default function LoginPage() {
               href={`/forgot-password?email=${encodeURIComponent(email)}`}
               className="text-sm font-bold text-brand-primary hover:underline"
             >
-              Forgot Password?
+              {t("auth.login.forgotPassword")}
             </Link>
           </div>
 
@@ -249,18 +291,18 @@ export default function LoginPage() {
             {isSubmitting ? (
               <Loader2 className="w-6 h-6 animate-spin" />
             ) : (
-              "Sign In"
+              t("auth.login.signInButton")
             )}
           </button>
         </form>
 
         <div className="mt-8 text-center text-sm text-text-primary font-medium">
-          Don't have an account?{" "}
+          {t("auth.login.noAccount")}{" "}
           <Link
             href="/signup"
             className="text-brand-primary font-bold hover:underline"
           >
-            Sign Up
+            {t("auth.login.signUpLink")}
           </Link>
         </div>
       </div>

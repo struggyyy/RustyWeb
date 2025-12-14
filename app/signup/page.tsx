@@ -15,6 +15,7 @@
 
 // React specific imports
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 // External libraries
 import Link from "next/link";
@@ -50,6 +51,11 @@ export default function SignupPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { signUp } = useAuth();
   const router = useRouter();
+  const { t, i18n } = useTranslation();
+
+  const handleLanguageChange = (lang: string) => {
+    i18n.changeLanguage(lang);
+  };
 
   const handleSignupPress = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,11 +70,11 @@ export default function SignupPage() {
     if (!nickname || nickname.length < 2 || nickname.length > 15) {
       newFieldErrors.nickname = true;
       if (!firstErrorMessage) {
-        if (!nickname) firstErrorMessage = "Nickname is required.";
+        if (!nickname)
+          firstErrorMessage = t("auth.signup.errors.nicknameRequired");
         else if (nickname.length < 2)
-          firstErrorMessage = "Nickname must be at least 2 characters.";
-        else
-          firstErrorMessage = "Nickname cannot be longer than 15 characters.";
+          firstErrorMessage = t("auth.signup.errors.nicknameLength");
+        else firstErrorMessage = t("auth.signup.errors.nicknameTooLong");
       }
       hasError = true;
     }
@@ -77,7 +83,7 @@ export default function SignupPage() {
     if (!email || !/\S+@\S+\.\S+/.test(email.trim())) {
       newFieldErrors.email = true;
       if (!firstErrorMessage)
-        firstErrorMessage = "Please enter a valid email address.";
+        firstErrorMessage = t("auth.signup.errors.emailInvalid");
       hasError = true;
     }
 
@@ -93,14 +99,13 @@ export default function SignupPage() {
       newFieldErrors.confirmPassword = true;
 
       if (!firstErrorMessage) {
-        if (!password) firstErrorMessage = "Password is required.";
+        if (!password)
+          firstErrorMessage = t("auth.signup.errors.passwordRequired");
         else if (password !== confirmPassword)
-          firstErrorMessage = "Passwords do not match.";
+          firstErrorMessage = t("auth.signup.errors.passwordMismatch");
         else if (password.length < 6)
-          firstErrorMessage = "Password must be at least 6 characters.";
-        else
-          firstErrorMessage =
-            "Password must contain at least one uppercase letter and one number.";
+          firstErrorMessage = t("auth.signup.errors.passwordShort");
+        else firstErrorMessage = t("auth.signup.errors.passwordComplexity");
       }
       hasError = true;
     }
@@ -114,14 +119,12 @@ export default function SignupPage() {
     setIsSubmitting(true);
 
     try {
-      await signUp(email, password, nickname, "en");
+      await signUp(email, password, nickname, i18n.language);
     } catch (err: any) {
       if (err.code === "auth/email-already-in-use") {
-        setGeneralError(
-          "This email address is already registered. Try logging in?"
-        );
+        setGeneralError(t("auth.signup.errors.emailInUse"));
       } else {
-        setGeneralError(err.message || "Sign up failed. Please try again.");
+        setGeneralError(err.message || t("auth.signup.errors.generic"));
       }
       setIsSubmitting(false);
     }
@@ -152,19 +155,53 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60">
+      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60 relative">
+        <div className="absolute top-4 right-4 flex bg-neutral-100/50 rounded-lg p-0.5 border border-white/40 z-10">
+          <button
+            suppressHydrationWarning
+            onClick={() => handleLanguageChange("en")}
+            className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
+              i18n.language === "en"
+                ? "bg-white shadow-sm text-neutral-900"
+                : "text-neutral-400 hover:text-neutral-600"
+            }`}
+          >
+            EN
+          </button>
+          <button
+            suppressHydrationWarning
+            onClick={() => handleLanguageChange("pl")}
+            className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
+              i18n.language === "pl"
+                ? "bg-white shadow-sm text-neutral-900"
+                : "text-neutral-400 hover:text-neutral-600"
+            }`}
+          >
+            PL
+          </button>
+        </div>
+
         <div className="mb-5 min-[600px]:mb-6">
           <Link
             href="/"
             className="inline-flex items-center text-text-tertiary hover:text-brand-primary transition-colors mb-4 font-medium"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
+            <ArrowLeft className="w-4 h-4 mr-2" />{" "}
+            <span suppressHydrationWarning>
+              {t("auth.verifyEmail.backToHome")}
+            </span>
           </Link>
-          <h1 className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark mb-2 min-[600px]:mb-3">
-            Create Account
+          <h1
+            suppressHydrationWarning
+            className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark mb-2 min-[600px]:mb-3"
+          >
+            {t("auth.signup.title")}
           </h1>
-          <p className="text-text-primary text-sm min-[600px]:text-base">
-            Join us to start reporting abandoned vehicles.
+          <p
+            suppressHydrationWarning
+            className="text-text-primary text-sm min-[600px]:text-base"
+          >
+            {t("auth.signup.subtitle")}
           </p>
         </div>
 
@@ -180,7 +217,7 @@ export default function SignupPage() {
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
             <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
-              Nickname
+              {t("auth.signup.nicknameLabel")}
             </label>
             <div className={getInputWrapperClass(fieldErrors.nickname)}>
               <User
@@ -192,7 +229,7 @@ export default function SignupPage() {
                 type="text"
                 value={nickname}
                 onChange={handleNicknameChange}
-                placeholder="Your nickname"
+                placeholder={t("auth.signup.placeholders.nickname")}
                 maxLength={15}
                 className={fieldErrors.nickname ? errorInputClass : inputClass}
               />
@@ -210,7 +247,7 @@ export default function SignupPage() {
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
             <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
-              Email
+              {t("auth.signup.emailLabel")}
             </label>
             <div className={getInputWrapperClass(fieldErrors.email)}>
               <Mail
@@ -226,7 +263,7 @@ export default function SignupPage() {
                   if (fieldErrors.email)
                     setFieldErrors((prev) => ({ ...prev, email: false }));
                 }}
-                placeholder="name@example.com"
+                placeholder={t("auth.signup.placeholders.email")}
                 className={fieldErrors.email ? errorInputClass : inputClass}
               />
               {email && (
@@ -243,7 +280,7 @@ export default function SignupPage() {
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
             <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
-              Password
+              {t("auth.signup.passwordLabel")}
             </label>
             <div className={getInputWrapperClass(fieldErrors.password)}>
               <Lock
@@ -263,7 +300,7 @@ export default function SignupPage() {
                       confirmPassword: false,
                     }));
                 }}
-                placeholder="••••••••"
+                placeholder={t("auth.signup.placeholders.password")}
                 className={fieldErrors.password ? errorInputClass : inputClass}
               />
               <button
@@ -282,7 +319,7 @@ export default function SignupPage() {
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
             <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
-              Confirm Password
+              {t("auth.signup.confirmPasswordLabel")}
             </label>
             <div className={getInputWrapperClass(fieldErrors.confirmPassword)}>
               <Lock
@@ -330,18 +367,18 @@ export default function SignupPage() {
             {isSubmitting ? (
               <Loader2 className="w-6 h-6 animate-spin" />
             ) : (
-              "Create Account"
+              t("auth.signup.createAccountButton")
             )}
           </button>
         </form>
 
         <div className="mt-8 text-center text-sm text-text-primary font-medium">
-          Already have an account?{" "}
+          {t("auth.signup.hasAccount")}{" "}
           <Link
             href="/login"
             className="text-brand-primary font-bold hover:underline"
           >
-            Sign In
+            {t("auth.signup.signInLink")}
           </Link>
         </div>
       </div>

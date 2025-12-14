@@ -191,6 +191,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe();
   }, [router, pathname]);
 
+  // Sync Firebase Auth language with current i18n language
+  useEffect(() => {
+    auth.languageCode = i18n.language;
+  }, [i18n.language]);
+
   const signUp = async (
     email: string,
     password: string,

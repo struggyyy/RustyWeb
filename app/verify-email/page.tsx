@@ -23,6 +23,7 @@ import { ArrowLeft, Loader2, RefreshCw } from "lucide-react";
 
 // Internal imports
 import { useAuth } from "@/context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 function VerifyEmailContent() {
   const [isResending, setIsResending] = useState(false);
@@ -32,6 +33,11 @@ function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || user?.email || "";
+  const { t, i18n } = useTranslation();
+
+  const handleLanguageChange = (lang: string) => {
+    i18n.changeLanguage(lang);
+  };
 
   // Load cooldown from localStorage on mount
   useEffect(() => {
@@ -80,7 +86,7 @@ function VerifyEmailContent() {
 
   const handleResendVerification = async () => {
     if (cooldown > 0) {
-      setResendMessage(`Please wait ${cooldown}s before trying again.`);
+      setResendMessage(t("auth.verifyEmail.pleaseWait", { seconds: cooldown }));
       return;
     }
 
@@ -89,7 +95,7 @@ function VerifyEmailContent() {
 
     try {
       await sendVerificationEmail();
-      setResendMessage("Email sent successfully!");
+      setResendMessage(t("auth.verifyEmail.success"));
 
       const COOLDOWN_SECONDS = 60;
       setCooldown(COOLDOWN_SECONDS);
@@ -105,11 +111,9 @@ function VerifyEmailContent() {
     } catch (err: any) {
       console.error("Resend Error:", err);
       if (err.message && err.message.includes("Too many")) {
-        setResendMessage(
-          "Too many verification emails sent. Please wait a few minutes before trying again."
-        );
+        setResendMessage(t("auth.verifyEmail.tooMany"));
       } else {
-        setResendMessage("Failed to resend verification email.");
+        setResendMessage(t("auth.verifyEmail.failed"));
       }
     } finally {
       setIsResending(false);
@@ -136,27 +140,51 @@ function VerifyEmailContent() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60">
-        <div className="mb-5 min-[600px]:mb-6">
-          <Link
-            href="/"
-            className="inline-flex items-center text-text-tertiary hover:text-brand-primary transition-colors mb-4 font-medium"
+      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60 relative">
+        <div className="absolute top-4 right-4 flex bg-neutral-100/50 rounded-lg p-0.5 border border-white/40 z-10">
+          <button
+            suppressHydrationWarning
+            onClick={() => handleLanguageChange("en")}
+            className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
+              i18n.language === "en"
+                ? "bg-white shadow-sm text-neutral-900"
+                : "text-neutral-400 hover:text-neutral-600"
+            }`}
           >
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
-          </Link>
-          <h1 className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark mb-2 min-[600px]:mb-3">
-            Verify Your Email
+            EN
+          </button>
+          <button
+            suppressHydrationWarning
+            onClick={() => handleLanguageChange("pl")}
+            className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
+              i18n.language === "pl"
+                ? "bg-white shadow-sm text-neutral-900"
+                : "text-neutral-400 hover:text-neutral-600"
+            }`}
+          >
+            PL
+          </button>
+        </div>
+
+        <div className="mb-5 min-[600px]:mb-6 mt-8">
+          <h1
+            suppressHydrationWarning
+            className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark mb-2 min-[600px]:mb-3"
+          >
+            {t("auth.verifyEmail.title")}
           </h1>
-          <p className="text-text-primary text-sm min-[600px]:text-base">
-            We've sent a verification link to your email. Please check your
-            inbox and click the link to verify your account.
+          <p
+            suppressHydrationWarning
+            className="text-text-primary text-sm min-[600px]:text-base"
+          >
+            {t("auth.verifyEmail.subtitle")}
           </p>
         </div>
 
         {resendMessage && (
           <div
             className={`p-4 text-sm rounded-xl border font-medium mb-6 ${
-              resendMessage.includes("successfully")
+              resendMessage.includes(t("auth.verifyEmail.success"))
                 ? "bg-green-50 text-green-600 border-green-100"
                 : "bg-blue-50 text-blue-600 border-blue-100"
             }`}
@@ -177,8 +205,8 @@ function VerifyEmailContent() {
               <>
                 <RefreshCw className="w-5 h-5 mr-2 hidden min-[540px]:block" />
                 {cooldown > 0
-                  ? `Resend available in ${cooldown}s`
-                  : "Resend Verification Email"}
+                  ? t("auth.verifyEmail.resendCooldown", { seconds: cooldown })
+                  : t("auth.verifyEmail.resendButton")}
               </>
             )}
           </button>
@@ -187,12 +215,12 @@ function VerifyEmailContent() {
             onClick={goToLogin}
             className="w-full py-2.5 min-[600px]:py-4 bg-brand-primary text-text-inverse rounded-xl font-bold text-sm min-[600px]:text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all uppercase tracking-wide"
           >
-            Back to Login
+            {t("auth.verifyEmail.backToLogin")}
           </button>
         </div>
 
         <div className="mt-8 text-center text-sm text-text-tertiary font-medium">
-          Check your spam folder if you don't see the email.
+          {t("auth.verifyEmail.spamHint")}
         </div>
       </div>
     </div>
