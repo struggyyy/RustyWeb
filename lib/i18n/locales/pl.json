@@ -108,5 +108,18 @@
     "retention_desc": "Przechowujemy Twoje zgłoszenia i powiązane dane (zdjęcia, lokalizacja) tak długo, jak jest to konieczne do realizacji celu zgłoszenia lub zgodnie z wymogami prawa.",
     "contact_title": "5. Kontakt",
     "contact_desc": "Jeśli masz jakiekolwiek pytania dotyczące tej Polityki Prywatności, skontaktuj się z nami pod adresem:"
+  },
+  "home": {
+    "title": "LEPSZE MIASTA,",
+    "subtitle": "Z KAŻDYM KLIKNIĘCIEM.",
+    "joinUs": "Dołącz do nas",
+    "downloadApp": "Pobierz aplikację"
+  },
+  "download": {
+    "title": "Odzyskaj Swoją <0>Przestrzeń</0>",
+    "description": "Zgłaszaj porzucone pojazdy, aby zwolnić miejsca parkingowe i poprawić wygląd swojej okolicy. Dołącz do społeczności, aby tworzyć czystsze, bezpieczniejsze i bardziej ekologiczne otoczenie dla wszystkich.",
+    "comingSoon": "Wkrótce",
+    "getItOn": "Pobierz z",
+    "downloadOn": "Pobierz w"
   }
 }

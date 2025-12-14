@@ -1,6 +1,10 @@
+"use client";
+
 import CustomCursor from "@/components/ui/CustomCursor";
+import { useTranslation, Trans } from "react-i18next";
 
 export default function DownloadPage() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden font-sans cursor-none">
       <CustomCursor />
@@ -9,12 +13,13 @@ export default function DownloadPage() {
         {/* Hero Description */}
         <div className="text-center max-w-5xl mx-auto mb-8 space-y-6">
           <h1 className="text-fluid-title font-black text-neutral-900 tracking-tighter uppercase leading-[0.9]">
-            Reclaim Your <span className="text-brand-primary">Space</span>
+            <Trans
+              i18nKey="download.title"
+              components={[<span className="text-brand-primary" key="0" />]}
+            />
           </h1>
           <p className="text-lg md:text-xl text-neutral-500 font-medium leading-relaxed max-w-4xl mx-auto">
-            Report abandoned vehicles to free up parking spaces and improve your
-            neighborhood. Join the community effort to create cleaner, safer,
-            and more eco-friendly surroundings for everyone.
+            {t("download.description")}
           </p>
         </div>
 
@@ -34,7 +39,7 @@ export default function DownloadPage() {
                   <path d="M14.222 9.374c1.037-.61 1.037-2.137 0-2.748L11.528 5.04 8.32 8l3.207 2.96 2.694-1.586Zm-3.595 2.116L7.583 8.68 1.03 14.73c.201 1.029 1.36 1.61 2.303 1.055l7.294-4.295ZM1 13.396V2.603L6.846 8 1 13.396ZM1.03 1.27l6.553 6.05 3.044-2.81L3.333.215C2.39-.341 1.231.24 1.03 1.27Z" />
                 </svg>
                 <span className="text-[#3DDC84]/80 font-bold uppercase tracking-widest text-xs sm:text-sm">
-                  Coming Soon
+                  {t("download.comingSoon")}
                 </span>
               </div>
             </div>
@@ -57,7 +62,7 @@ export default function DownloadPage() {
               </div>
               <div className="flex flex-col items-start leading-none">
                 <span className="text-[10px] uppercase font-bold opacity-90">
-                  Get it on
+                  {t("download.getItOn")}
                 </span>
                 <span className="text-base font-bold whitespace-nowrap">
                   Google Play
@@ -80,7 +85,7 @@ export default function DownloadPage() {
                   <path d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516s1.52.087 2.475-1.258.762-2.391.728-2.43m3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422s1.675-2.789 1.698-2.854-.597-.79-1.254-1.157a3.7 3.7 0 0 0-1.563-.434c-.108-.003-.483-.095-1.254.116-.508.139-1.653.589-1.968.607-.316.018-1.256-.522-2.267-.665-.647-.125-1.333.131-1.824.328-.49.196-1.422.754-2.074 2.237-.652 1.482-.311 3.83-.067 4.56s.625 1.924 1.273 2.796c.576.984 1.34 1.667 1.659 1.899s1.219.386 1.843.067c.502-.308 1.408-.485 1.766-.472.357.013 1.061.154 1.782.539.571.197 1.111.115 1.652-.105.541-.221 1.324-1.059 2.238-2.758q.52-1.185.473-1.282" />
                 </svg>
                 <span className="text-white font-bold uppercase tracking-widest text-xs sm:text-sm">
-                  Coming Soon
+                  {t("download.comingSoon")}
                 </span>
               </div>
             </div>
@@ -103,7 +108,7 @@ export default function DownloadPage() {
               </div>
               <div className="flex flex-col items-start leading-none">
                 <span className="text-[10px] uppercase font-bold opacity-90">
-                  Download on the
+                  {t("download.downloadOn")}
                 </span>
                 <span className="text-lg sm:text-xl font-bold">App Store</span>
               </div>
@@ -113,7 +118,7 @@ export default function DownloadPage() {
       </main>
 
       <footer className="w-full py-6 text-center text-neutral-400 text-sm font-bold uppercase tracking-widest">
-        © 2025 Created by struggyyy
+        {t("common.footer")}
       </footer>
     </div>
   );

@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import CustomCursor from "@/components/ui/CustomCursor";
+import { useTranslation } from "react-i18next";
 
 export default function Page() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden font-sans cursor-none">
       <CustomCursor />
@@ -13,9 +17,9 @@ export default function Page() {
             {/* Slogan and Buttons Container */}
             <div className="flex flex-col items-start">
               <h1 className="text-fluid-title font-black text-neutral-900 leading-[0.9] tracking-tighter whitespace-nowrap">
-                BETTER CITIES,{" "}
+                {t("home.title")}{" "}
                 <span className="block text-fluid-subtitle text-neutral-400 mt-2">
-                  ONE REPORT AT A TIME.
+                  {t("home.subtitle")}
                 </span>
               </h1>
 
@@ -24,13 +28,13 @@ export default function Page() {
                   href="/signup"
                   className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-brand-primary text-white text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-xl hover:opacity-90 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
                 >
-                  Join Us
+                  {t("home.joinUs")}
                 </Link>
                 <Link
                   href="/download"
                   className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-[#CECECE] text-white text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-lg hover:bg-neutral-300 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
                 >
-                  Download the App
+                  {t("home.downloadApp")}
                 </Link>
               </div>
             </div>
@@ -65,7 +69,7 @@ export default function Page() {
       </main>
 
       <footer className="w-full py-6 text-center text-neutral-400 text-sm font-bold uppercase tracking-widest">
-        © 2025 Created by struggyyy
+        {t("common.footer")}
       </footer>
     </div>
   );

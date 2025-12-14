@@ -108,5 +108,18 @@
     "retention_desc": "We retain your reports and associated data (photos, location) as long as necessary to fulfill the purpose of the report or as required by law.",
     "contact_title": "5. Contact Us",
     "contact_desc": "If you have any questions about this Privacy Policy, please contact us at:"
+  },
+  "home": {
+    "title": "BETTER CITIES,",
+    "subtitle": "ONE REPORT AT A TIME.",
+    "joinUs": "Join Us",
+    "downloadApp": "Download the App"
+  },
+  "download": {
+    "title": "Reclaim Your <0>Space</0>",
+    "description": "Report abandoned vehicles to free up parking spaces and improve your neighborhood. Join the community effort to create cleaner, safer, and more eco-friendly surroundings for everyone.",
+    "comingSoon": "Coming Soon",
+    "getItOn": "Get it on",
+    "downloadOn": "Download on the"
   }
 }
