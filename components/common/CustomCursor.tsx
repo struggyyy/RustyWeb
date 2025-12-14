@@ -37,10 +37,10 @@ export default function CustomCursor() {
       `}</style>
       <div
         ref={cursorRef}
-        className="fixed top-0 left-0 w-12 h-12 border-2 border-neutral-900 rounded-full pointer-events-none z-[2147483647] mix-blend-difference transition-opacity duration-300 ease-out flex items-center justify-center will-change-transform"
+        className="fixed top-0 left-0 w-12 h-12 border-2 border-white rounded-full pointer-events-none z-[2147483647] mix-blend-difference transition-opacity duration-300 ease-out flex items-center justify-center will-change-transform"
         style={{ opacity: isVisible ? 1 : 0 }}
       >
-        <div className="w-1.5 h-1.5 bg-neutral-900 rounded-full" />
+        <div className="w-1.5 h-1.5 bg-white rounded-full" />
       </div>
     </>
   );

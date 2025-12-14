@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { AuthProvider } from "@/components/context/AuthContext";
+import { ThemeProvider } from "@/components/context/ThemeProvider";
 import BackgroundPattern from "@/components/common/BackgroundPattern";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,10 +26,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
         <I18nProvider>
-          <AuthProvider>
-            <BackgroundPattern pattern="checker" />
-            {children}
-          </AuthProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <BackgroundPattern pattern="checker" />
+              {children}
+            </AuthProvider>
+          </ThemeProvider>
         </I18nProvider>
       </body>
     </html>

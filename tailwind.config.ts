@@ -6,6 +6,7 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     screens: {
       sm: "900px",
@@ -18,30 +19,31 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          primary: "#BD5151", // Main brand color
+          primary: "var(--brand-primary)", // Main brand color
         },
         neutral: {
-          50: "#FFFFFF", // White backgrounds, text on dark
-          100: "#CECECEFF", // Medium gray for backgrounds and borders (Note: FF opacity is implicit in hex but good to match)
-          200: "#9E9E9E", // Tertiary text, disabled states
-          300: "#656565", // Primary text
-          400: "#333333", // Dark gray text
-          500: "#000000", // Black for shadows
+          50: "var(--neutral-50)", // White backgrounds, text on dark
+          100: "var(--neutral-100)", // Medium gray for backgrounds and borders
+          200: "var(--neutral-200)", // Tertiary text, disabled states
+          300: "var(--neutral-300)", // Primary text
+          400: "var(--neutral-400)", // Dark gray text
+          500: "var(--neutral-500)", // Black for shadows
+          800: "var(--neutral-800)", // Deep dark
         },
         status: {
-          Submitted: "#1976D2", // Blue for submitted
-          Accepted: "#00796B", // Teal for accepted
-          Completed: "#2E7D32", // Green for completed
-          Canceled: "#C62828", // Red for canceled
+          Submitted: "var(--status-Submitted)", // Blue for submitted
+          Accepted: "var(--status-Accepted)", // Teal for accepted
+          Completed: "var(--status-Completed)", // Green for completed
+          Canceled: "var(--status-Canceled)", // Red for canceled
         },
         text: {
-          primary: "#656565", // neutral[300]
-          tertiary: "#9E9E9E", // neutral[200]
-          inverse: "#FFFFFF", // neutral[50]
-          dark: "#333333", // neutral[400]
+          primary: "var(--text-primary)", // neutral[300]
+          tertiary: "var(--text-tertiary)", // neutral[200]
+          inverse: "var(--text-inverse)", // neutral[50]
+          dark: "var(--text-dark)", // neutral[400]
         },
         border: {
-          default: "#CECECEFF", // neutral[100]
+          default: "var(--border-default)", // neutral[100]
         },
         error: "#C62828",
       },

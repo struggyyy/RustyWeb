@@ -1,26 +1,32 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-  --color-brand-primary: #BD5151;
+  --color-brand-primary: var(--brand-primary);
 
-  --color-neutral-50: #FFFFFF;
-  --color-neutral-100: #CECECE;
-  --color-neutral-200: #9E9E9E;
-  --color-neutral-300: #656565;
-  --color-neutral-400: #333333;
-  --color-neutral-500: #000000;
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-900: var(--neutral-900);
 
-  --color-status-Submitted: #1976D2;
-  --color-status-Accepted: #00796B;
-  --color-status-Completed: #2E7D32;
-  --color-status-Canceled: #C62828;
+  --color-status-Submitted: var(--status-Submitted);
+  --color-status-Accepted: var(--status-Accepted);
+  --color-status-Completed: var(--status-Completed);
+  --color-status-Canceled: var(--status-Canceled);
 
-  --color-text-primary: #656565;
-  --color-text-tertiary: #9E9E9E;
-  --color-text-inverse: #FFFFFF;
-  --color-text-dark: #333333;
+  --color-text-primary: var(--text-primary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-inverse: var(--text-inverse);
+  --color-text-dark: var(--text-dark);
 
-  --color-border-default: #CECECE;
+  --color-border-default: var(--border-default);
 
   --animate-pulse-slow: pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-pulse-slower: pulse 12s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -38,21 +44,82 @@
   --button-container-width: 280px;
 
   @keyframes float {
-
     0%,
     100% {
       transform: translateY(0px);
     }
-
     50% {
       transform: translateY(-20px);
     }
   }
 }
 
+:root {
+  /* Brand */
+  --brand-primary: #BD5151;
+
+  /* Neutral Scale */
+  --neutral-50: #FFFFFF;
+  --neutral-100: #CECECE;
+  --neutral-200: #9E9E9E;
+  --neutral-300: #656565;
+  --neutral-400: #333333;
+  --neutral-500: #000000;
+  
+  /* Extended Neutral Scale for Dark Mode */
+  --neutral-600: #262626;
+  --neutral-700: #171717;
+  --neutral-800: #121212; /* Deep dark gray */
+  --neutral-900: #0a0a0a;
+
+  /* Status */
+  --status-Submitted: #1976D2;
+  --status-Accepted: #00796B;
+  --status-Completed: #2E7D32;
+  --status-Canceled: #C62828;
+
+  /* Text - Light Mode Defaults */
+  --text-primary: #656565;
+  --text-tertiary: #9E9E9E;
+  --text-inverse: #FFFFFF;
+  --text-dark: #333333;
+
+  /* Border */
+  --border-default: #CECECE; /* neutral-100 */
+}
+
+/* Dark Mode Overrides */
+.dark {
+  color-scheme: dark;
+  
+  /* Backgrounds */
+  --neutral-50: #121212; /* Main background becomes deep dark gray */
+  --neutral-100: #262626; /* Slightly lighter for cards/borders */
+  
+  /* Text */
+  --text-primary: #FFFFFF;
+  --text-tertiary: #A3A3A3;
+  --text-dark: #FFFFFF;
+  
+  /* Borders */
+  --border-default: #333333;
+}
+
 body {
-  color: var(--color-text-primary);
-  background: var(--color-neutral-50);
+  color: var(--text-primary);
+  background: var(--neutral-50);
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@keyframes shake-left {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(0); }
+  75% { transform: translateX(-4px); }
+}
+
+.animate-shake-left {
+  animation: shake-left 0.6s ease-in-out;
 }

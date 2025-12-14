@@ -16,9 +16,9 @@ export default function Page() {
           <div className="w-auto flex flex-col items-start space-y-4 z-10 md:pb-48">
             {/* Slogan and Buttons Container */}
             <div className="flex flex-col items-start">
-              <h1 className="text-fluid-title font-black text-neutral-900 leading-[0.9] tracking-tighter whitespace-nowrap">
+              <h1 className="text-fluid-title font-black text-neutral-900 dark:text-white leading-[0.9] tracking-tighter whitespace-nowrap">
                 {t("home.title")}{" "}
-                <span className="block text-fluid-subtitle text-neutral-400 mt-2">
+                <span className="block text-fluid-subtitle text-neutral-400 dark:text-neutral-200 mt-2">
                   {t("home.subtitle")}
                 </span>
               </h1>
@@ -26,13 +26,13 @@ export default function Page() {
               <div className="flex gap-3 md:gap-4 items-center mt-2 md:mt-3">
                 <Link
                   href="/signup"
-                  className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-brand-primary text-white text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-xl hover:opacity-90 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
+                  className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-brand-primary text-white dark:text-black text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-xl hover:opacity-90 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
                 >
                   {t("home.joinUs")}
                 </Link>
                 <Link
                   href="/download"
-                  className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-[#CECECE] text-white text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-lg hover:bg-neutral-300 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
+                  className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-[#CECECE] dark:bg-neutral-300 text-white dark:text-black text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-lg hover:bg-neutral-300 dark:hover:bg-neutral-200 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
                 >
                   {t("home.downloadApp")}
                 </Link>
@@ -68,7 +68,7 @@ export default function Page() {
         </div>
       </main>
 
-      <footer className="w-full py-6 text-center text-neutral-400 text-sm font-bold uppercase tracking-widest">
+      <footer className="w-full py-6 text-center text-neutral-400 dark:text-neutral-200 text-sm font-bold uppercase tracking-widest">
         {t("common.footer")}
       </footer>
     </div>
