@@ -141,34 +141,37 @@ export default function SignupPage() {
     ${
       isError
         ? "bg-red-50/50 shadow-[0_8px_30px_rgb(239,68,68,0.15)] ring-1 ring-red-100"
-        : "bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus-within:shadow-[0_8px_30px_rgb(var(--brand-primary),0.15)]"
+        : "bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.25)]"
     }
   `;
 
   const inputClass =
-    "w-full pl-12 pr-12 py-4 bg-transparent outline-none rounded-xl text-text-dark placeholder:text-text-tertiary placeholder:font-normal";
+    "w-full pl-12 pr-12 py-2.5 min-[600px]:py-4 bg-transparent outline-none rounded-xl text-text-dark placeholder:text-text-tertiary placeholder:font-normal";
   const errorInputClass =
-    "w-full pl-12 pr-12 py-4 bg-transparent outline-none rounded-xl text-red-900 placeholder:text-red-300 placeholder:font-normal";
+    "w-full pl-12 pr-12 py-2.5 min-[600px]:py-4 bg-transparent outline-none rounded-xl text-red-900 placeholder:text-red-300 placeholder:font-normal";
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-6 min-[540px]:p-10 border border-white/60">
-        <div className="mb-6">
+      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60">
+        <div className="mb-5 min-[600px]:mb-6">
           <Link
             href="/"
             className="inline-flex items-center text-text-tertiary hover:text-brand-primary transition-colors mb-4 font-medium"
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
           </Link>
-          <h1 className="text-3xl font-extrabold text-text-dark mb-3">
+          <h1 className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark mb-2 min-[600px]:mb-3">
             Create Account
           </h1>
-          <p className="text-text-primary">
+          <p className="text-text-primary text-sm min-[600px]:text-base">
             Join us to start reporting abandoned vehicles.
           </p>
         </div>
 
-        <form onSubmit={handleSignupPress} className="space-y-6">
+        <form
+          onSubmit={handleSignupPress}
+          className="space-y-5 min-[600px]:space-y-6"
+        >
           {generalError && (
             <div className="p-4 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 font-medium">
               {generalError}
@@ -176,7 +179,7 @@ export default function SignupPage() {
           )}
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
-            <label className="text-sm font-bold text-text-dark uppercase tracking-wide">
+            <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
               Nickname
             </label>
             <div className={getInputWrapperClass(fieldErrors.nickname)}>
@@ -206,7 +209,7 @@ export default function SignupPage() {
           </div>
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
-            <label className="text-sm font-bold text-text-dark uppercase tracking-wide">
+            <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
               Email
             </label>
             <div className={getInputWrapperClass(fieldErrors.email)}>
@@ -239,7 +242,7 @@ export default function SignupPage() {
           </div>
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
-            <label className="text-sm font-bold text-text-dark uppercase tracking-wide">
+            <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
               Password
             </label>
             <div className={getInputWrapperClass(fieldErrors.password)}>
@@ -278,7 +281,7 @@ export default function SignupPage() {
           </div>
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
-            <label className="text-sm font-bold text-text-dark uppercase tracking-wide">
+            <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
               Confirm Password
             </label>
             <div className={getInputWrapperClass(fieldErrors.confirmPassword)}>
@@ -322,7 +325,7 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-4 bg-brand-primary text-text-inverse rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all uppercase tracking-wide flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full py-2.5 min-[600px]:py-4 bg-brand-primary text-text-inverse rounded-xl font-bold text-sm min-[600px]:text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all uppercase tracking-wide flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <Loader2 className="w-6 h-6 animate-spin" />
