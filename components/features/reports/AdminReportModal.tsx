@@ -75,13 +75,13 @@ export default function AdminReportModal({
   const getStatusColor = (status: ReportStatus) => {
     switch (status) {
       case "Submitted":
-        return "bg-status-Submitted/10 text-status-Submitted border-status-Submitted/20";
+        return "bg-status-Submitted text-white border-status-Submitted";
       case "Accepted":
-        return "bg-status-Accepted/10 text-status-Accepted border-status-Accepted/20";
+        return "bg-status-Accepted text-white border-status-Accepted";
       case "Completed":
-        return "bg-status-Completed/10 text-status-Completed border-status-Completed/20";
+        return "bg-status-Completed text-white border-status-Completed";
       case "Canceled":
-        return "bg-status-Canceled/10 text-status-Canceled border-status-Canceled/20";
+        return "bg-status-Canceled text-white border-status-Canceled";
       default:
         return "bg-neutral-100 text-neutral-500 border-neutral-200";
     }
@@ -138,11 +138,9 @@ export default function AdminReportModal({
             disabled={status === report.status || isUpdating}
             className={`px-3 py-2.5 rounded-xl font-bold text-xs transition-all border ${
               status === report.status
-                ? `${getStatusColor(status)} shadow-sm`
-                : isUpdating
-                ? "bg-neutral-50 text-neutral-300 border-transparent cursor-not-allowed"
-                : "bg-white border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:bg-neutral-50 shadow-sm"
-            }`}
+                ? `${getStatusColor(status)} shadow-md`
+                : "bg-white dark:bg-transparent border-neutral-200 dark:border-neutral-400 text-neutral-600 dark:text-neutral-900 hover:border-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-300 dark:hover:border-neutral-500 dark:hover:text-white shadow-sm"
+            } ${isUpdating ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             {t(`reports.status${status}`)}
           </button>
@@ -153,10 +151,10 @@ export default function AdminReportModal({
 
   return (
     <div className="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-[32px] max-w-2xl sm:max-w-4xl w-full max-h-[85vh] overflow-hidden shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-white dark:bg-neutral-200 rounded-[32px] max-w-2xl sm:max-w-4xl w-full max-h-[85vh] overflow-hidden shadow-2xl dark:shadow-[0_0_40px_rgba(0,0,0,0.5)] flex flex-col animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 sm:p-8 border-b border-neutral-100 flex-shrink-0">
-          <h2 className="text-xl sm:text-3xl font-black text-neutral-800 tracking-tight">
+        <div className="flex items-center justify-between p-4 sm:p-8 border-b border-neutral-100 dark:border-neutral-300 flex-shrink-0">
+          <h2 className="text-xl sm:text-3xl font-black text-neutral-800 dark:text-black tracking-tight">
             {t("admin.manage")}
           </h2>
           <div className="flex items-center gap-1 sm:gap-2">
@@ -171,7 +169,7 @@ export default function AdminReportModal({
             )}
             <button
               onClick={onClose}
-              className="p-2 sm:p-2.5 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-xl transition-all hover:scale-105 active:scale-95"
+              className="p-2 sm:p-2.5 text-neutral-400 dark:text-black hover:text-neutral-600 dark:hover:text-black/70 hover:bg-neutral-100 dark:hover:bg-neutral-300 rounded-xl transition-all hover:scale-105 active:scale-95"
             >
               <X className="w-4 h-4 sm:w-6 sm:h-6" />
             </button>
@@ -181,7 +179,7 @@ export default function AdminReportModal({
         {/* Content - Split View */}
         <div className="flex-1 min-h-0 flex flex-col sm:flex-row overflow-y-auto sm:overflow-hidden">
           {/* Left Column (Image & Date) */}
-          <div className="w-full sm:w-1/2 px-4 pb-6 pt-2 sm:px-8 sm:pb-8 sm:pt-4 sm:overflow-y-auto border-b sm:border-b-0 sm:border-r border-neutral-100 flex-shrink-0">
+          <div className="w-full sm:w-1/2 px-4 pb-6 pt-2 sm:px-8 sm:pb-8 sm:pt-4 sm:overflow-y-auto border-b sm:border-b-0 sm:border-r border-neutral-100 dark:border-neutral-300 flex-shrink-0">
             <div className="flex flex-col gap-4">
               {/* Date */}
               <div
@@ -196,13 +194,13 @@ export default function AdminReportModal({
               <div
                 className={`w-full rounded-2xl overflow-hidden shadow-sm relative ${
                   !imageLoaded && report.imageUrl
-                    ? "min-h-[300px] bg-neutral-100"
+                    ? "min-h-[300px] bg-neutral-100 dark:bg-neutral-300"
                     : ""
                 }`}
               >
                 {report.imageUrl && !imageLoaded && (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-full h-full animate-pulse bg-neutral-200" />
+                    <div className="w-full h-full animate-pulse bg-neutral-200 dark:bg-neutral-400" />
                   </div>
                 )}
                 {report.imageUrl ? (
@@ -215,7 +213,7 @@ export default function AdminReportModal({
                     onLoad={() => setImageLoaded(true)}
                   />
                 ) : (
-                  <div className="w-full aspect-video flex items-center justify-center bg-neutral-100 text-neutral-400 font-medium">
+                  <div className="w-full aspect-video flex items-center justify-center bg-neutral-100 dark:bg-neutral-300 text-neutral-400 dark:text-neutral-500 font-medium">
                     No image available
                   </div>
                 )}
@@ -224,14 +222,14 @@ export default function AdminReportModal({
           </div>
 
           {/* Right Column (Details + Controls) */}
-          <div className="w-full sm:w-1/2 p-4 sm:p-8 sm:overflow-y-auto bg-neutral-50/30 flex-shrink-0">
+          <div className="w-full sm:w-1/2 p-4 sm:p-8 sm:overflow-y-auto bg-neutral-50/30 dark:bg-transparent flex-shrink-0">
             <div className="space-y-6">
               {/* Description */}
               <div className="space-y-0.5">
-                <label className="block text-xs font-bold text-neutral-500 uppercase tracking-wider ml-1">
+                <label className="block text-xs font-bold text-neutral-500 dark:text-neutral-600 uppercase tracking-wider ml-1">
                   {t("reports.description")}
                 </label>
-                <p className="text-neutral-700 text-sm sm:text-base break-words whitespace-pre-wrap leading-relaxed px-1">
+                <p className="text-neutral-700 dark:text-neutral-900 text-sm sm:text-base break-words whitespace-pre-wrap leading-relaxed px-1">
                   {report.description}
                 </p>
               </div>
@@ -241,15 +239,15 @@ export default function AdminReportModal({
                 <label className="block text-xs font-bold text-neutral-500 uppercase tracking-wider ml-1 mb-1">
                   {t("admin.submittedBy")}
                 </label>
-                <div className="bg-white border border-neutral-100 rounded-xl p-3 flex items-center gap-3 shadow-sm">
-                  <div className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400">
+                <div className="bg-white dark:bg-transparent border border-neutral-100 dark:border-neutral-300 rounded-xl p-3 flex items-center gap-3 shadow-sm dark:shadow-none">
+                  <div className="w-8 h-8 rounded-full bg-neutral-100 dark:bg-neutral-300 flex items-center justify-center text-neutral-400 dark:text-neutral-600">
                     <User className="w-4 h-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-neutral-700 truncate">
+                    <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-900 truncate">
                       {report.userEmail || "Unknown User"}
                     </p>
-                    <p className="text-xs text-neutral-400 truncate font-mono">
+                    <p className="text-xs text-neutral-400 dark:text-neutral-600 truncate font-mono">
                       ID: {report.userId}
                     </p>
                   </div>
@@ -263,16 +261,16 @@ export default function AdminReportModal({
                 </label>
                 <button
                   onClick={() => onShowOnMap(report)}
-                  className="w-full bg-white border border-neutral-100 rounded-xl p-3 flex items-center gap-3 shadow-sm hover:bg-neutral-50 hover:border-neutral-200 transition-all group text-left"
+                  className="w-full bg-white dark:bg-transparent border border-neutral-100 dark:border-neutral-300 rounded-xl p-3 flex items-center gap-3 shadow-sm dark:shadow-none transition-all group text-left"
                 >
-                  <div className="w-8 h-8 rounded-full bg-neutral-100 group-hover:bg-brand-primary/10 flex items-center justify-center text-neutral-400 group-hover:text-brand-primary transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-neutral-100 dark:bg-neutral-300 group-hover:bg-brand-primary/10 dark:group-hover:bg-neutral-300 flex items-center justify-center text-neutral-400 dark:text-neutral-600 group-hover:text-brand-primary transition-colors">
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-neutral-700 truncate group-hover:text-brand-primary transition-colors">
+                    <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-900 truncate group-hover:text-brand-primary transition-colors">
                       {cityName}
                     </p>
-                    <p className="text-xs text-neutral-400 truncate font-mono">
+                    <p className="text-xs text-neutral-400 dark:text-neutral-600 truncate font-mono">
                       {report.location
                         ? `${report.location.latitude.toFixed(
                             6
@@ -292,7 +290,7 @@ export default function AdminReportModal({
         </div>
 
         {/* Mobile Status Control Footer (Visible only on Mobile) */}
-        <div className="block sm:hidden p-4 border-t border-neutral-100 bg-white z-10 w-full">
+        <div className="block sm:hidden p-4 border-t border-neutral-100 dark:border-neutral-300 bg-white dark:bg-neutral-200 z-10 w-full">
           <StatusControls />
         </div>
       </div>

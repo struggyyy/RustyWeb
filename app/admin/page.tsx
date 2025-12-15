@@ -131,6 +131,7 @@ export default function AdminDashboardPage() {
   const [inputValue, setInputValue] = useState(""); // Typed text (visual)
   const searchInputRef = useRef<HTMLInputElement>(null);
   const lastSelectedRef = useRef<string>("");
+  const isProgrammaticFocusRef = useRef(false);
 
   const [searchPlaceholder, setSearchPlaceholder] = useState(
     "Search reports or enter city..."
@@ -336,8 +337,12 @@ export default function AdminDashboardPage() {
     filterRadius,
   ]);
 
-  // Reset map focus when filters change
+  // Reset map focus when filters change, unless we are programmatically focusing
   useEffect(() => {
+    if (isProgrammaticFocusRef.current) {
+      isProgrammaticFocusRef.current = false;
+      return;
+    }
     setFocusedMapLocation(null);
   }, [
     searchQuery,
@@ -487,6 +492,16 @@ export default function AdminDashboardPage() {
   };
 
   const handleShowReportOnMap = (report: Report) => {
+    // Clear all filters to ensure report is visible
+    isProgrammaticFocusRef.current = true;
+    setSearchQuery("");
+    setInputValue("");
+    setSelectedLocationName("");
+    setFilterLocation(null);
+    setSelectedStatuses([]);
+    setDateFrom("");
+    setDateTo("");
+
     if (report.location) {
       setFocusedMapLocation({
         latitude: report.location.latitude,
@@ -724,7 +739,7 @@ export default function AdminDashboardPage() {
         >
           {/* Reports View - Map or List */}
           {showMapView ? (
-            <div className="w-full flex-1 min-h-0 rounded-xl overflow-hidden relative z-10 border border-neutral-200 shadow-sm bg-neutral-100">
+            <div className="w-full flex-1 min-h-0 rounded-xl overflow-hidden relative z-10 border border-neutral-200 dark:border-none shadow-sm dark:shadow-[0_0_30px_rgba(255,255,255,0.1)] bg-neutral-100">
               <GoogleMaps
                 key={theme}
                 reports={filteredReports}

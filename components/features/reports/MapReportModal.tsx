@@ -83,16 +83,22 @@ export default function MapReportModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-[32px] max-w-md w-full max-h-[90vh] overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200 flex flex-col">
+    <div
+      className="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white dark:bg-neutral-200 border border-white/20 dark:border-neutral-200 rounded-[32px] max-w-md w-full max-h-[90vh] overflow-hidden shadow-2xl dark:shadow-[0_0_40px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-neutral-100 flex-shrink-0">
-          <h2 className="text-xl font-black text-neutral-800 tracking-tight">
+        <div className="flex items-center justify-between p-6 border-b border-neutral-100 dark:border-neutral-400/50 flex-shrink-0">
+          <h2 className="text-xl font-black text-neutral-800 dark:text-black tracking-tight">
             {t("map.preview")}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-xl transition-all hover:scale-105 active:scale-95"
+            className="p-2 text-neutral-400 hover:text-neutral-600 dark:text-black dark:hover:text-black/70 hover:bg-neutral-100 dark:hover:bg-neutral-400/50 rounded-xl transition-all hover:scale-105 active:scale-95"
           >
             <X className="w-5 h-5" />
           </button>
@@ -102,7 +108,7 @@ export default function MapReportModal({
         <div className="p-6 flex-1 overflow-y-auto">
           {/* Date */}
           <div
-            className={`text-lg font-bold text-left mb-4 pl-1 ${getStatusTextColor(
+            className={`text-lg font-bold text-left mb-4 px-1 ${getStatusTextColor(
               report.status
             )}`}
           >
@@ -110,10 +116,10 @@ export default function MapReportModal({
           </div>
 
           {/* Image */}
-          <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-sm relative mb-4 bg-neutral-100 border border-neutral-100">
+          <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-sm relative mb-4 bg-neutral-100 dark:bg-neutral-200 border border-neutral-100 dark:border-neutral-400/50">
             {report.imageUrl && !imageLoaded && (
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-full h-full animate-pulse bg-neutral-200" />
+                <div className="w-full h-full animate-pulse bg-neutral-200 dark:bg-neutral-400" />
               </div>
             )}
             {report.imageUrl ? (
@@ -126,7 +132,7 @@ export default function MapReportModal({
                 onLoad={() => setImageLoaded(true)}
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-neutral-400 font-medium">
+              <div className="w-full h-full flex items-center justify-center text-neutral-400 dark:text-neutral-500 font-medium">
                 No image
               </div>
             )}
@@ -134,20 +140,20 @@ export default function MapReportModal({
 
           {/* Navigation controls for multiple reports */}
           {hasMultiple && (
-            <div className="flex items-center justify-between mb-4 bg-neutral-50 p-2 rounded-xl">
+            <div className="flex items-center justify-between mb-4 bg-neutral-50 dark:bg-neutral-200 p-2 rounded-xl">
               <button
                 onClick={onPrev}
-                className="p-2 text-neutral-400 hover:text-neutral-700 hover:bg-white rounded-lg transition-all shadow-sm disabled:opacity-50"
+                className="p-2 text-neutral-400 dark:text-black hover:text-neutral-700 dark:hover:text-black/70 hover:bg-white dark:hover:bg-neutral-400/50 rounded-lg transition-all shadow-sm dark:shadow-none disabled:opacity-50"
                 disabled={!onPrev}
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest">
+              <span className="text-xs font-bold text-neutral-500 dark:text-black uppercase tracking-widest">
                 {t("map.multipleHere")}
               </span>
               <button
                 onClick={onNext}
-                className="p-2 text-neutral-400 hover:text-neutral-700 hover:bg-white rounded-lg transition-all shadow-sm disabled:opacity-50"
+                className="p-2 text-neutral-400 dark:text-black hover:text-neutral-700 dark:hover:text-black/70 hover:bg-white dark:hover:bg-neutral-400/50 rounded-lg transition-all shadow-sm dark:shadow-none disabled:opacity-50"
                 disabled={!onNext}
               >
                 <ChevronRight className="w-5 h-5" />
@@ -166,7 +172,7 @@ export default function MapReportModal({
             </button>
             <button
               onClick={handleNavigate}
-              className="flex-1 bg-white border border-neutral-200 text-neutral-700 px-4 py-3 rounded-xl font-bold hover:bg-neutral-50 transition-colors flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98]"
+              className="flex-1 bg-status-Submitted text-white px-4 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg shadow-status-Submitted/20 hover:scale-[1.02] active:scale-[0.98]"
             >
               <Navigation className="w-4 h-4" />
               {t("common.navigate")}
