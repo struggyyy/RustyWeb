@@ -101,12 +101,13 @@ export default function ReportCard({
   return (
     <div
       onClick={() => onDetailsPress(report)}
-      className="bg-white/60 backdrop-blur-2xl border border-white/60 shadow-xl p-3 sm:p-5 rounded-2xl cursor-pointer hover:scale-[1.01] transition-all duration-300 group"
+      className="bg-white/60 dark:bg-neutral-900/60 backdrop-blur-2xl border border-white/60 dark:border-neutral-700/60 shadow-xl dark:shadow-[0_0_30px_rgba(255,255,255,0.15)] p-3 sm:p-5 rounded-2xl cursor-pointer hover:scale-[1.01] transition-all duration-300 group relative overflow-hidden"
     >
-      <div className="flex flex-row items-center gap-3 md:gap-4">
+      <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
+      <div className="flex flex-row items-center gap-3 md:gap-4 relative z-10">
         {/* Image Section - Fluid Size */}
         <div
-          className={`w-24 h-24 min-[450px]:w-32 min-[450px]:h-28 sm:w-40 sm:h-32 bg-white/50 rounded-xl overflow-hidden flex-shrink-0 border border-white/50 relative shadow-inner ${
+          className={`w-24 h-24 min-[450px]:w-32 min-[450px]:h-28 sm:w-40 sm:h-32 bg-white/50 dark:bg-neutral-800/50 rounded-xl overflow-hidden flex-shrink-0 border border-white/50 dark:border-white/10 relative shadow-inner ${
             !imageLoaded && report.imageUrl ? "animate-pulse" : ""
           }`}
         >
@@ -136,12 +137,12 @@ export default function ReportCard({
           {/* Left Info Group (Date & Location) */}
           <div className="flex flex-col gap-1 items-start w-full">
             {/* Date */}
-            <div className="text-sm min-[450px]:text-base sm:text-lg md:text-xl font-bold text-neutral-800 leading-tight mb-0.5">
+            <div className="text-sm min-[450px]:text-base sm:text-lg md:text-xl font-bold text-neutral-800 dark:text-white leading-tight mb-0.5">
               {formatDate(report.createdAt)}
             </div>
 
             {/* City Name (Geocoded) */}
-            <div className="flex items-center gap-1 text-neutral-700 font-semibold text-xs min-[450px]:text-sm sm:text-base">
+            <div className="flex items-center gap-1 text-neutral-700 dark:text-neutral-200 font-semibold text-xs min-[450px]:text-sm sm:text-base">
               <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-primary" />
               <span className="truncate max-w-[120px] min-[450px]:max-w-[180px] sm:max-w-none">
                 {cityName}
@@ -149,7 +150,7 @@ export default function ReportCard({
             </div>
 
             {/* Coordinates */}
-            <div className="text-[10px] min-[450px]:text-xs text-neutral-400 font-mono pl-0.5">
+            <div className="text-[10px] min-[450px]:text-xs text-neutral-400 dark:text-neutral-200 font-mono pl-0.5">
               {report.location
                 ? `${report.location.latitude.toFixed(
                     2

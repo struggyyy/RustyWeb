@@ -540,10 +540,10 @@ export default function AdminDashboardPage() {
         <div className="max-w-4xl mx-auto flex flex-col gap-4">
           {/* Title & Subtitle */}
           <div>
-            <h1 className="text-lg min-[400px]:text-xl sm:text-4xl lg:text-5xl font-black text-neutral-800 tracking-tight">
+            <h1 className="text-lg min-[400px]:text-xl sm:text-4xl lg:text-5xl font-black text-neutral-800 dark:text-white tracking-tight">
               {t("admin.managementTitle")}
             </h1>
-            <p className="text-neutral-500 text-xs min-[400px]:text-sm sm:text-base lg:text-lg font-medium mt-1">
+            <p className="text-neutral-500 dark:text-neutral-200 text-xs min-[400px]:text-sm sm:text-base lg:text-lg font-medium mt-1">
               {t("admin.managementSubtitle")}
             </p>
           </div>
@@ -553,12 +553,12 @@ export default function AdminDashboardPage() {
             <div className="flex w-full gap-2">
               {/* Combined Search & Location Bar */}
               <div
-                className={`relative z-30 flex-1 flex items-center bg-white border border-neutral-200 rounded-lg shadow-sm focus-within:border-brand-primary focus-within:ring-1 focus-within:ring-brand-primary transition-all h-10 ${
+                className={`relative z-30 flex-1 flex items-center bg-white dark:bg-neutral-200 border border-neutral-200 dark:border-neutral-200 rounded-lg shadow-sm dark:shadow-[0_0_15px_rgba(255,255,255,0.1)] focus-within:border-brand-primary focus-within:ring-1 focus-within:ring-brand-primary transition-all h-10 ${
                   selectedLocationName ? "pl-2" : ""
                 }`}
               >
                 {!selectedLocationName && (
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 dark:text-neutral-500" />
                 )}
 
                 {/* Location Chip */}
@@ -608,26 +608,26 @@ export default function AdminDashboardPage() {
                       handleClearLocation();
                     }
                   }}
-                  className={`flex-1 w-full bg-transparent border-none focus:ring-0 text-sm text-neutral-600 py-2 ${
+                  className={`flex-1 w-full bg-transparent border-none focus:ring-0 text-sm text-neutral-600 dark:text-neutral-900 py-2 ${
                     selectedLocationName ? "" : "pl-9"
-                  } pr-3 placeholder-neutral-400 focus:outline-none min-w-[20px]`}
+                  } pr-3 placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none min-w-[20px]`}
                 />
 
                 {/* Location Suggestions Dropdown */}
                 {showSuggestions &&
                   suggestions.length > 0 &&
                   !selectedLocationName && (
-                    <div className="absolute top-[calc(100%+4px)] left-0 right-0 bg-white border border-neutral-200 rounded-lg shadow-xl max-h-60 overflow-y-auto z-40">
+                    <div className="absolute top-[calc(100%+4px)] left-0 right-0 bg-white dark:bg-neutral-200 border border-neutral-200 dark:border-neutral-200 rounded-lg shadow-xl dark:shadow-[0_0_15px_rgba(255,255,255,0.1)] max-h-60 overflow-y-auto z-40">
                       {suggestions.map((item: any) => (
                         <button
                           key={item.place_id}
                           onClick={() => handleLocationSelect(item)}
-                          className="w-full px-4 py-3 text-left hover:bg-neutral-50 border-b border-neutral-50 last:border-0 flex flex-col gap-0.5"
+                          className="w-full px-4 py-3 text-left hover:bg-neutral-50 dark:hover:bg-neutral-700 border-b border-neutral-50 dark:border-neutral-300 last:border-0 flex flex-col gap-0.5 transition-colors group"
                         >
-                          <span className="text-sm font-medium text-neutral-800">
+                          <span className="text-sm font-medium text-neutral-800 dark:text-neutral-900 dark:group-hover:text-white">
                             {item.display_name.split(",")[0]}
                           </span>
-                          <span className="text-xs text-neutral-500 truncate">
+                          <span className="text-xs text-neutral-500 dark:text-neutral-500 dark:group-hover:text-neutral-200 truncate">
                             {item.display_name}
                           </span>
                         </button>
@@ -674,7 +674,7 @@ export default function AdminDashboardPage() {
                 className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all ${
                   selectedStatuses.length === 0
                     ? "bg-brand-primary text-white shadow-md shadow-brand-primary/20"
-                    : "bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50"
+                    : "bg-white dark:bg-neutral-300 border border-neutral-200 dark:border-neutral-300 text-neutral-600 dark:text-black hover:bg-neutral-50 dark:hover:bg-neutral-200"
                 }`}
               >
                 {t("common.all")}
@@ -696,7 +696,7 @@ export default function AdminDashboardPage() {
                       isSelected
                         ? getStatusColor(status) +
                           " ring-1 ring-current shadow-sm"
-                        : "bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50"
+                        : "bg-white dark:bg-neutral-300 border border-neutral-200 dark:border-neutral-300 text-neutral-600 dark:text-black hover:bg-neutral-50 dark:hover:bg-neutral-200"
                     }`}
                   >
                     {t(`reports.status${status}`)}
@@ -775,7 +775,7 @@ export default function AdminDashboardPage() {
           )}
 
           {!showMapView && (
-            <footer className="w-full py-6 text-center text-neutral-400 text-sm font-bold uppercase tracking-widest mt-8">
+            <footer className="w-full py-6 text-center text-neutral-400 dark:text-neutral-200 text-sm font-bold uppercase tracking-widest mt-8">
               {t("common.footer")}
             </footer>
           )}

@@ -223,7 +223,7 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
         className={`h-10 flex-shrink-0 flex items-center gap-2 px-3 py-2 border rounded-lg transition-all shadow-sm ${
           dateFrom || dateTo
             ? "border-brand-primary bg-brand-primary/5 text-brand-primary"
-            : "border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50"
+            : "border-neutral-200 dark:border-neutral-300 bg-white dark:bg-neutral-300 text-neutral-600 dark:text-black hover:bg-neutral-50 dark:hover:bg-neutral-200"
         }`}
       >
         <CalendarIcon className="w-4 h-4" />
