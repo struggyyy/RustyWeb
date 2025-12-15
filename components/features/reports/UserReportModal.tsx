@@ -61,15 +61,15 @@ export default function UserReportModal({
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Submitted":
-        return "text-status-Submitted";
+        return "bg-status-Submitted/10 text-status-Submitted border-status-Submitted/20 dark:bg-status-Submitted dark:text-white dark:border-status-Submitted";
       case "Accepted":
-        return "text-status-Accepted";
+        return "bg-status-Accepted/10 text-status-Accepted border-status-Accepted/20 dark:bg-status-Accepted dark:text-white dark:border-status-Accepted";
       case "Completed":
-        return "text-status-Completed";
+        return "bg-status-Completed/10 text-status-Completed border-status-Completed/20 dark:bg-status-Completed dark:text-white dark:border-status-Completed";
       case "Canceled":
-        return "text-status-Canceled";
+        return "bg-status-Canceled/10 text-status-Canceled border-status-Canceled/20 dark:bg-status-Canceled dark:text-white dark:border-status-Canceled";
       default:
-        return "text-neutral-500";
+        return "bg-neutral-100 text-neutral-500 border-neutral-200 dark:bg-neutral-100 dark:text-neutral-500 dark:border-neutral-200";
     }
   };
 
@@ -90,10 +90,10 @@ export default function UserReportModal({
 
   return (
     <div className="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-[32px] max-w-2xl sm:max-w-4xl w-full max-h-[85vh] overflow-hidden shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-white dark:bg-neutral-200 rounded-[32px] max-w-2xl sm:max-w-4xl w-full max-h-[85vh] overflow-hidden shadow-2xl dark:shadow-[0_0_40px_rgba(0,0,0,0.5)] flex flex-col animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 sm:p-8 border-b border-neutral-100 flex-shrink-0">
-          <h2 className="text-xl sm:text-3xl font-black text-neutral-800 tracking-tight">
+        <div className="flex items-center justify-between p-4 sm:p-8 border-b border-neutral-100 dark:border-neutral-300 flex-shrink-0">
+          <h2 className="text-xl sm:text-3xl font-black text-neutral-800 dark:text-black tracking-tight">
             {t("reports.reportDetails")}
           </h2>
           <div className="flex items-center gap-1 sm:gap-2">
@@ -106,7 +106,7 @@ export default function UserReportModal({
             </button>
             <button
               onClick={onClose}
-              className="p-2 sm:p-2.5 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-xl transition-all hover:scale-105 active:scale-95"
+              className="p-2 sm:p-2.5 text-neutral-400 dark:text-black hover:text-neutral-600 dark:hover:text-black/70 hover:bg-neutral-100 dark:hover:bg-neutral-300 rounded-xl transition-all hover:scale-105 active:scale-95"
             >
               <X className="w-4 h-4 sm:w-6 sm:h-6" />
             </button>
@@ -116,7 +116,7 @@ export default function UserReportModal({
         {/* Content - Split View with Independent Scrolling on Desktop, Single Scroll on Mobile */}
         <div className="flex-1 min-h-0 flex flex-col sm:flex-row overflow-y-auto sm:overflow-hidden">
           {/* Left Column (Image & Date) - Scrollable on Desktop */}
-          <div className="w-full sm:w-1/2 px-4 pb-6 pt-2 sm:px-8 sm:pb-8 sm:pt-4 sm:overflow-y-auto border-b sm:border-b-0 sm:border-r border-neutral-100 flex-shrink-0">
+          <div className="w-full sm:w-1/2 px-4 pb-6 pt-2 sm:px-8 sm:pb-8 sm:pt-4 sm:overflow-y-auto border-b sm:border-b-0 sm:border-r border-neutral-100 dark:border-neutral-300 flex-shrink-0">
             <div className="flex flex-col gap-4">
               {/* Date (Top) */}
               <div
@@ -128,17 +128,16 @@ export default function UserReportModal({
               </div>
 
               {/* Image */}
-              {/* Image */}
               <div
                 className={`w-full rounded-2xl overflow-hidden shadow-sm relative ${
                   !imageLoaded && report.imageUrl
-                    ? "min-h-[300px] bg-neutral-100"
+                    ? "min-h-[300px] bg-neutral-100 dark:bg-neutral-300"
                     : ""
                 }`}
               >
                 {report.imageUrl && !imageLoaded && (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-full h-full animate-pulse bg-neutral-200" />
+                    <div className="w-full h-full animate-pulse bg-neutral-200 dark:bg-neutral-400" />
                   </div>
                 )}
                 {report.imageUrl ? (
@@ -151,7 +150,7 @@ export default function UserReportModal({
                     onLoad={() => setImageLoaded(true)}
                   />
                 ) : (
-                  <div className="w-full aspect-video flex items-center justify-center bg-neutral-100 text-neutral-400 font-medium">
+                  <div className="w-full aspect-video flex items-center justify-center bg-neutral-100 dark:bg-neutral-300 text-neutral-400 dark:text-neutral-500 font-medium">
                     {t("reports.noImageAvailable")}
                   </div>
                 )}
@@ -160,13 +159,13 @@ export default function UserReportModal({
           </div>
 
           {/* Right Column (Details) - Scrollable on Desktop */}
-          <div className="w-full sm:w-1/2 p-4 sm:p-8 sm:overflow-y-auto bg-neutral-50/30 flex-shrink-0">
+          <div className="w-full sm:w-1/2 p-4 sm:p-8 sm:overflow-y-auto bg-neutral-50/30 dark:bg-transparent flex-shrink-0">
             <div className="space-y-6">
               <div className="space-y-0.5">
-                <label className="block text-xs font-bold text-neutral-500 uppercase tracking-wider ml-1">
+                <label className="block text-xs font-bold text-neutral-500 dark:text-neutral-600 uppercase tracking-wider ml-1">
                   {t("reports.description")}
                 </label>
-                <p className="text-neutral-700 text-sm sm:text-base break-words whitespace-pre-wrap leading-relaxed px-1">
+                <p className="text-neutral-700 dark:text-neutral-900 text-sm sm:text-base break-words whitespace-pre-wrap leading-relaxed px-1">
                   {report.description}
                 </p>
               </div>
@@ -175,22 +174,22 @@ export default function UserReportModal({
                 <div
                   className={`inline-flex items-center px-4 py-1.5 rounded-full font-bold text-xs sm:text-sm uppercase tracking-wider ${getStatusColor(
                     report.status
-                  )} bg-current/10`}
+                  )}`}
                 >
                   {t(`reports.status${report.status}`)}
                 </div>
                 {getStatusNote(report.status) && (
-                  <p className="text-sm text-neutral-500 italic mt-1 ml-1">
+                  <p className="text-sm text-neutral-500 dark:text-neutral-600 italic mt-1 ml-1">
                     "{getStatusNote(report.status)}"
                   </p>
                 )}
               </div>
 
               <div className="px-1">
-                <span className="font-bold text-neutral-500 uppercase tracking-wider text-xs">
+                <span className="font-bold text-neutral-500 dark:text-neutral-600 uppercase tracking-wider text-xs">
                   {t("reports.points")}:{" "}
                 </span>
-                <span className="text-neutral-700 font-medium text-sm sm:text-base ml-2">
+                <span className="text-neutral-700 dark:text-neutral-900 font-medium text-sm sm:text-base ml-2">
                   {report.points}
                 </span>
               </div>

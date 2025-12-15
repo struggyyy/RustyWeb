@@ -113,12 +113,12 @@ export default function UserDashboardPage() {
 
       <div className="flex-shrink-0 w-full pt-4 md:pt-8 px-4 sm:px-10 z-10 pointer-events-auto">
         <div className="max-w-4xl mx-auto flex items-center h-10 md:h-12">
-          <h1 className="text-lg min-[400px]:text-xl sm:text-4xl lg:text-5xl font-black text-neutral-800 tracking-tight">
+          <h1 className="text-lg min-[400px]:text-xl sm:text-4xl lg:text-5xl font-black text-neutral-800 dark:text-white tracking-tight">
             {t("dashboard.title")}
           </h1>
         </div>
         <div className="max-w-4xl mx-auto mt-1 sm:mt-2">
-          <p className="text-neutral-500 text-xs min-[400px]:text-sm sm:text-base lg:text-lg font-medium">
+          <p className="text-neutral-500 dark:text-neutral-200 text-xs min-[400px]:text-sm sm:text-base lg:text-lg font-medium">
             {t("dashboard.subtitle")}
           </p>
         </div>
@@ -164,7 +164,7 @@ export default function UserDashboardPage() {
             )}
           </div>
 
-          <footer className="w-full py-6 text-center text-neutral-400 text-sm font-bold uppercase tracking-widest mt-8">
+          <footer className="w-full py-6 text-center text-neutral-400 dark:text-neutral-200 text-sm font-bold uppercase tracking-widest mt-8">
             {t("common.footer")}
           </footer>
         </div>

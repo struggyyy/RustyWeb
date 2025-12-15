@@ -174,7 +174,7 @@ export default function ReportCard({
 
             {/* Points (Always visible under status) */}
             {!isAdmin && (
-              <div className="flex items-center gap-1 text-xs sm:text-sm font-bold text-neutral-600 mt-1">
+              <div className="flex items-center gap-1 text-xs sm:text-sm font-bold text-neutral-600 dark:text-white mt-1">
                 {report.status === "Submitted" ? (
                   getStatusIcon("Submitted")
                 ) : report.status === "Canceled" ? (
