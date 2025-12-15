@@ -17,6 +17,8 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 
 // External libraries
+import Link from "next/link";
+import { useTheme } from "@/components/context/ThemeProvider";
 import { useRouter } from "next/navigation";
 import { Filter, Search, MapPin, X, List } from "lucide-react";
 import {
@@ -65,6 +67,7 @@ export default function AdminDashboardPage() {
 
   const [loading, setLoading] = useState(true);
   const { t, i18n } = useTranslation();
+  const { theme } = useTheme();
 
   const router = useRouter();
 
@@ -723,6 +726,7 @@ export default function AdminDashboardPage() {
           {showMapView ? (
             <div className="w-full flex-1 min-h-0 rounded-xl overflow-hidden relative z-10 border border-neutral-200 shadow-sm bg-neutral-100">
               <GoogleMaps
+                key={theme}
                 reports={filteredReports}
                 onMarkerClick={handleMapMarkerClick}
                 className="w-full h-full"

@@ -17,10 +17,12 @@
 import { useEffect, useRef, useState } from "react";
 
 // External libraries
-import { MapPin } from "lucide-react";
+import { MapPin, Plus, Minus, Layers, Map as MapIcon } from "lucide-react";
 
 // Internal imports
 import { Report } from "@/lib/types/reports";
+import { useTheme } from "@/components/context/ThemeProvider";
+import { nightMapStyle } from "@/lib/mapStyles";
 
 interface GoogleMapsProps {
   reports: Report[];
@@ -41,10 +43,14 @@ export default function GoogleMaps({
   className,
   focusedLocation,
 }: GoogleMapsProps) {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const mapRef = useRef<HTMLDivElement>(null);
   const googleMapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [mapType, setMapType] = useState<"roadmap" | "satellite">("roadmap");
+  const [isStreetViewVisible, setIsStreetViewVisible] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const scriptLoadedRef = useRef(false);
 
@@ -129,7 +135,7 @@ export default function GoogleMaps({
       scriptLoadedRef.current = true;
 
       const script = document.createElement("script");
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,marker&loading=async&v=beta`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,marker&loading=async&v=weekly`;
       script.async = true;
 
       const scriptLoadPromise = new Promise<void>((resolve, reject) => {
@@ -185,8 +191,8 @@ export default function GoogleMaps({
     const initMap = async () => {
       try {
         const { Map } = await window.google.maps.importLibrary("maps");
-        const { AdvancedMarkerElement } =
-          await window.google.maps.importLibrary("marker");
+
+        // AdvancedMarkerElement removed to support client-side dark mode styling (requires no mapId)
 
         // Calculate center and zoom based on reports or focusedLocation
         let center = { lat: 52.2, lng: 19.1 }; // Center of Poland
@@ -245,12 +251,14 @@ export default function GoogleMaps({
         const mapOptions = {
           center,
           zoom,
-          mapId: "DEMO_MAP_ID", // Required for AdvancedMarkerElement
-          mapTypeControl: true,
-          streetViewControl: true,
-          fullscreenControl: true,
-          zoomControl: true,
-          // Styles property removed as it conflicts with mapId
+          mapTypeId: "roadmap",
+          // mapId removed to enable client-side 'styles' array for Dark Mode
+          disableDefaultUI: true, // Disable all default controls to use custom themed ones
+          zoomControl: false,
+          mapTypeControl: false,
+          streetViewControl: true, // Re-enable standard Pegman for drag-and-drop functionality
+          fullscreenControl: false,
+          styles: isDark ? nightMapStyle : [],
         };
 
         googleMapRef.current = new Map(mapRef.current, mapOptions);
@@ -284,20 +292,27 @@ export default function GoogleMaps({
           }
 
           // Create pin element
-          const pinElement = document.createElement("div");
+          // Create pin icon as Data URI for legacy Marker
           const pinColor = getPinColor(report.status);
-          pinElement.innerHTML = `
+          const svgString = `
             <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
               <circle cx="20" cy="20" r="18" fill="${pinColor}" stroke="white" stroke-width="3"/>
               <circle cx="20" cy="20" r="8" fill="white"/>
             </svg>
           `;
+          const iconUrl =
+            "data:image/svg+xml;charset=UTF-8," +
+            encodeURIComponent(svgString.trim());
 
-          const marker = new AdvancedMarkerElement({
+          const marker = new window.google.maps.Marker({
             position: { lat, lng },
             map: googleMapRef.current,
             title: `Report #${report.id.slice(0, 6)}`,
-            content: pinElement,
+            icon: {
+              url: iconUrl,
+              scaledSize: new window.google.maps.Size(40, 40),
+              anchor: new window.google.maps.Point(20, 20), // Center the circle
+            },
           });
 
           marker.addListener("click", () => {
@@ -352,6 +367,13 @@ export default function GoogleMaps({
             );
           }
         }
+        // Listen for Street View visibility changes
+        const panorama = googleMapRef.current.getStreetView();
+        if (panorama) {
+          panorama.addListener("visible_changed", () => {
+            setIsStreetViewVisible(panorama.getVisible());
+          });
+        }
       } catch (error) {
         console.error("Error initializing Google Map:", error);
         setLoadError("Failed to initialize map");
@@ -371,6 +393,16 @@ export default function GoogleMaps({
       googleMapRef.current.setZoom(15);
     }
   }, [focusedLocation]);
+
+  // Update map styles when theme changes
+  useEffect(() => {
+    if (googleMapRef.current) {
+      console.log("Applying map theme:", isDark ? "DARK" : "LIGHT");
+      googleMapRef.current.setOptions({
+        styles: isDark ? nightMapStyle : [],
+      });
+    }
+  }, [isDark]);
 
   // Removed separate marker effect since it's now handled in initMap
   // To support dynamic updates, we would need to separate them again, but for now let's initialize together to ensure libraries are loaded.
@@ -402,6 +434,25 @@ export default function GoogleMaps({
     );
   }
 
+  const handleZoomIn = () => {
+    if (googleMapRef.current) {
+      googleMapRef.current.setZoom(googleMapRef.current.getZoom() + 1);
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (googleMapRef.current) {
+      googleMapRef.current.setZoom(googleMapRef.current.getZoom() - 1);
+    }
+  };
+
+  const handleMapTypeChange = (type: "roadmap" | "satellite") => {
+    if (googleMapRef.current) {
+      googleMapRef.current.setMapTypeId(type);
+      setMapType(type);
+    }
+  };
+
   if (!isLoaded) {
     return (
       <div
@@ -416,8 +467,59 @@ export default function GoogleMaps({
   }
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className} group`}>
       <div ref={mapRef} className="w-full h-full rounded-xl overflow-hidden" />
+
+      {/* Custom Controls Overlay - Hidden in Street View */}
+      {!isStreetViewVisible && (
+        <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+          {/* Map Type Toggle */}
+          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden flex flex-col">
+            <button
+              onClick={() => handleMapTypeChange("roadmap")}
+              className={`p-2 transition-colors ${
+                mapType === "roadmap"
+                  ? "bg-neutral-100 dark:bg-neutral-700 text-brand-primary dark:text-white"
+                  : "text-neutral-500 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-700"
+              }`}
+              title="Map View"
+            >
+              <MapIcon className="w-5 h-5" />
+            </button>
+            <div className="h-[1px] bg-neutral-200 dark:bg-neutral-700 w-full" />
+            <button
+              onClick={() => handleMapTypeChange("satellite")}
+              className={`p-2 transition-colors ${
+                mapType === "satellite"
+                  ? "bg-neutral-100 dark:bg-neutral-700 text-brand-primary dark:text-white"
+                  : "text-neutral-500 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-700"
+              }`}
+              title="Satellite View"
+            >
+              <Layers className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Zoom Controls */}
+          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden flex flex-col mt-2">
+            <button
+              onClick={handleZoomIn}
+              className="p-2 text-neutral-600 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
+              title="Zoom In"
+            >
+              <Plus className="w-5 h-5" />
+            </button>
+            <div className="h-[1px] bg-neutral-200 dark:bg-neutral-700 w-full" />
+            <button
+              onClick={handleZoomOut}
+              className="p-2 text-neutral-600 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
+              title="Zoom Out"
+            >
+              <Minus className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* No reports message overlay */}
       {reports.length === 0 && (
