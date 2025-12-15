@@ -123,11 +123,17 @@ function VerifyEmailContent() {
   const goToLogin = async () => {
     try {
       await logOut();
-      router.replace("/login");
+      await logOut();
+      router.replace(
+        `/login${email ? `?email=${encodeURIComponent(email)}` : ""}`
+      );
     } catch (err: any) {
       console.error("Logout failed:", err);
       // Still navigate to login even if logout fails
-      router.replace("/login");
+      // Still navigate to login even if logout fails
+      router.replace(
+        `/login${email ? `?email=${encodeURIComponent(email)}` : ""}`
+      );
     }
   };
 
@@ -140,15 +146,16 @@ function VerifyEmailContent() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60 relative">
-        <div className="absolute top-4 right-4 flex bg-neutral-100/50 rounded-lg p-0.5 border border-white/40 z-10">
+      <div className="max-w-md w-full bg-neutral-50/60 dark:bg-neutral-900/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60 dark:border-neutral-700/60 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
+        <div className="absolute top-4 right-4 flex bg-neutral-100/50 dark:bg-neutral-800/50 rounded-lg p-0.5 border border-white/40 dark:border-neutral-700/40 z-10">
           <button
             suppressHydrationWarning
             onClick={() => handleLanguageChange("en")}
             className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
               i18n.language === "en"
-                ? "bg-white shadow-sm text-neutral-900"
-                : "text-neutral-400 hover:text-neutral-600"
+                ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-white"
+                : "text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300"
             }`}
           >
             EN
@@ -158,24 +165,24 @@ function VerifyEmailContent() {
             onClick={() => handleLanguageChange("pl")}
             className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
               i18n.language === "pl"
-                ? "bg-white shadow-sm text-neutral-900"
-                : "text-neutral-400 hover:text-neutral-600"
+                ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-white"
+                : "text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300"
             }`}
           >
             PL
           </button>
         </div>
 
-        <div className="mb-5 min-[600px]:mb-6 mt-8">
+        <div className="mb-5 min-[600px]:mb-6 mt-8 relative z-10">
           <h1
             suppressHydrationWarning
-            className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark mb-2 min-[600px]:mb-3"
+            className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark dark:text-white mb-2 min-[600px]:mb-3"
           >
             {t("auth.verifyEmail.title")}
           </h1>
           <p
             suppressHydrationWarning
-            className="text-text-primary text-sm min-[600px]:text-base"
+            className="text-text-primary dark:text-neutral-200 text-sm min-[600px]:text-base"
           >
             {t("auth.verifyEmail.subtitle")}
           </p>
@@ -183,7 +190,7 @@ function VerifyEmailContent() {
 
         {resendMessage && (
           <div
-            className={`p-4 text-sm rounded-xl border font-medium mb-6 ${
+            className={`p-4 text-sm rounded-xl border font-medium mb-6 relative z-10 ${
               resendMessage.includes(t("auth.verifyEmail.success"))
                 ? "bg-green-50 text-green-600 border-green-100"
                 : "bg-blue-50 text-blue-600 border-blue-100"
@@ -193,7 +200,7 @@ function VerifyEmailContent() {
           </div>
         )}
 
-        <div className="space-y-5">
+        <div className="space-y-5 relative z-10">
           <button
             onClick={handleResendVerification}
             disabled={isResending || cooldown > 0}
@@ -219,7 +226,7 @@ function VerifyEmailContent() {
           </button>
         </div>
 
-        <div className="mt-8 text-center text-sm text-text-tertiary font-medium">
+        <div className="mt-8 text-center text-sm text-text-tertiary dark:text-white font-medium relative z-10">
           {t("auth.verifyEmail.spamHint")}
         </div>
       </div>

@@ -89,8 +89,8 @@ function ForgotPasswordContent() {
     relative w-full rounded-xl transition-all duration-300 font-medium
     ${
       isError
-        ? "bg-red-50/50 shadow-[0_8px_30px_rgb(239,68,68,0.15)] ring-1 ring-red-100"
-        : "bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.25)]"
+        ? "bg-red-50/50 dark:bg-red-900/20 shadow-[0_8px_30px_rgb(239,68,68,0.15)] ring-1 ring-red-100 dark:ring-red-800"
+        : "bg-white dark:bg-neutral-200 shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.25)] dark:focus-within:shadow-[0_0_25px_rgba(255,255,255,0.2)]"
     }
   `;
 
@@ -101,15 +101,16 @@ function ForgotPasswordContent() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60 relative">
-        <div className="absolute top-4 right-4 flex bg-neutral-100/50 rounded-lg p-0.5 border border-white/40 z-10">
+      <div className="max-w-md w-full bg-neutral-50/60 dark:bg-neutral-900/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60 dark:border-neutral-700/60 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
+        <div className="absolute top-4 right-4 flex bg-neutral-100/50 dark:bg-neutral-800/50 rounded-lg p-0.5 border border-white/40 dark:border-neutral-700/40 z-10">
           <button
             suppressHydrationWarning
             onClick={() => handleLanguageChange("en")}
             className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
               i18n.language === "en"
-                ? "bg-white shadow-sm text-neutral-900"
-                : "text-neutral-400 hover:text-neutral-600"
+                ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-white"
+                : "text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300"
             }`}
           >
             EN
@@ -119,18 +120,18 @@ function ForgotPasswordContent() {
             onClick={() => handleLanguageChange("pl")}
             className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
               i18n.language === "pl"
-                ? "bg-white shadow-sm text-neutral-900"
-                : "text-neutral-400 hover:text-neutral-600"
+                ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-white"
+                : "text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300"
             }`}
           >
             PL
           </button>
         </div>
 
-        <div className="mb-5 min-[600px]:mb-6">
+        <div className="mb-5 min-[600px]:mb-6 relative z-10">
           <Link
-            href="/login"
-            className="inline-flex items-center text-text-tertiary hover:text-brand-primary transition-colors mb-4 font-medium"
+            href={`/login${email ? `?email=${encodeURIComponent(email)}` : ""}`}
+            className="inline-flex items-center text-text-tertiary dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors mb-4 font-medium"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />{" "}
             <span suppressHydrationWarning>
@@ -139,13 +140,13 @@ function ForgotPasswordContent() {
           </Link>
           <h1
             suppressHydrationWarning
-            className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark mb-2 min-[600px]:mb-3"
+            className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark dark:text-white mb-2 min-[600px]:mb-3"
           >
             {t("auth.forgotPassword.title")}
           </h1>
           <p
             suppressHydrationWarning
-            className="text-text-primary text-sm min-[600px]:text-base"
+            className="text-text-primary dark:text-neutral-200 text-sm min-[600px]:text-base"
           >
             {t("auth.forgotPassword.subtitle")}
           </p>
@@ -153,7 +154,7 @@ function ForgotPasswordContent() {
 
         <form
           onSubmit={handleSubmit}
-          className="space-y-5 min-[600px]:space-y-6"
+          className="space-y-5 min-[600px]:space-y-6 relative z-10"
         >
           {message && (
             <div
@@ -168,13 +169,15 @@ function ForgotPasswordContent() {
           )}
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
-            <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
+            <label className="text-xs min-[600px]:text-sm font-bold text-text-dark dark:text-neutral-200 uppercase tracking-wide">
               {t("auth.forgotPassword.emailLabel")}
             </label>
             <div className={getInputWrapperClass(isEmailError)}>
               <Mail
                 className={`absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
-                  isEmailError ? "text-red-400" : "text-text-tertiary"
+                  isEmailError
+                    ? "text-red-400"
+                    : "text-text-tertiary dark:text-neutral-500"
                 }`}
               />
               <input
@@ -186,13 +189,15 @@ function ForgotPasswordContent() {
                   if (message && message.type === "error") setMessage(null);
                 }}
                 placeholder={t("auth.signup.placeholders.email")}
-                className={isEmailError ? errorInputClass : inputClass}
+                className={`${
+                  isEmailError ? errorInputClass : inputClass
+                } dark:text-neutral-900 dark:placeholder:text-neutral-500`}
               />
               {email && (
                 <button
                   type="button"
                   onClick={() => setEmail("")}
-                  className="absolute z-10 right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+                  className="absolute z-10 right-4 top-1/2 -translate-y-1/2 text-text-tertiary dark:text-neutral-500 hover:text-text-primary dark:hover:text-white transition-colors"
                 >
                   <XCircle className="w-5 h-5" />
                 </button>

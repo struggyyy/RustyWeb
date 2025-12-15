@@ -1,7 +1,22 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
-
-import CustomCursor from "@/components/common/CustomCursor";
+// external imports
 import { useTranslation, Trans } from "react-i18next";
+
+// internal imports
+import CustomCursor from "@/components/common/CustomCursor";
 
 export default function DownloadPage() {
   const { t } = useTranslation();
@@ -12,13 +27,13 @@ export default function DownloadPage() {
       <main className="flex-1 w-full max-w-screen-2xl mx-auto px-4 sm:px-8 py-8 flex flex-col items-center justify-center pt-16 overflow-x-hidden">
         {/* Hero Description */}
         <div className="text-center max-w-5xl mx-auto mb-8 space-y-6">
-          <h1 className="text-fluid-title font-black text-neutral-900 tracking-tighter uppercase leading-[0.9]">
+          <h1 className="text-fluid-title font-black text-neutral-900 dark:text-white tracking-tighter uppercase leading-[0.9]">
             <Trans
               i18nKey="download.title"
               components={[<span className="text-brand-primary" key="0" />]}
             />
           </h1>
-          <p className="text-lg md:text-xl text-neutral-500 font-medium leading-relaxed max-w-4xl mx-auto">
+          <p className="text-lg md:text-xl text-neutral-500 dark:text-neutral-200 font-medium leading-relaxed max-w-4xl mx-auto">
             {t("download.description")}
           </p>
         </div>
@@ -26,9 +41,11 @@ export default function DownloadPage() {
         {/* Download Columns */}
         <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 w-full max-w-3xl px-2">
           {/* Android Column (First - Green) */}
-          <div className="flex flex-col items-center p-6 sm:p-8 bg-white/60 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl transition-all duration-300 w-full max-w-[320px] mx-auto transform hover:scale-[1.02] hover:shadow-2xl">
+          <div className="relative overflow-hidden flex flex-col items-center p-6 sm:p-8 bg-neutral-50/60 backdrop-blur-2xl border border-white/60 dark:border-neutral-700/60 rounded-3xl shadow-xl transition-all duration-300 w-full max-w-[320px] mx-auto transform hover:scale-[1.02] hover:shadow-2xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
+
             {/* QR Placeholder */}
-            <div className="w-full aspect-square max-w-[250px] bg-[#3DDC84]/10 rounded-2xl flex items-center justify-center mb-6 shadow-inner transition-all border border-[#3DDC84]/20 relative overflow-hidden">
+            <div className="w-full aspect-square max-w-[250px] bg-[#3DDC84]/10 rounded-2xl flex items-center justify-center mb-6 shadow-inner transition-all border border-[#3DDC84]/20 relative overflow-hidden z-10">
               <div className="text-center p-4 z-10 w-full flex flex-col items-center">
                 {/* Google Play Logo SVG - Filled */}
                 <svg
@@ -49,7 +66,7 @@ export default function DownloadPage() {
               href="https://play.google.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 px-4 sm:px-6 py-3 bg-[#3DDC84] text-white rounded-xl w-full max-w-[250px] justify-center transition-all transform hover:scale-105 hover:opacity-90 shadow-xl hover:bg-[#35c274]"
+              className="relative z-10 flex items-center gap-3 px-4 sm:px-6 py-3 bg-[#3DDC84] text-white rounded-xl w-full max-w-[250px] justify-center transition-all transform hover:scale-105 hover:opacity-90 shadow-xl hover:bg-[#35c274]"
             >
               <div className="w-6 h-6 sm:w-7 sm:h-7 relative flex-shrink-0">
                 <svg
@@ -72,9 +89,11 @@ export default function DownloadPage() {
           </div>
 
           {/* iOS Column (Second - Black) */}
-          <div className="flex flex-col items-center p-6 sm:p-8 bg-white/60 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl transition-all duration-300 w-full max-w-[320px] mx-auto transform hover:scale-[1.02] hover:shadow-2xl">
+          <div className="relative overflow-hidden flex flex-col items-center p-6 sm:p-8 bg-neutral-50/60 backdrop-blur-2xl border border-white/60 dark:border-neutral-700/60 rounded-3xl shadow-xl transition-all duration-300 w-full max-w-[320px] mx-auto transform hover:scale-[1.02] hover:shadow-2xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
+
             {/* QR Placeholder */}
-            <div className="w-full aspect-square max-w-[250px] bg-neutral-900 rounded-2xl flex items-center justify-center mb-6 shadow-inner transition-all relative overflow-hidden">
+            <div className="w-full aspect-square max-w-[250px] bg-neutral-900 rounded-2xl flex items-center justify-center mb-6 shadow-inner transition-all relative overflow-hidden z-10">
               <div className="text-center p-4 z-10 w-full flex flex-col items-center">
                 {/* Apple Logo SVG - Filled */}
                 <svg
@@ -95,7 +114,7 @@ export default function DownloadPage() {
               href="https://apps.apple.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 px-4 sm:px-6 py-3 bg-black text-white rounded-xl w-full max-w-[250px] justify-center transition-all transform hover:scale-105 hover:opacity-90 shadow-xl hover:bg-neutral-800"
+              className="relative z-10 flex items-center gap-3 px-4 sm:px-6 py-3 bg-black text-white rounded-xl w-full max-w-[250px] justify-center transition-all transform hover:scale-105 hover:opacity-90 shadow-xl hover:bg-neutral-800"
             >
               <div className="w-6 h-6 sm:w-7 sm:h-7 relative flex-shrink-0">
                 <svg
@@ -117,7 +136,7 @@ export default function DownloadPage() {
         </div>
       </main>
 
-      <footer className="w-full py-6 text-center text-neutral-400 text-sm font-bold uppercase tracking-widest">
+      <footer className="w-full py-6 text-center text-neutral-400 dark:text-neutral-200 text-sm font-bold uppercase tracking-widest">
         {t("common.footer")}
       </footer>
     </div>

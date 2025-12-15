@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 
 // External libraries
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   Mail,
@@ -35,7 +35,8 @@ import {
 import { useAuth } from "@/components/context/AuthContext";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const searchParams = useSearchParams();
+  const [email, setEmail] = useState(searchParams.get("email") || "");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [generalError, setGeneralError] = useState("");
@@ -116,8 +117,8 @@ export default function LoginPage() {
     relative w-full rounded-xl transition-all duration-300 font-medium
     ${
       isError
-        ? "bg-red-50/50 shadow-[0_8px_30px_rgb(239,68,68,0.15)] ring-1 ring-red-100"
-        : "bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.25)]"
+        ? "bg-red-50/50 dark:bg-red-900/20 shadow-[0_8px_30px_rgb(239,68,68,0.15)] ring-1 ring-red-100 dark:ring-red-800"
+        : "bg-white dark:bg-neutral-200 shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.25)] dark:focus-within:shadow-[0_0_25px_rgba(255,255,255,0.2)]"
     }
   `;
 
@@ -128,15 +129,16 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60 relative">
-        <div className="absolute top-4 right-4 flex bg-neutral-100/50 rounded-lg p-0.5 border border-white/40 z-10">
+      <div className="max-w-md w-full bg-neutral-50/60 dark:bg-neutral-900/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 min-[600px]:p-10 border border-white/60 dark:border-neutral-700/60 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
+        <div className="absolute top-4 right-4 flex bg-neutral-100/50 dark:bg-neutral-800/50 rounded-lg p-0.5 border border-white/40 dark:border-neutral-700/40 z-10">
           <button
             suppressHydrationWarning
             onClick={() => handleLanguageChange("en")}
             className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
               i18n.language === "en"
-                ? "bg-white shadow-sm text-neutral-900"
-                : "text-neutral-400 hover:text-neutral-600"
+                ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-white"
+                : "text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300"
             }`}
           >
             EN
@@ -146,18 +148,18 @@ export default function LoginPage() {
             onClick={() => handleLanguageChange("pl")}
             className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
               i18n.language === "pl"
-                ? "bg-white shadow-sm text-neutral-900"
-                : "text-neutral-400 hover:text-neutral-600"
+                ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-white"
+                : "text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300"
             }`}
           >
             PL
           </button>
         </div>
 
-        <div className="mb-5 min-[600px]:mb-6">
+        <div className="mb-5 min-[600px]:mb-6 relative z-10">
           <Link
             href="/"
-            className="inline-flex items-center text-text-tertiary hover:text-brand-primary transition-colors mb-4 font-medium"
+            className="inline-flex items-center text-text-tertiary dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors mb-4 font-medium"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />{" "}
             <span suppressHydrationWarning>
@@ -166,13 +168,13 @@ export default function LoginPage() {
           </Link>
           <h1
             suppressHydrationWarning
-            className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark mb-2 min-[600px]:mb-3"
+            className="text-xl min-[600px]:text-3xl font-extrabold text-text-dark dark:text-white mb-2 min-[600px]:mb-3"
           >
             {t("auth.login.title")}
           </h1>
           <p
             suppressHydrationWarning
-            className="text-text-primary text-sm min-[600px]:text-base"
+            className="text-text-primary dark:text-neutral-200 text-sm min-[600px]:text-base"
           >
             {t("auth.login.subtitle")}
           </p>
@@ -180,7 +182,7 @@ export default function LoginPage() {
 
         <form
           onSubmit={handleLoginPress}
-          className="space-y-5 min-[600px]:space-y-6"
+          className="space-y-5 min-[600px]:space-y-6 relative z-10"
         >
           {generalError && (
             <div className="p-4 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 font-medium">
@@ -189,13 +191,15 @@ export default function LoginPage() {
           )}
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
-            <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
+            <label className="text-xs min-[600px]:text-sm font-bold text-text-dark dark:text-neutral-200 uppercase tracking-wide">
               {t("auth.login.emailLabel")}
             </label>
             <div className={getInputWrapperClass(fieldErrors.email)}>
               <Mail
                 className={`absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
-                  fieldErrors.email ? "text-red-400" : "text-text-tertiary"
+                  fieldErrors.email
+                    ? "text-red-400"
+                    : "text-text-tertiary dark:text-neutral-500"
                 }`}
               />
               <input
@@ -208,13 +212,15 @@ export default function LoginPage() {
                   if (generalError) setGeneralError("");
                 }}
                 placeholder="name@example.com"
-                className={fieldErrors.email ? errorInputClass : inputClass}
+                className={`${
+                  fieldErrors.email ? errorInputClass : inputClass
+                } dark:text-neutral-900 dark:placeholder:text-neutral-500`}
               />
               {email && (
                 <button
                   type="button"
                   onClick={() => setEmail("")}
-                  className="absolute z-10 right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+                  className="absolute z-10 right-4 top-1/2 -translate-y-1/2 text-text-tertiary dark:text-neutral-500 hover:text-text-primary dark:hover:text-white transition-colors"
                 >
                   <XCircle className="w-5 h-5" />
                 </button>
@@ -223,13 +229,15 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
-            <label className="text-xs min-[600px]:text-sm font-bold text-text-dark uppercase tracking-wide">
+            <label className="text-xs min-[600px]:text-sm font-bold text-text-dark dark:text-neutral-200 uppercase tracking-wide">
               {t("auth.login.passwordLabel")}
             </label>
             <div className={getInputWrapperClass(fieldErrors.password)}>
               <Lock
                 className={`absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
-                  fieldErrors.password ? "text-red-400" : "text-text-tertiary"
+                  fieldErrors.password
+                    ? "text-red-400"
+                    : "text-text-tertiary dark:text-neutral-500"
                 }`}
               />
               <input
@@ -242,12 +250,14 @@ export default function LoginPage() {
                   if (generalError) setGeneralError("");
                 }}
                 placeholder="••••••••"
-                className={fieldErrors.password ? errorInputClass : inputClass}
+                className={`${
+                  fieldErrors.password ? errorInputClass : inputClass
+                } dark:text-neutral-900 dark:placeholder:text-neutral-500`}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute z-10 right-4 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+                className="absolute z-10 right-4 top-1/2 -translate-y-1/2 text-text-tertiary dark:text-neutral-500 hover:text-text-primary dark:hover:text-white transition-colors"
               >
                 {showPassword ? (
                   <EyeOff className="w-5 h-5" />
@@ -259,11 +269,11 @@ export default function LoginPage() {
           </div>
 
           <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center text-text-primary font-medium cursor-pointer group select-none relative z-10">
+            <label className="flex items-center text-text-primary dark:text-white font-medium cursor-pointer group select-none relative z-10">
               <div className="relative mr-3 flex items-center justify-center w-5 h-5">
                 <input
                   type="checkbox"
-                  className="peer appearance-none w-5 h-5 rounded-full border-2 border-neutral-300 checked:bg-brand-primary checked:border-brand-primary transition-all duration-200 cursor-pointer"
+                  className="peer appearance-none w-5 h-5 rounded-full border-2 border-neutral-300 dark:border-white checked:bg-brand-primary checked:border-brand-primary transition-all duration-200 cursor-pointer"
                 />
                 <Check
                   className="absolute w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity duration-200 pointer-events-none"
@@ -296,10 +306,12 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-8 text-center text-sm text-text-primary font-medium">
+        <div className="mt-8 text-center text-sm text-text-primary dark:text-white font-medium relative z-10">
           {t("auth.login.noAccount")}{" "}
           <Link
-            href="/signup"
+            href={`/signup${
+              email ? `?email=${encodeURIComponent(email)}` : ""
+            }`}
             className="text-brand-primary font-bold hover:underline"
           >
             {t("auth.login.signUpLink")}

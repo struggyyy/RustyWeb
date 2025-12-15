@@ -1,8 +1,24 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
+// external imports
 import Link from "next/link";
-import CustomCursor from "@/components/common/CustomCursor";
 import { useTranslation } from "react-i18next";
+
+// internal imports
+import CustomCursor from "@/components/common/CustomCursor";
 
 export default function Page() {
   const { t } = useTranslation();
@@ -26,13 +42,13 @@ export default function Page() {
               <div className="flex gap-3 md:gap-4 items-center mt-2 md:mt-3">
                 <Link
                   href="/signup"
-                  className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-brand-primary text-white dark:text-black text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-xl hover:opacity-90 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
+                  className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-brand-primary text-white dark:text-black text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-xl dark:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:opacity-90 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
                 >
                   {t("home.joinUs")}
                 </Link>
                 <Link
                   href="/download"
-                  className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-[#CECECE] dark:bg-neutral-300 text-white dark:text-black text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-lg hover:bg-neutral-300 dark:hover:bg-neutral-200 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
+                  className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-[#CECECE] dark:bg-neutral-300 text-white dark:text-black text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-lg dark:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:bg-neutral-300 dark:hover:bg-neutral-200 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
                 >
                   {t("home.downloadApp")}
                 </Link>
