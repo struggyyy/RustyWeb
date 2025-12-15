@@ -131,7 +131,7 @@ export default function PublicHeader() {
 
           {/* Dropdown Menu */}
           {isOpen && (
-            <div className="fixed top-16 left-0 right-0 mx-auto w-72 min-[550px]:absolute min-[550px]:top-12 min-[550px]:right-0 min-[550px]:left-auto min-[550px]:mx-0 md:top-14 bg-neutral-50/60 backdrop-blur-2xl border border-white/60 dark:border-neutral-700/60 shadow-2xl rounded-2xl p-2 animate-in fade-in slide-in-from-top-2 duration-200 origin-top min-[550px]:origin-top-right z-40">
+            <div className="fixed top-16 left-0 right-0 mx-auto w-72 min-[550px]:absolute min-[550px]:top-12 min-[550px]:right-0 min-[550px]:left-auto min-[550px]:mx-0 md:top-14 bg-neutral-50/60 backdrop-blur-2xl border border-white/60 dark:border-neutral-700/60 shadow-2xl dark:shadow-[0_0_30px_rgba(255,255,255,0.15)] rounded-2xl p-2 animate-in fade-in slide-in-from-top-2 duration-200 origin-top min-[550px]:origin-top-right z-40">
               {/* Liquid Glass Shine Effect */}
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
 

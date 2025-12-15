@@ -80,10 +80,10 @@ export const RadiusPicker = ({ radius, onChange }: RadiusPickerProps) => {
 
           {/* Dropdown / Modal Card */}
           {/* Note: Modified widht from min-w-[600px] to w-[320px] for radius picker as it doesn't need to be huge */}
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] w-[90vw] max-w-[340px] sm:absolute sm:inset-auto sm:top-full sm:right-0 sm:left-auto sm:translate-x-0 sm:translate-y-0 sm:mt-2 sm:z-50 sm:w-[320px] p-6 bg-white border border-neutral-100 rounded-2xl shadow-xl flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-200">
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] w-[90vw] max-w-[340px] sm:absolute sm:inset-auto sm:top-full sm:right-0 sm:left-auto sm:translate-x-0 sm:translate-y-0 sm:mt-2 sm:z-50 sm:w-[320px] p-6 bg-white dark:bg-neutral-200 border border-neutral-100 dark:border-neutral-200 rounded-2xl shadow-xl dark:shadow-[0_0_30px_rgba(255,255,255,0.15)] flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-200">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-bold text-neutral-700">
+                <label className="text-sm font-bold text-neutral-700 dark:text-neutral-900">
                   {t("common.radius")}
                 </label>
                 <span className="text-sm font-medium text-brand-primary bg-brand-primary/10 px-2 py-1 rounded-md">
@@ -98,23 +98,23 @@ export const RadiusPicker = ({ radius, onChange }: RadiusPickerProps) => {
                 step="1"
                 value={displayValue}
                 onChange={handleSliderChange}
-                className="w-full h-2 bg-neutral-100 rounded-lg appearance-none cursor-pointer accent-brand-primary hover:accent-brand-primary/90 transition-all"
+                className="w-full h-2 bg-neutral-100 dark:bg-neutral-300 rounded-lg appearance-none cursor-pointer accent-brand-primary hover:accent-brand-primary/90 transition-all"
               />
 
-              <div className="flex justify-between text-xs text-neutral-400 font-medium px-1">
+              <div className="flex justify-between text-xs text-neutral-400 dark:text-neutral-500 font-medium px-1">
                 <span>1 km</span>
                 <span>50 km</span>
                 <span>100 km</span>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-neutral-50 flex justify-end gap-2">
+            <div className="pt-4 border-t border-neutral-50 dark:border-neutral-300 flex justify-end gap-2">
               <button
                 onClick={() => {
                   onChange(null);
                   setIsOpen(false);
                 }}
-                className="px-3 py-1.5 text-xs font-medium text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50 rounded-lg transition-colors"
+                className="px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-700 hover:text-neutral-700 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-transparent rounded-lg transition-colors"
               >
                 {t("common.clear")}
               </button>
