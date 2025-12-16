@@ -123,8 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
 
-      // Define protected routes
-      const protectedPaths = ["/dashboard", "/settings", "/admin"];
+      const protectedPaths = ["/dashboard", "/profile", "/admin"];
       const isProtected = protectedPaths.some((path) =>
         pathname?.startsWith(path)
       );
@@ -156,11 +155,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setProfileLoaded(true);
 
             // 2. Strict Admin Redirect (Match Mobile Case 5)
-            // If user is Admin, they MUST be on /admin routes OR /settings.
+            // If user is Admin, they MUST be on /admin routes OR /profile.
             if (
               isUserAdmin &&
               !pathname?.startsWith("/admin") &&
-              !pathname?.startsWith("/settings")
+              !pathname?.startsWith("/profile")
             ) {
               router.replace("/admin");
             }

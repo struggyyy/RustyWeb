@@ -189,14 +189,14 @@ export default function DashboardHeader() {
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
 
               <div className="relative z-10 space-y-1">
-                {/* Settings Link */}
+                {/* Profile Link */}
                 <Link
-                  href="/settings"
+                  href="/profile"
                   onClick={() => setIsOpen("none")}
                   className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-white/50 dark:hover:bg-neutral-800/50 rounded-xl transition-colors group"
                 >
-                  <Settings className="w-4 h-4 text-neutral-400 group-hover:text-brand-primary dark:group-hover:text-white transition-colors" />
-                  {t("common.settings")}
+                  <User className="w-4 h-4 text-neutral-400 group-hover:text-brand-primary dark:group-hover:text-white transition-colors" />
+                  {t("common.profile")}
                 </Link>
 
                 <div className="h-[1.5px] bg-neutral-200/50 dark:bg-neutral-700/50 my-1 mx-2" />
