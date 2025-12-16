@@ -43,6 +43,7 @@ export default function SettingsPage() {
     updateUserAuth,
     uploadProfileImage,
     deleteAccount,
+    isAdmin,
   } = useAuth();
   const { t } = useTranslation();
   const router = useRouter();
@@ -57,6 +58,24 @@ export default function SettingsPage() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [error, setError] = useState("");
+  const [isGoingBack, setIsGoingBack] = useState(false);
+
+  const handleBack = () => {
+    setIsGoingBack(true);
+
+    setTimeout(() => {
+      // Check if there is a referrer and if it belongs to our app (same origin)
+      if (
+        document.referrer &&
+        document.referrer.startsWith(window.location.origin)
+      ) {
+        router.back();
+      } else {
+        // Fallback if opened directly, from external site, or no referrer
+        router.push(isAdmin ? "/admin" : "/dashboard");
+      }
+    }, 600);
+  };
 
   const handleSave = async () => {
     if (!nickname.trim()) {
@@ -152,12 +171,23 @@ export default function SettingsPage() {
     <div className="min-h-screen font-sans relative">
       {/* Fixed Back Button */}
       <div className="fixed top-4 left-4 sm:top-8 sm:left-8 z-50">
-        <Link
-          href="/dashboard"
-          className="w-10 h-10 md:w-12 md:h-12 bg-white/60 backdrop-blur-2xl border border-white/60 rounded-full flex items-center justify-center hover:bg-white/80 hover:scale-105 transition-all shadow-xl text-neutral-500 hover:text-brand-primary"
+        <button
+          onClick={handleBack}
+          className={`relative overflow-hidden w-10 h-10 md:w-12 md:h-12 bg-neutral-50/60 backdrop-blur-2xl border border-white/60 dark:border-neutral-700/60 rounded-full flex items-center justify-center hover:bg-neutral-50/80 hover:scale-105 transition-all duration-500 ease-in-out shadow-xl ${
+            isGoingBack
+              ? "scale-110 shadow-brand-primary/20 dark:shadow-brand-primary/20"
+              : "scale-100 dark:shadow-white/10"
+          }`}
         >
-          <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />
-        </Link>
+          <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
+          <ArrowLeft
+            className={`relative z-10 w-5 h-5 md:w-6 md:h-6 text-neutral-500 dark:text-white transition-all duration-500 ease-in-out ${
+              isGoingBack
+                ? "animate-shake-left"
+                : "translate-x-0 opacity-100 scale-100"
+            }`}
+          />
+        </button>
       </div>
 
       <main className="max-w-xl mx-auto p-4 sm:p-8 pt-20 sm:pt-24">
