@@ -56,24 +56,26 @@ export default function ProfileImageModal({
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-lg bg-white dark:bg-neutral-200 rounded-[32px] shadow-2xl dark:shadow-[0_0_40px_rgba(0,0,0,0.5)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100 bg-white/50 backdrop-blur-md">
-          <h3 className="text-lg font-bold text-neutral-800">{title}</h3>
+        <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-100 dark:border-neutral-300">
+          <h3 className="text-xl font-black text-neutral-800 dark:text-black tracking-tight">
+            {title}
+          </h3>
           <button
             onClick={onClose}
-            className="p-2 -mr-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-full transition-colors"
+            className="p-2 -mr-2 text-neutral-400 dark:text-black hover:text-neutral-600 dark:hover:text-black/70 hover:bg-neutral-100 dark:hover:bg-neutral-300 rounded-xl transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Image Container */}
-        <div className="p-1 bg-neutral-50 aspect-square flex items-center justify-center">
+        <div className="p-8 flex items-center justify-center bg-white dark:bg-neutral-200">
           <img
             src={imageUrl}
             alt={title}
-            className="w-full h-full object-contain"
+            className="w-full h-auto max-h-[60vh] object-contain rounded-2xl shadow-sm dark:shadow-md border border-neutral-100 dark:border-neutral-300"
           />
         </div>
       </div>

@@ -101,7 +101,7 @@ export default function ReportCard({
   return (
     <div
       onClick={() => onDetailsPress(report)}
-      className="bg-white/60 dark:bg-neutral-900/60 backdrop-blur-2xl border border-white/60 dark:border-neutral-700/60 shadow-xl dark:shadow-[0_0_30px_rgba(255,255,255,0.15)] p-3 sm:p-5 rounded-2xl cursor-pointer hover:scale-[1.01] transition-all duration-300 group relative overflow-hidden"
+      className="bg-white/60 dark:bg-neutral-900/60 backdrop-blur-2xl border border-neutral-200 dark:border-neutral-700/60 shadow-xl dark:shadow-[0_0_30px_rgba(255,255,255,0.15)] p-3 sm:p-5 rounded-2xl cursor-pointer hover:scale-[1.01] transition-all duration-300 group relative overflow-hidden"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
       <div className="flex flex-row items-center gap-3 md:gap-4 relative z-10">

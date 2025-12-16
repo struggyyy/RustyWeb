@@ -166,23 +166,32 @@ export default function PublicHeader() {
                     <Globe className="w-4 h-4 text-neutral-400" />
                     {t("nav.language")}
                   </div>
-                  <div className="flex bg-neutral-100/50 dark:bg-neutral-900/50 rounded-lg p-0.5 border border-white/40 dark:border-neutral-700/40">
+                  <div className="flex bg-neutral-100/50 dark:bg-neutral-900/50 rounded-lg p-0.5 border border-white/40 dark:border-neutral-700/40 relative">
+                    {/* Animated Sliding Background */}
+                    <div
+                      className={`absolute top-0.5 bottom-0.5 w-[calc(50%-2px)] bg-white dark:bg-neutral-800 rounded-md shadow-sm transition-all duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
+                        i18n.language === "pl"
+                          ? "translate-x-full"
+                          : "translate-x-0"
+                      } left-0.5`}
+                    />
+
                     <button
                       onClick={() => i18n.changeLanguage("en")}
-                      className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
+                      className={`flex-1 relative z-10 px-2 py-0.5 text-xs font-bold rounded-md transition-colors duration-200 ${
                         i18n.language === "en"
-                          ? "bg-white dark:bg-neutral-800 shadow-sm text-neutral-900 dark:text-white"
-                          : "text-neutral-400 dark:text-neutral-300 hover:text-neutral-600 dark:hover:text-neutral-200"
+                          ? "text-neutral-900 dark:text-white"
+                          : "text-neutral-500 dark:text-neutral-300 hover:text-neutral-700 dark:hover:text-neutral-200"
                       }`}
                     >
                       EN
                     </button>
                     <button
                       onClick={() => i18n.changeLanguage("pl")}
-                      className={`px-2 py-0.5 text-xs font-bold rounded-md transition-all ${
+                      className={`flex-1 relative z-10 px-2 py-0.5 text-xs font-bold rounded-md transition-colors duration-200 ${
                         i18n.language === "pl"
-                          ? "bg-white dark:bg-neutral-800 shadow-sm text-neutral-900 dark:text-white"
-                          : "text-neutral-400 dark:text-neutral-300 hover:text-neutral-600 dark:hover:text-neutral-200"
+                          ? "text-neutral-900 dark:text-white"
+                          : "text-neutral-500 dark:text-neutral-300 hover:text-neutral-700 dark:hover:text-neutral-200"
                       }`}
                     >
                       PL

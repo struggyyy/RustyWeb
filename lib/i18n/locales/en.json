@@ -98,9 +98,11 @@
     "language": "Language",
     "darkTheme": "Dark Theme"
   },
-  "settings": {
+  "profile": {
+    "profileHeader": "Profile",
     "editProfile": "Edit Profile",
     "nickname": "Nickname",
+    "nicknamePlaceholder": "Your nickname",
     "profilePicture": "Profile Picture",
     "anonymousUser": "Anonymous User",
     "deleteAccount": "Delete Account",
@@ -109,6 +111,7 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "saveChanges": "Save Changes",
+    "signOut": "Sign Out",
     "uploadError": "Failed to upload image",
     "updateError": "Failed to update profile",
     "deleteError": "Failed to delete account",
