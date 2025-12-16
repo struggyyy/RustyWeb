@@ -34,6 +34,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
+    lng: typeof window === "undefined" ? "en" : undefined,
     fallbackLng: "en",
     interpolation: {
       escapeValue: false,

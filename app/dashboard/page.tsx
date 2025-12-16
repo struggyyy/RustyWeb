@@ -135,14 +135,14 @@ export default function UserDashboardPage() {
                 ))}
               </div>
             ) : reports.length === 0 ? (
-              <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 sm:p-16 text-center border-2 border-dashed border-neutral-200 mt-4 max-w-4xl mx-auto">
-                <div className="w-16 h-16 sm:w-24 sm:h-24 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <MapPin className="w-8 h-8 sm:w-12 sm:h-12 text-neutral-300" />
+              <div className="bg-white/80 dark:bg-neutral-900/40 backdrop-blur-md rounded-3xl p-8 sm:p-16 text-center border-2 border-dashed border-neutral-200 dark:border-white/30 mt-4 max-w-4xl mx-auto shadow-sm dark:shadow-[0_0_30px_rgba(0,0,0,0.2)]">
+                <div className="w-16 h-16 sm:w-24 sm:h-24 bg-neutral-50 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 ring-1 ring-black/5 dark:ring-white/10">
+                  <MapPin className="w-8 h-8 sm:w-12 sm:h-12 text-neutral-300 dark:text-white/80" />
                 </div>
-                <h3 className="text-lg sm:text-2xl font-bold text-neutral-700 mb-3">
+                <h3 className="text-lg sm:text-2xl font-bold text-neutral-700 dark:text-white mb-3">
                   {t("dashboard.noReportsTitle")}
                 </h3>
-                <p className="text-neutral-400 max-w-md mx-auto text-sm sm:text-lg font-medium">
+                <p className="text-neutral-400 dark:text-neutral-200 max-w-md mx-auto text-sm sm:text-lg font-medium">
                   {t("dashboard.noReportsDesc")}
                 </p>
               </div>
