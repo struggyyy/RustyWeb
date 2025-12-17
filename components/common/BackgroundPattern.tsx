@@ -48,11 +48,11 @@ export default function BackgroundPattern({
     <>
       <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none bg-neutral-50 transition-colors duration-300">
         <div
-          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.1]"
+          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.15]"
           style={{
             backgroundImage:
               theme === "dark"
-                ? "repeating-linear-gradient(45deg, #404040 0, #404040 1px, transparent 0, transparent 50%)"
+                ? "repeating-linear-gradient(45deg, #808080 0, #808080 1px, transparent 0, transparent 50%)"
                 : currentPattern.backgroundImage,
             backgroundSize:
               theme === "dark"

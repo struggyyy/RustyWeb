@@ -93,7 +93,7 @@
   color-scheme: dark;
   
   /* Backgrounds */
-  --neutral-50: #121212; /* Main background becomes deep dark gray */
+  --neutral-50: #1A1A1A; /* Main background becomes lighter grayish */
   --neutral-100: #262626; /* Slightly lighter for cards/borders */
   
   /* Text */
