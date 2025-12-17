@@ -18,7 +18,15 @@ import { useState, useRef, useEffect } from "react";
 
 // External libraries
 import Link from "next/link";
-import { User, MoreHorizontal, X, LogOut, Settings } from "lucide-react";
+import {
+  User,
+  MoreHorizontal,
+  X,
+  LogOut,
+  Settings,
+  Shield,
+  Key,
+} from "lucide-react";
 
 // Internal imports
 import { useAuth } from "@/components/context/AuthContext";
@@ -29,7 +37,7 @@ import { useTheme } from "@/components/context/ThemeProvider";
 export default function DashboardHeader() {
   const [isOpen, setIsOpen] = useState<"none" | "more" | "profile">("none");
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { logOut, user, updateUserProfile } = useAuth();
+  const { logOut, user, updateUserProfile, isAdmin } = useAuth();
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === "dark";
@@ -94,6 +102,26 @@ export default function DashboardHeader() {
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
 
               <div className="relative z-10 space-y-1">
+                {/* Privacy Policy */}
+                <Link
+                  href="/privacy"
+                  onClick={() => setIsOpen("none")}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-white/50 dark:hover:bg-neutral-700/50 rounded-xl transition-colors group"
+                >
+                  <Shield className="w-4 h-4 text-neutral-400 group-hover:text-brand-primary transition-colors" />
+                  {t("nav.privacyPolicy")}
+                </Link>
+
+                {/* Request Admin Access - Only for non-admins */}
+                {!isAdmin && (
+                  <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-white/50 dark:hover:bg-neutral-700/50 rounded-xl transition-colors group">
+                    <Key className="w-4 h-4 text-neutral-400 group-hover:text-brand-primary transition-colors" />
+                    {t("nav.requestAdmin")}
+                  </button>
+                )}
+
+                <div className="h-px bg-neutral-200/50 dark:bg-neutral-700/50 my-1 mx-2" />
+
                 {/* Language Toggle */}
                 <div className="flex items-center justify-between px-3 py-2.5">
                   <div className="flex items-center gap-3 text-sm font-medium text-neutral-700 dark:text-neutral-200">
@@ -154,17 +182,6 @@ export default function DashboardHeader() {
                     />
                   </button>
                 </div>
-
-                <div className="h-[1.5px] bg-neutral-200/50 dark:bg-neutral-700/50 my-1 mx-2" />
-
-                {/* Sign Out */}
-                <button
-                  onClick={() => logOut()}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50/50 dark:hover:bg-red-900/20 rounded-xl transition-colors group"
-                >
-                  <LogOut className="w-4 h-4 text-red-400 dark:text-red-500 group-hover:text-red-500 transition-colors" />
-                  {t("auth.logout")}
-                </button>
               </div>
             </div>
           )}
@@ -198,6 +215,32 @@ export default function DashboardHeader() {
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
 
               <div className="relative z-10 space-y-1">
+                {/* Home Link */}
+                <Link
+                  href="/"
+                  onClick={() => setIsOpen("none")}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-white/50 dark:hover:bg-neutral-700/50 rounded-xl transition-colors group"
+                >
+                  <div className="w-4 h-4 flex items-center justify-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="text-neutral-400 group-hover:text-brand-primary transition-colors"
+                    >
+                      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                      <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                  </div>
+                  {t("nav.home") || "Home"}
+                </Link>
+
                 {/* Profile Link */}
                 <Link
                   href="/profile"

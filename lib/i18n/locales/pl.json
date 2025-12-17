@@ -96,7 +96,9 @@
     "requestAdmin": "Poproś o dostęp",
     "requestAccountDeletion": "Poproś o usunięcie konta",
     "language": "Język",
-    "darkTheme": "Ciemny motyw"
+    "darkTheme": "Ciemny motyw",
+    "home": "Strona główna",
+    "dashboard": "Panel zgłoszeń"
   },
   "profile": {
     "profileHeader": "Profil",

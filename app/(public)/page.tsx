@@ -32,9 +32,15 @@ export default function Page() {
           <div className="w-auto flex flex-col items-start space-y-4 z-10 md:pb-48">
             {/* Slogan and Buttons Container */}
             <div className="flex flex-col items-start">
-              <h1 className="text-fluid-title font-black text-neutral-900 dark:text-white leading-[0.9] tracking-tighter whitespace-nowrap">
+              <h1
+                suppressHydrationWarning
+                className="text-fluid-title font-black text-neutral-900 dark:text-white leading-[0.9] tracking-tighter whitespace-nowrap"
+              >
                 {t("home.title")}{" "}
-                <span className="block text-fluid-subtitle text-neutral-400 dark:text-neutral-200 mt-2">
+                <span
+                  suppressHydrationWarning
+                  className="block text-fluid-subtitle text-neutral-400 dark:text-neutral-200 mt-2"
+                >
                   {t("home.subtitle")}
                 </span>
               </h1>

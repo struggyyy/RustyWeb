@@ -7,7 +7,7 @@ export default function PrivacyPolicy() {
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-x-hidden font-sans cursor-none bg-neutral-50 dark:bg-neutral-800 transition-colors duration-300">
+    <div className="min-h-screen flex flex-col relative overflow-x-hidden font-sans cursor-none bg-neutral-50 transition-colors duration-300">
       <CustomCursor />
 
       <main className="flex-1 w-full max-w-4xl mx-auto px-6 py-24 md:py-32">

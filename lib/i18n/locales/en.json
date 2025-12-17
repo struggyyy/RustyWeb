@@ -96,7 +96,9 @@
     "requestAdmin": "Request Admin Access",
     "requestAccountDeletion": "Request Account Deletion",
     "language": "Language",
-    "darkTheme": "Dark Theme"
+    "darkTheme": "Dark Theme",
+    "home": "Home",
+    "dashboard": "Dashboard"
   },
   "profile": {
     "profileHeader": "Profile",

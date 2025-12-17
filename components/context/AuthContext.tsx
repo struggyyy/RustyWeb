@@ -104,9 +104,13 @@ interface AuthContextType {
     file: File
   ) => Promise<string | undefined>;
   deleteAccount: () => Promise<void>;
+  previousPath: string | null;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+
+// Protected routes that require authentication
+const PROTECTED_PATHS = ["/dashboard", "/profile", "/admin"];
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -116,15 +120,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profileLoaded, setProfileLoaded] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const [previousPath, setPreviousPath] = useState<string | null>(null);
   const isClosingSessionRef = useRef(false);
   const { i18n } = useTranslation();
+
+  // Use a ref to track the path from the previous render cycle
+  const currentPathRef = useRef(pathname);
+  useEffect(() => {
+    if (currentPathRef.current !== pathname) {
+      setPreviousPath(currentPathRef.current);
+      currentPathRef.current = pathname;
+    }
+  }, [pathname]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
 
-      const protectedPaths = ["/dashboard", "/profile", "/admin"];
-      const isProtected = protectedPaths.some((path) =>
+      const isProtected = PROTECTED_PATHS.some((path) =>
         pathname?.startsWith(path)
       );
 
@@ -154,15 +167,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setIsAdmin(isUserAdmin);
             setProfileLoaded(true);
 
-            // 2. Strict Admin Redirect (Match Mobile Case 5)
-            // If user is Admin, they MUST be on /admin routes OR /profile.
-            if (
-              isUserAdmin &&
-              !pathname?.startsWith("/admin") &&
-              !pathname?.startsWith("/profile")
-            ) {
-              router.replace("/admin");
-            }
+            // 2. Strict Admin Redirect Removed to allow access to home page
+            // if (
+            //   isUserAdmin &&
+            //   !pathname?.startsWith("/admin") &&
+            //   !pathname?.startsWith("/profile")
+            // ) {
+            //   router.replace("/admin");
+            // }
           } else {
             setProfile(null);
             setIsAdmin(false);
@@ -181,7 +193,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         setProfile(null);
         setIsAdmin(false);
-        setProfileLoaded(false);
+        setProfileLoaded(true);
       }
 
       setLoading(false);
@@ -250,7 +262,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isClosingSessionRef.current = true;
     try {
       await signOut(auth);
-      router.push("/");
+
+      // Only redirect to home if we are currently on a protected route
+      const isProtected = PROTECTED_PATHS.some((path) =>
+        pathname?.startsWith(path)
+      );
+
+      if (isProtected) {
+        router.push("/");
+      }
+
+      isClosingSessionRef.current = false;
     } catch (error) {
       isClosingSessionRef.current = false;
       throw error;
@@ -445,6 +467,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         updateUserAuth,
         uploadProfileImage,
         deleteAccount,
+        previousPath,
       }}
     >
       {children}
