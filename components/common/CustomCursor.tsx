@@ -76,11 +76,11 @@ export default function CustomCursor({
       `}</style>
       <div
         ref={cursorRef}
-        className={`fixed top-0 left-0 ${sizeClass} border-[2.5px] border-white rounded-full pointer-events-none z-[2147483647] mix-blend-difference transition-[width,height,opacity] duration-300 ease-out flex items-center justify-center will-change-transform`}
+        className={`fixed top-0 left-0 ${sizeClass} border-[2.5px] border-white rounded-full pointer-events-none z-[2147483647] mix-blend-difference transition-[width,height,opacity] duration-250 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex items-center justify-center will-change-transform`}
         style={{ opacity: isVisible ? 1 : 0 }}
       >
         <div
-          className={`bg-white rounded-full transition-all duration-300 ease-out ${
+          className={`bg-white rounded-full transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
             isHovering ? "w-full h-full" : dotSizeClass
           }`}
         />

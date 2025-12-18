@@ -217,9 +217,13 @@ function VerifyEmailContent() {
             ) : (
               <>
                 <RefreshCw className="w-5 h-5 mr-2 hidden min-[540px]:block" />
-                {cooldown > 0
-                  ? t("auth.verifyEmail.resendCooldown", { seconds: cooldown })
-                  : t("auth.verifyEmail.resendButton")}
+                <span suppressHydrationWarning>
+                  {cooldown > 0
+                    ? t("auth.verifyEmail.resendCooldown", {
+                        seconds: cooldown,
+                      })
+                    : t("auth.verifyEmail.resendButton")}
+                </span>
               </>
             )}
           </button>

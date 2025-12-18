@@ -110,7 +110,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 // Protected routes that require authentication
-const PROTECTED_PATHS = ["/dashboard", "/profile", "/admin"];
+const PROTECTED_PATHS = ["/dashboard", "/profile", "/admin", "/verify-email"];
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -186,8 +186,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     if (user) {
-      // 1. Check Email Verification for protected routes
-      if (!user.emailVerified && isProtected) {
+      // 1. Check Email Verification
+      // If user is verified and tries to access verify-email page -> Redirect to Dashboard
+      if (user.emailVerified && pathname?.startsWith("/verify-email")) {
+        router.replace("/dashboard");
+        return;
+      }
+
+      // If user is NOT verified and tries to access other protected routes -> Redirect to verify-email
+      if (
+        !user.emailVerified &&
+        isProtected &&
+        !pathname?.startsWith("/verify-email")
+      ) {
         router.replace(
           `/verify-email?email=${encodeURIComponent(user.email || "")}`
         );
@@ -246,8 +257,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setProfile(initialProfileData);
     setProfileLoaded(true);
 
-    // Send verification email automatically
-    await sendEmailVerification(newUser.user);
+    // Send verification email automatically (suppress error if rate restricted)
+    try {
+      await sendEmailVerification(newUser.user);
+    } catch (error) {
+      console.warn("Failed to send initial verification email:", error);
+      // Continue anyway, user can resend from the page
+    }
 
     router.push(`/verify-email?email=${encodeURIComponent(email)}`);
   };

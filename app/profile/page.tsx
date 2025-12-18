@@ -418,7 +418,7 @@ export default function SettingsPage() {
                       ) : (
                         <>
                           <Trash2 className="w-3 h-3" />
-                          {t("settings.delete")}
+                          {t("profile.delete")}
                         </>
                       )}
                     </button>
@@ -439,7 +439,7 @@ export default function SettingsPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         imageUrl={profile.profileImage || null}
-        title={profile.displayName || t("settings.profilePicture")}
+        title={profile.displayName || t("profile.profilePicture")}
       />
     </div>
   );
