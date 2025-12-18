@@ -137,21 +137,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
 
-      const isProtected = PROTECTED_PATHS.some((path) =>
-        pathname?.startsWith(path)
-      );
-
       if (user) {
         isClosingSessionRef.current = false;
-        // 1. Check Email Verification for protected routes
-        if (!user.emailVerified && isProtected) {
-          router.replace(
-            `/verify-email?email=${encodeURIComponent(user.email || "")}`
-          );
-          // Wait for profile to load before returning?
-          // Mobile logic continues, so we continue too.
-        }
-
         try {
           const userDoc = await getDoc(doc(db, "users", user.uid));
           if (userDoc.exists()) {
@@ -165,32 +152,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             const isUserAdmin = userData.role === "admin";
             setIsAdmin(isUserAdmin);
-            setProfileLoaded(true);
-
-            // 2. Strict Admin Redirect Removed to allow access to home page
-            // if (
-            //   isUserAdmin &&
-            //   !pathname?.startsWith("/admin") &&
-            //   !pathname?.startsWith("/profile")
-            // ) {
-            //   router.replace("/admin");
-            // }
           } else {
             setProfile(null);
             setIsAdmin(false);
-            setProfileLoaded(true);
           }
         } catch (error) {
           console.error("Error fetching user profile:", error);
           setProfile(null);
           setIsAdmin(false);
-          setProfileLoaded(true);
         }
+        setProfileLoaded(true);
       } else {
-        // 3. Redirect to Login if trying to access protected route while logged out
-        if (isProtected && !isClosingSessionRef.current) {
-          router.replace("/login");
-        }
         setProfile(null);
         setIsAdmin(false);
         setProfileLoaded(true);
@@ -200,7 +172,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, [router, pathname]);
+  }, []); // Only run on mount
+
+  // Dedicated Effect for Route Protection
+  useEffect(() => {
+    if (loading) return; // Wait for initial auth check
+
+    // If logged in but profile not loaded yet, wait (unless we are sure there is no user)
+    if (user && !profileLoaded) return;
+
+    const isProtected = PROTECTED_PATHS.some((path) =>
+      pathname?.startsWith(path)
+    );
+
+    if (user) {
+      // 1. Check Email Verification for protected routes
+      if (!user.emailVerified && isProtected) {
+        router.replace(
+          `/verify-email?email=${encodeURIComponent(user.email || "")}`
+        );
+        return;
+      }
+
+      // 2. Role-based Redirects
+      if (isAdmin && pathname?.startsWith("/dashboard")) {
+        // Admin trying to access user dashboard -> Redirect to Admin Panel
+        router.replace("/admin");
+      } else if (!isAdmin && pathname?.startsWith("/admin")) {
+        // Regular user trying to access admin panel -> Redirect to Dashboard
+        router.replace("/dashboard");
+      }
+    } else {
+      // 3. Unauthenticated User trying to access protected route
+      if (isProtected && !isClosingSessionRef.current) {
+        router.replace("/login");
+      }
+    }
+  }, [user, isAdmin, profileLoaded, loading, pathname, router]);
 
   // Sync Firebase Auth language with current i18n language
   useEffect(() => {
@@ -270,14 +278,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (isProtected) {
         router.push("/");
+      } else {
+        // If we are not on a protected route, we can reset the flag immediately
+        isClosingSessionRef.current = false;
       }
-
-      isClosingSessionRef.current = false;
     } catch (error) {
       isClosingSessionRef.current = false;
       throw error;
     }
   };
+
+  // Reset closing session ref when we land on a public page
+  useEffect(() => {
+    const isProtected = PROTECTED_PATHS.some((path) =>
+      pathname?.startsWith(path)
+    );
+    if (!isProtected && isClosingSessionRef.current) {
+      isClosingSessionRef.current = false;
+    }
+  }, [pathname]);
 
   const sendVerificationEmail = async () => {
     if (!auth.currentUser) {

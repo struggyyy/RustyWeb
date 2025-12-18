@@ -77,12 +77,7 @@ export default function AdminDashboardPage() {
       return;
     }
 
-    if (!user) {
-      return;
-    }
-
-    if (!isAdmin) {
-      router.push("/dashboard");
+    if (!user || !isAdmin) {
       return;
     }
 
@@ -99,7 +94,7 @@ export default function AdminDashboardPage() {
     });
 
     return () => unsubscribe();
-  }, [user, isAdmin, authLoading, router]);
+  }, [user, isAdmin, authLoading]);
 
   // Calculate distance between two points using Haversine formula
   const calculateDistance = (
@@ -541,10 +536,10 @@ export default function AdminDashboardPage() {
     }
   };
 
-  if (authLoading || loading) {
+  if (authLoading || loading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-neutral-200 border-t-brand-primary" />
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-neutral-200 dark:border-neutral-800 border-t-brand-primary" />
       </div>
     );
   }

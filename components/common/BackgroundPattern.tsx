@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useTheme } from "@/components/context/ThemeProvider";
 
 // Available background patterns
 const PATTERNS = {
@@ -14,7 +13,7 @@ const PATTERNS = {
   },
   checker: {
     backgroundImage: "url('/grid.svg')",
-    opacity: 0.03,
+    opacity: 0.05,
   },
   largeDots: {
     backgroundImage:
@@ -41,29 +40,35 @@ interface BackgroundPatternProps {
 export default function BackgroundPattern({
   pattern = "dots",
 }: BackgroundPatternProps) {
-  const { theme } = useTheme();
   const currentPattern = PATTERNS[pattern];
 
   return (
     <>
       <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none bg-neutral-50 transition-colors duration-300">
+        {/* Light Mode Pattern */}
         <div
-          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.15]"
+          className="absolute inset-0 dark:hidden"
           style={{
-            backgroundImage:
-              theme === "dark"
-                ? "repeating-linear-gradient(45deg, #808080 0, #808080 1px, transparent 0, transparent 50%)"
-                : currentPattern.backgroundImage,
+            opacity: currentPattern.opacity,
+            backgroundImage: currentPattern.backgroundImage,
             backgroundSize:
-              theme === "dark"
-                ? "10px 10px"
-                : "backgroundSize" in currentPattern
+              "backgroundSize" in currentPattern
                 ? currentPattern.backgroundSize
                 : undefined,
             backgroundPosition:
               "backgroundPosition" in currentPattern
                 ? currentPattern.backgroundPosition
                 : undefined,
+          }}
+        />
+
+        {/* Dark Mode Pattern */}
+        <div
+          className="absolute inset-0 hidden dark:block opacity-[0.15]"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(45deg, #808080 0, #808080 1px, transparent 0, transparent 50%)",
+            backgroundSize: "10px 10px",
           }}
         />
       </div>

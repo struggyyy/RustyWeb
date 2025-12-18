@@ -110,7 +110,7 @@ body {
   background: var(--neutral-50);
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  /* transition: background-color 0.3s ease, color 0.3s ease; Removed to prevent flash on load */
 }
 
 @keyframes shake-left {

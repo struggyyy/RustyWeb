@@ -54,12 +54,7 @@ export default function UserDashboardPage() {
       return;
     }
 
-    if (!user) {
-      return;
-    }
-
-    if (isAdmin) {
-      router.push("/admin");
+    if (!user || isAdmin) {
       return;
     }
 
@@ -79,7 +74,7 @@ export default function UserDashboardPage() {
     });
 
     return () => unsubscribe();
-  }, [user, router, isAdmin, authLoading]);
+  }, [user, isAdmin, authLoading]);
 
   const formatDate = (timestamp: Timestamp) => {
     if (!timestamp) return "";
@@ -100,10 +95,10 @@ export default function UserDashboardPage() {
     console.log("Delete report:", reportId);
   };
 
-  if (authLoading || isAdmin) {
+  if (authLoading || isAdmin || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-neutral-200 border-t-brand-primary" />
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-neutral-200 dark:border-neutral-800 border-t-brand-primary" />
       </div>
     );
   }
