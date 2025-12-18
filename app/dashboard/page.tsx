@@ -37,6 +37,7 @@ import ReportCard from "@/components/features/reports/ReportCard";
 import UserReportModal from "@/components/features/reports/UserReportModal";
 import DashboardHeader from "@/components/layout/DashboardHeader";
 import ReportCardSkeleton from "@/components/features/reports/ReportCardSkeleton";
+import CustomCursor from "@/components/common/CustomCursor";
 
 export default function UserDashboardPage() {
   const { user, logOut, isAdmin, loading: authLoading } = useAuth();
@@ -109,6 +110,7 @@ export default function UserDashboardPage() {
 
   return (
     <div className="h-screen w-full flex flex-col relative overflow-hidden font-sans">
+      <CustomCursor variant="precise" />
       <DashboardHeader />
 
       <div className="flex-shrink-0 w-full pt-4 md:pt-8 px-4 sm:px-10 z-10 pointer-events-auto">

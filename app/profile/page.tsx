@@ -35,6 +35,7 @@ import {
 // Internal imports
 import { useAuth } from "@/components/context/AuthContext";
 import ProfileImageModal from "@/components/features/settings/ProfileImageModal";
+import CustomCursor from "@/components/common/CustomCursor";
 
 export default function SettingsPage() {
   const {
@@ -172,6 +173,7 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen font-sans relative">
+      {!isAdmin && <CustomCursor variant="precise" />}
       {/* Fixed Back Button */}
       <div className="fixed top-4 left-4 sm:top-8 sm:left-8 z-50">
         <button

@@ -89,8 +89,14 @@ export default function UserReportModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-neutral-200 rounded-[32px] max-w-2xl sm:max-w-4xl w-full max-h-[85vh] overflow-hidden shadow-2xl dark:shadow-[0_0_40px_rgba(0,0,0,0.5)] flex flex-col animate-in fade-in zoom-in-95 duration-200">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white dark:bg-neutral-200 rounded-[32px] max-w-2xl sm:max-w-4xl w-full max-h-[85vh] overflow-hidden shadow-2xl dark:shadow-[0_0_40px_rgba(0,0,0,0.5)] flex flex-col animate-in fade-in zoom-in-95 duration-200"
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-8 border-b border-neutral-100 dark:border-neutral-300 flex-shrink-0">
           <h2 className="text-xl sm:text-3xl font-black text-neutral-800 dark:text-black tracking-tight">

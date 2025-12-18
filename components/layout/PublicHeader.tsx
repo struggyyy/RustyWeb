@@ -219,14 +219,6 @@ export default function PublicHeader() {
                   </button>
                 )}
 
-                {/* Request Account Deletion - Only for non-logged in users */}
-                {!user && (
-                  <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50/50 dark:hover:bg-red-900/20 rounded-xl transition-colors group">
-                    <Trash2 className="w-4 h-4 text-red-400 dark:text-red-500 group-hover:text-red-500 transition-colors" />
-                    {t("nav.requestAccountDeletion")}
-                  </button>
-                )}
-
                 <div className="h-px bg-neutral-200/50 dark:bg-neutral-700/50 my-1 mx-2" />
 
                 {/* Language Toggle */}
