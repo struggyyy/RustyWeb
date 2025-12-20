@@ -171,7 +171,7 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
                     ${
                       isFrom || isTo
                         ? "bg-brand-primary text-white font-bold shadow-md shadow-brand-primary/20"
-                        : "hover:bg-neutral-100 dark:hover:bg-neutral-100 text-neutral-700 dark:text-neutral-900"
+                        : "hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-900 dark:hover:text-white"
                     }
                     ${
                       inRange
@@ -252,9 +252,9 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
             <div className="flex items-center justify-between pb-2 border-b border-neutral-50 dark:border-neutral-300">
               <button
                 onClick={() => changeMonth(-1)}
-                className="p-1 hover:bg-neutral-100 rounded-full"
+                className="p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-full group transition-colors"
               >
-                <ChevronLeft className="w-5 h-5 text-neutral-500 dark:text-neutral-700" />
+                <ChevronLeft className="w-5 h-5 text-neutral-500 dark:text-neutral-700 dark:group-hover:text-white" />
               </button>
               <div className="flex gap-8 font-bold text-neutral-700 dark:text-neutral-900">
                 <span className="w-32 text-center hidden sm:block">
@@ -266,9 +266,9 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
               </div>
               <button
                 onClick={() => changeMonth(1)}
-                className="p-1 hover:bg-neutral-100 rounded-full"
+                className="p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-full group transition-colors"
               >
-                <ChevronRight className="w-5 h-5 text-neutral-500 dark:text-neutral-700" />
+                <ChevronRight className="w-5 h-5 text-neutral-500 dark:text-neutral-700 dark:group-hover:text-white" />
               </button>
             </div>
 

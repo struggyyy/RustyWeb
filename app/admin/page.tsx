@@ -294,19 +294,40 @@ export default function AdminDashboardPage() {
     // 4. Text Search
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (report) =>
+      filtered = filtered.filter((report) => {
+        const matchesText =
           report.id.toLowerCase().includes(query) ||
           report.description.toLowerCase().includes(query) ||
-          (report.userEmail &&
-            report.userEmail.toLowerCase().includes(query)) ||
-          // Include location check in text search so typing "Krakow" still finds "Krakow" reports (redundant if geo-filtered but harmless)
-          (report.location &&
-            `${report.location.latitude} ${report.location.longitude}`.includes(
-              query
-            ))
-        // We might need reverse geocoded address in report for full text search functionality, but we don't have it on report object yet.
-      );
+          (report.userEmail && report.userEmail.toLowerCase().includes(query));
+
+        const matchesLocation =
+          report.location &&
+          `${report.location.latitude} ${report.location.longitude}`.includes(
+            query
+          );
+
+        // Check translated status
+        const statusTranslation = t(
+          `reports.status${report.status}`
+        ).toLowerCase();
+        const matchesStatus = statusTranslation.includes(query);
+
+        // Check formatted date
+        const dateString = report.createdAt
+          .toDate()
+          .toLocaleDateString(i18n.language, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })
+          .toLowerCase();
+        const matchesDate = dateString.includes(query);
+
+        return (
+          matchesText || matchesLocation || matchesStatus || matchesDate
+          // We might need reverse geocoded address in report for full text search functionality, but we don't have it on report object yet.
+        );
+      });
     }
 
     setFilteredReports(filtered);
@@ -604,11 +625,65 @@ export default function AdminDashboardPage() {
                       handleLocationSelect(suggestions[0]);
                       return;
                     }
-                    // Or apply text filter on Enter
+                    // Smart Filter on Enter
                     if (e.key === "Enter") {
+                      const lowerVal = inputValue.trim().toLowerCase();
+
+                      // 1. Status Check
+                      const matchedStatus = reportStatuses.find(
+                        (s) =>
+                          t(`reports.status${s}`).toLowerCase() === lowerVal ||
+                          s.toLowerCase() === lowerVal
+                      );
+
+                      if (matchedStatus) {
+                        if (!selectedStatuses.includes(matchedStatus)) {
+                          setSelectedStatuses([
+                            ...selectedStatuses,
+                            matchedStatus,
+                          ]);
+                        }
+                        setInputValue("");
+                        setSearchQuery("");
+                        setShowSuggestions(false);
+                        return;
+                      }
+
+                      // 2. Date Check
+                      let dateParsed: Date | null = null;
+                      // Handle DD.MM.YYYY or DD/MM/YYYY manually to ensure non-US locale correctness
+                      if (
+                        /^\d{1,2}[./-]\d{1,2}[./-]\d{4}$/.test(
+                          inputValue.trim()
+                        )
+                      ) {
+                        const parts = inputValue.trim().split(/[./-]/);
+                        // Assume DD.MM.YYYY
+                        dateParsed = new Date(
+                          `${parts[2]}-${parts[1]}-${parts[0]}`
+                        );
+                      } else {
+                        const potentialDate = new Date(inputValue.trim());
+                        if (!isNaN(potentialDate.getTime())) {
+                          dateParsed = potentialDate;
+                        }
+                      }
+
+                      if (dateParsed && !isNaN(dateParsed.getTime())) {
+                        const isoDate = dateParsed.toISOString().split("T")[0];
+                        setDateFrom(isoDate);
+                        setDateTo(isoDate);
+                        setInputValue("");
+                        setSearchQuery("");
+                        setShowSuggestions(false);
+                        return;
+                      }
+
+                      // 3. Fallback to Text Search
                       setSearchQuery(inputValue);
                       setShowSuggestions(false);
                     }
+
                     if (
                       e.key === "Backspace" &&
                       inputValue === "" &&
