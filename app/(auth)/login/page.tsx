@@ -77,11 +77,10 @@ export default function LoginPage() {
 
     if (hasError) {
       setFieldErrors(newFieldErrors);
-      if (!email) setGeneralError(t("auth.login.errors.emailRequired"));
+      if (!email) setGeneralError("auth.login.errors.emailRequired");
       else if (newFieldErrors.email)
-        setGeneralError(t("auth.login.errors.emailInvalid"));
-      else if (!password)
-        setGeneralError(t("auth.login.errors.passwordRequired"));
+        setGeneralError("auth.login.errors.emailInvalid");
+      else if (!password) setGeneralError("auth.login.errors.passwordRequired");
       return;
     }
 
@@ -97,17 +96,17 @@ export default function LoginPage() {
       ) {
         // Generic security message, highlight both if possible or neither (to avoid leaking existence)
         // Mobile app highlights neither, just shows generic error. We will do the same.
-        setGeneralError(t("auth.login.errors.userNotFound"));
+        setGeneralError("auth.login.errors.userNotFound");
       } else if (err.code === "auth/wrong-password") {
-        setGeneralError(t("auth.login.errors.wrongPassword"));
+        setGeneralError("auth.login.errors.wrongPassword");
         setFieldErrors({ password: true });
       } else if (err.code === "auth/invalid-email") {
-        setGeneralError(t("auth.login.errors.emailInvalid"));
+        setGeneralError("auth.login.errors.emailInvalid");
         setFieldErrors({ email: true });
       } else if (err.code === "auth/too-many-requests") {
-        setGeneralError(t("auth.login.errors.tooManyRequests"));
+        setGeneralError("auth.login.errors.tooManyRequests");
       } else {
-        setGeneralError(err.message || t("auth.login.errors.generic"));
+        setGeneralError(err.message || "auth.login.errors.generic");
       }
       setIsSubmitting(false);
     }
@@ -192,7 +191,7 @@ export default function LoginPage() {
         >
           {generalError && (
             <div className="p-4 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 font-medium">
-              {generalError}
+              {t(generalError)}
             </div>
           )}
 

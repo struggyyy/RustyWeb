@@ -33,6 +33,7 @@ import { db } from "@/lib/firebase/firebase";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/components/context/AuthContext";
 import { Report } from "@/lib/types/reports";
+import { deleteReport } from "@/lib/firebase/reports";
 import ReportCard from "@/components/features/reports/ReportCard";
 import UserReportModal from "@/components/features/reports/UserReportModal";
 import DashboardHeader from "@/components/layout/DashboardHeader";
@@ -91,8 +92,16 @@ export default function UserDashboardPage() {
   };
 
   const handleDeleteReport = async (reportId: string) => {
-    // TODO: Implement delete functionality
-    console.log("Delete report:", reportId);
+    if (!selectedReport) return;
+    try {
+      await deleteReport(reportId, selectedReport.imageUrl);
+      // Optimistic update or wait for snapshot? Snapshot will handle it, but we should close modal
+      setShowReportModal(false);
+      setSelectedReport(null);
+    } catch (error) {
+      console.error("Error deleting report:", error);
+      alert(t("profile.deleteError"));
+    }
   };
 
   if (authLoading || isAdmin || !user) {

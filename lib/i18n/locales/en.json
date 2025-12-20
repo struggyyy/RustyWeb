@@ -12,7 +12,9 @@
     "mapView": "Map View",
     "profile": "Profile",
     "settings": "Settings",
-    "footer": "© 2025 Created by struggyyy"
+    "footer": "© 2025 Created by struggyyy",
+    "cancel": "Cancel",
+    "delete": "Delete"
   },
   "auth": {
     "login": {
@@ -150,7 +152,9 @@
     "noteSubmitted": "Your report has been received and is now being verified. We'll notify you once its status changes.",
     "noteAccepted": "Your report has been accepted. Our team is now processing it, which may take some time as we contact the vehicle owner and complete the necessary paperwork.",
     "noteCompleted": "The reported vehicle has been removed from the street and is now being recycled, donated, or prepared for a city auction.",
-    "noteCanceled": "We were unable to verify your report due to insufficient information or potential inaccuracies. Please feel free to submit a new report if you believe this was an error."
+    "noteCanceled": "We were unable to verify your report due to insufficient information or potential inaccuracies. Please feel free to submit a new report if you believe this was an error.",
+    "deleteConfirmTitle": "Delete Report?",
+    "deleteConfirmDesc": "Are you sure you want to delete this report? This action cannot be undone."
   },
   "dashboard": {
     "title": "My Reports",

@@ -12,17 +12,30 @@
  *                                                                         *
  ************************************************************************** */
 // React specific imports
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 // Internal imports
 import { Report } from "@/lib/types/reports";
-import { X, Trash2 } from "lucide-react";
+import { getCityFromCoordinates } from "@/lib/services/geocoding";
+import {
+  X,
+  Trash2,
+  MapPin,
+  AlertCircle,
+  Clock,
+  CheckCircle,
+  XCircle,
+  FileCheck,
+  Check,
+} from "lucide-react";
+
+import CustomAlert from "@/components/common/CustomAlert";
 
 interface UserReportModalProps {
   report: Report;
   onClose: () => void;
-  onDelete: () => void;
+  onDelete: () => Promise<void>;
 }
 
 export default function UserReportModal({
@@ -30,8 +43,57 @@ export default function UserReportModal({
   onClose,
   onDelete,
 }: UserReportModalProps) {
-  const [imageLoaded, setImageLoaded] = useState(false);
   const { t, i18n } = useTranslation();
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [cityName, setCityName] = useState<string>("reports.loading");
+
+  useEffect(() => {
+    async function fetchCity() {
+      if (report.location) {
+        const city = await getCityFromCoordinates(
+          report.location.latitude,
+          report.location.longitude
+        );
+        setCityName(city);
+      } else {
+        setCityName("reports.unknownLocation");
+      }
+    }
+    fetchCity();
+  }, [report.location, t]);
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "Submitted":
+        return <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-400" />;
+      case "Accepted":
+        return (
+          <FileCheck className="w-4 h-4 sm:w-5 sm:h-5 text-status-Accepted" />
+        );
+      case "Completed":
+        return (
+          <Check className="w-4 h-4 sm:w-5 sm:h-5 text-status-Completed" />
+        );
+      case "Canceled":
+        return <X className="w-4 h-4 sm:w-5 sm:h-5 text-status-Canceled" />;
+      default:
+        return null;
+    }
+  };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await onDelete();
+      onClose();
+    } catch (error) {
+      console.error("Delete failed", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const formatDate = (timestamp: any) => {
     if (!timestamp) return "";
@@ -104,7 +166,7 @@ export default function UserReportModal({
           </h2>
           <div className="flex items-center gap-1 sm:gap-2">
             <button
-              onClick={onDelete}
+              onClick={() => setShowAlert(true)}
               className="p-2 sm:p-2.5 text-red-500 hover:bg-red-50 rounded-xl transition-all hover:scale-105 active:scale-95"
               title={t("admin.deleteReport")}
             >
@@ -119,12 +181,12 @@ export default function UserReportModal({
           </div>
         </div>
 
-        {/* Content - Split View with Independent Scrolling on Desktop, Single Scroll on Mobile */}
+        {/* Content - Split View */}
         <div className="flex-1 min-h-0 flex flex-col sm:flex-row overflow-y-auto sm:overflow-hidden">
-          {/* Left Column (Image & Date) - Scrollable on Desktop */}
+          {/* Left Column (Date & Image) */}
           <div className="w-full sm:w-1/2 px-4 pb-6 pt-2 sm:px-8 sm:pb-8 sm:pt-4 sm:overflow-y-auto border-b sm:border-b-0 sm:border-r border-neutral-100 dark:border-neutral-300 flex-shrink-0">
             <div className="flex flex-col gap-4">
-              {/* Date (Top) */}
+              {/* Date */}
               <div
                 className={`text-lg font-bold text-left pl-1 ${getStatusTextColor(
                   report.status
@@ -164,9 +226,10 @@ export default function UserReportModal({
             </div>
           </div>
 
-          {/* Right Column (Details) - Scrollable on Desktop */}
+          {/* Right Column (Details) */}
           <div className="w-full sm:w-1/2 p-4 sm:p-8 sm:overflow-y-auto bg-neutral-50/30 dark:bg-transparent flex-shrink-0">
             <div className="space-y-6">
+              {/* Description */}
               <div className="space-y-0.5">
                 <label className="block text-xs font-bold text-neutral-500 dark:text-neutral-600 uppercase tracking-wider ml-1">
                   {t("reports.description")}
@@ -176,33 +239,74 @@ export default function UserReportModal({
                 </p>
               </div>
 
-              <div className="space-y-1">
-                <div
-                  className={`inline-flex items-center px-4 py-1.5 rounded-full font-bold text-xs sm:text-sm uppercase tracking-wider ${getStatusColor(
-                    report.status
-                  )}`}
-                >
-                  {t(`reports.status${report.status}`)}
+              {/* Location Details */}
+              <div className="space-y-0.5">
+                <label className="block text-xs font-bold text-neutral-500 uppercase tracking-wider ml-1 mb-1">
+                  {t("reports.location")}
+                </label>
+                <div className="w-full bg-white dark:bg-transparent border border-neutral-100 dark:border-neutral-300 rounded-xl p-3 flex items-center gap-3 shadow-sm dark:shadow-none">
+                  <div className="w-8 h-8 rounded-full bg-neutral-100 dark:bg-neutral-300 flex items-center justify-center text-neutral-400 dark:text-neutral-600">
+                    <MapPin className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-900 truncate">
+                      {t(cityName)}
+                    </p>
+                    <p className="text-xs text-neutral-400 dark:text-neutral-600 truncate font-mono">
+                      {report.location
+                        ? `${report.location.latitude.toFixed(
+                            6
+                          )}, ${report.location.longitude.toFixed(6)}`
+                        : "No location data"}
+                    </p>
+                  </div>
                 </div>
-                {getStatusNote(report.status) && (
-                  <p className="text-sm text-neutral-500 dark:text-neutral-600 italic mt-1 ml-1">
-                    "{getStatusNote(report.status)}"
-                  </p>
-                )}
               </div>
 
-              <div className="px-1">
-                <span className="font-bold text-neutral-500 dark:text-neutral-600 uppercase tracking-wider text-xs">
-                  {t("reports.points")}:{" "}
-                </span>
-                <span className="text-neutral-700 dark:text-neutral-900 font-medium text-sm sm:text-base ml-2">
-                  {report.points}
-                </span>
+              {/* Status Section */}
+              <div className="space-y-2">
+                {/* Status Pill */}
+                <div className="flex justify-start">
+                  <span
+                    className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider ${getStatusColor(
+                      report.status
+                    )}`}
+                  >
+                    {t(`reports.status${report.status}`)}
+                  </span>
+                </div>
+
+                {/* Status Note */}
+                {report.status !== "Submitted" && (
+                  <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed italic border-l-2 border-neutral-200 dark:border-neutral-700 pl-3 py-1">
+                    {t(`reports.note${report.status}`)}
+                  </p>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <CustomAlert
+        visible={showAlert}
+        title={t("reports.deleteConfirmTitle")}
+        message={t("reports.deleteConfirmDesc")}
+        onRequestClose={() => !isDeleting && setShowAlert(false)}
+        buttons={[
+          {
+            text: t("common.cancel"),
+            style: "cancel",
+            onPress: () => setShowAlert(false),
+          },
+          {
+            text: t("common.delete"), // Need to ensure "delete" or "confirm" key exists. 'common.delete' is in profile but maybe not common. profile.delete exists.
+            style: "destructive",
+            loading: isDeleting,
+            onPress: handleDelete,
+          },
+        ]}
+      />
     </div>
   );
 }

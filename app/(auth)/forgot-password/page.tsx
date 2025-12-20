@@ -50,7 +50,7 @@ function ForgotPasswordContent() {
     if (!email || !/\S+@\S+\.\S+/.test(email.trim())) {
       setMessage({
         type: "error",
-        text: t("auth.forgotPassword.errors.emailInvalid"),
+        text: "auth.forgotPassword.errors.emailInvalid",
       });
       setIsEmailError(true);
       return;
@@ -62,18 +62,18 @@ function ForgotPasswordContent() {
       await resetPassword(email);
       setMessage({
         type: "success",
-        text: t("auth.forgotPassword.success"),
+        text: "auth.forgotPassword.success",
       });
       setEmail(""); // Clear input on success
     } catch (err: any) {
       let errorText = "";
       if (err.code === "auth/user-not-found") {
-        errorText = t("auth.forgotPassword.errors.userNotFound");
+        errorText = "auth.forgotPassword.errors.userNotFound";
       } else if (err.code === "auth/invalid-email") {
-        errorText = t("auth.forgotPassword.errors.emailInvalid");
+        errorText = "auth.forgotPassword.errors.emailInvalid";
         setIsEmailError(true);
       } else {
-        errorText = t("auth.forgotPassword.errors.generic");
+        errorText = "auth.forgotPassword.errors.generic";
       }
 
       setMessage({
@@ -170,7 +170,7 @@ function ForgotPasswordContent() {
                   : "bg-red-50 text-red-600 border-red-100"
               }`}
             >
-              {message.text}
+              {t(message.text)}
             </div>
           )}
 

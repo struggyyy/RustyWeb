@@ -28,7 +28,7 @@ interface AdminReportModalProps {
   report: Report;
   onClose: () => void;
   onStatusUpdate: (newStatus: ReportStatus) => Promise<void>;
-  onDelete: () => void;
+  onDelete: () => Promise<void>;
   onShowOnMap: (report: Report) => void;
 }
 
@@ -45,7 +45,20 @@ export default function AdminReportModal({
   const [isUpdating, setIsUpdating] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [cityName, setCityName] = useState<string>("Loading...");
+  const [isDeleting, setIsDeleting] = useState(false);
   const { t, i18n } = useTranslation();
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await onDelete();
+      onClose();
+    } catch (error) {
+      console.error("Delete failed", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   useEffect(() => {
     async function fetchCity() {
@@ -166,11 +179,16 @@ export default function AdminReportModal({
           <div className="flex items-center gap-1 sm:gap-2">
             {report.status === "Canceled" && (
               <button
-                onClick={onDelete}
-                className="p-2 sm:p-2.5 text-red-500 hover:bg-red-50 rounded-xl transition-all hover:scale-105 active:scale-95"
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="p-2 sm:p-2.5 text-red-500 hover:bg-red-50 rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:scale-100"
                 title={t("admin.deleteReport")}
               >
-                <Trash2 className="w-4 h-4 sm:w-6 sm:h-6" />
+                {isDeleting ? (
+                  <Loader2 className="w-4 h-4 sm:w-6 sm:h-6 animate-spin" />
+                ) : (
+                  <Trash2 className="w-4 h-4 sm:w-6 sm:h-6" />
+                )}
               </button>
             )}
             <button

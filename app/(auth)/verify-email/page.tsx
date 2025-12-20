@@ -86,7 +86,7 @@ function VerifyEmailContent() {
 
   const handleResendVerification = async () => {
     if (cooldown > 0) {
-      setResendMessage(t("auth.verifyEmail.pleaseWait", { seconds: cooldown }));
+      setResendMessage("auth.verifyEmail.pleaseWait");
       return;
     }
 
@@ -95,7 +95,7 @@ function VerifyEmailContent() {
 
     try {
       await sendVerificationEmail();
-      setResendMessage(t("auth.verifyEmail.success"));
+      setResendMessage("auth.verifyEmail.success");
 
       const COOLDOWN_SECONDS = 60;
       setCooldown(COOLDOWN_SECONDS);
@@ -111,9 +111,9 @@ function VerifyEmailContent() {
     } catch (err: any) {
       console.error("Resend Error:", err);
       if (err.message && err.message.includes("Too many")) {
-        setResendMessage(t("auth.verifyEmail.tooMany"));
+        setResendMessage("auth.verifyEmail.tooMany");
       } else {
-        setResendMessage(t("auth.verifyEmail.failed"));
+        setResendMessage("auth.verifyEmail.failed");
       }
     } finally {
       setIsResending(false);
@@ -197,12 +197,12 @@ function VerifyEmailContent() {
         {resendMessage && (
           <div
             className={`p-4 text-sm rounded-xl border font-medium mb-6 relative z-10 ${
-              resendMessage.includes(t("auth.verifyEmail.success"))
+              resendMessage === "auth.verifyEmail.success"
                 ? "bg-green-50 text-green-600 border-green-100"
                 : "bg-blue-50 text-blue-600 border-blue-100"
             }`}
           >
-            {resendMessage}
+            {t(resendMessage, { seconds: cooldown })}
           </div>
         )}
 

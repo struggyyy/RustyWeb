@@ -72,10 +72,10 @@ export default function SignupPage() {
       newFieldErrors.nickname = true;
       if (!firstErrorMessage) {
         if (!nickname)
-          firstErrorMessage = t("auth.signup.errors.nicknameRequired");
+          firstErrorMessage = "auth.signup.errors.nicknameRequired";
         else if (nickname.length < 2)
-          firstErrorMessage = t("auth.signup.errors.nicknameLength");
-        else firstErrorMessage = t("auth.signup.errors.nicknameTooLong");
+          firstErrorMessage = "auth.signup.errors.nicknameLength";
+        else firstErrorMessage = "auth.signup.errors.nicknameTooLong";
       }
       hasError = true;
     }
@@ -84,7 +84,7 @@ export default function SignupPage() {
     if (!email || !/\S+@\S+\.\S+/.test(email.trim())) {
       newFieldErrors.email = true;
       if (!firstErrorMessage)
-        firstErrorMessage = t("auth.signup.errors.emailInvalid");
+        firstErrorMessage = "auth.signup.errors.emailInvalid";
       hasError = true;
     }
 
@@ -101,12 +101,12 @@ export default function SignupPage() {
 
       if (!firstErrorMessage) {
         if (!password)
-          firstErrorMessage = t("auth.signup.errors.passwordRequired");
+          firstErrorMessage = "auth.signup.errors.passwordRequired";
         else if (password !== confirmPassword)
-          firstErrorMessage = t("auth.signup.errors.passwordMismatch");
+          firstErrorMessage = "auth.signup.errors.passwordMismatch";
         else if (password.length < 6)
-          firstErrorMessage = t("auth.signup.errors.passwordShort");
-        else firstErrorMessage = t("auth.signup.errors.passwordComplexity");
+          firstErrorMessage = "auth.signup.errors.passwordShort";
+        else firstErrorMessage = "auth.signup.errors.passwordComplexity";
       }
       hasError = true;
     }
@@ -124,9 +124,9 @@ export default function SignupPage() {
       router.push(`/verify-email?email=${encodeURIComponent(email)}`);
     } catch (err: any) {
       if (err.code === "auth/email-already-in-use") {
-        setGeneralError(t("auth.signup.errors.emailInUse"));
+        setGeneralError("auth.signup.errors.emailInUse");
       } else {
-        setGeneralError(err.message || t("auth.signup.errors.generic"));
+        setGeneralError(err.message || "auth.signup.errors.generic");
       }
       setIsSubmitting(false);
     }
@@ -220,7 +220,7 @@ export default function SignupPage() {
         >
           {generalError && (
             <div className="p-4 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 font-medium">
-              {generalError}
+              {t(generalError)}
             </div>
           )}
 

@@ -33,6 +33,7 @@ import { useTranslation } from "react-i18next";
 // Internal imports
 import { db } from "@/lib/firebase/firebase";
 import { updateReportStatus } from "@/lib/firebase/admin";
+import { deleteReport } from "@/lib/firebase/reports";
 import { useAuth } from "@/components/context/AuthContext";
 import { Report, ReportStatus, reportStatuses } from "@/lib/types/reports";
 import { DatePicker } from "@/components/ui/DatePicker";
@@ -128,33 +129,21 @@ export default function AdminDashboardPage() {
   const lastSelectedRef = useRef<string>("");
   const isProgrammaticFocusRef = useRef(false);
 
-  const [searchPlaceholder, setSearchPlaceholder] = useState(
-    "Search reports or enter city..."
-  );
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setSearchPlaceholder(t("common.searchPlaceholderMobile"));
-      } else {
-        setSearchPlaceholder(t("common.searchPlaceholder"));
-      }
+      setIsMobile(window.innerWidth < 640);
     };
 
     handleResize();
     window.addEventListener("resize", handleResize);
-    // Listen for language changes to update placeholder immediately
     return () => window.removeEventListener("resize", handleResize);
-  }, [t]);
+  }, []);
 
-  // Update placeholder when language changes
-  useEffect(() => {
-    if (window.innerWidth < 640) {
-      setSearchPlaceholder(t("common.searchPlaceholderMobile"));
-    } else {
-      setSearchPlaceholder(t("common.searchPlaceholder"));
-    }
-  }, [i18n.language, t]);
+  const searchPlaceholder = isMobile
+    ? t("common.searchPlaceholderMobile")
+    : t("common.searchPlaceholder");
 
   // Logic from ReportFilters: Geocoding
   const searchLocations = async (query: string) => {
@@ -508,8 +497,15 @@ export default function AdminDashboardPage() {
   };
 
   const handleDeleteReport = async () => {
-    // TODO: Implement delete functionality
-    console.log("Delete report");
+    if (!selectedReport) return;
+    try {
+      await deleteReport(selectedReport.id, selectedReport.imageUrl);
+      setShowReportModal(false);
+      setSelectedReport(null);
+    } catch (error) {
+      console.error("Error deleting report:", error);
+      alert(t("profile.deleteError"));
+    }
   };
 
   const formatDate = (timestamp: Timestamp) => {

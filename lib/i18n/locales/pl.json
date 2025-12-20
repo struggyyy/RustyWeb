@@ -12,7 +12,9 @@
     "mapView": "Widok mapy",
     "profile": "Profil",
     "settings": "Ustawienia",
-    "footer": "© 2025 Stworzone przez struggyyy"
+    "footer": "© 2025 Stworzone przez struggyyy",
+    "cancel": "Anuluj",
+    "delete": "Usuń"
   },
   "auth": {
     "login": {
@@ -150,7 +152,9 @@
     "noteSubmitted": "Twoje zgłoszenie zostało otrzymane i jest teraz weryfikowane. Powiadomimy Cię, gdy status się zmieni.",
     "noteAccepted": "Twoje zgłoszenie zostało przyjęte. Nasz zespół teraz je przetwarza, co może zająć trochę czasu, ponieważ kontaktujemy się z właścicielem pojazdu i kompletujemy niezbędną dokumentację.",
     "noteCompleted": "Zgłoszony pojazd został usunięty z ulicy i jest teraz poddawany recyklingowi, przekazywany osobom potrzebującym lub przygotowywany do miejskiej licytacji.",
-    "noteCanceled": "Nie byliśmy w stanie zweryfikować Twojego zgłoszenia z powodu niewystarczających informacji lub potencjalnych niedokładności. Możesz przesłać nowe zgłoszenie, jeśli uważasz, że to był błąd."
+    "noteCanceled": "Nie byliśmy w stanie zweryfikować Twojego zgłoszenia z powodu niewystarczających informacji lub potencjalnych niedokładności. Możesz przesłać nowe zgłoszenie, jeśli uważasz, że to był błąd.",
+    "deleteConfirmTitle": "Usunąć zgłoszenie?",
+    "deleteConfirmDesc": "Czy na pewno chcesz usunąć to zgłoszenie? Tej operacji nie można cofnąć."
   },
   "dashboard": {
     "title": "Moje zgłoszenia",

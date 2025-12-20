@@ -36,7 +36,7 @@ export default function ReportCard({
   onDetailsPress,
 }: ReportCardProps) {
   const { t, i18n } = useTranslation();
-  const [cityName, setCityName] = useState<string>(t("reports.loading"));
+  const [cityName, setCityName] = useState<string>("reports.loading");
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function ReportCard({
         );
         setCityName(city);
       } else {
-        setCityName(t("reports.unknownLocation"));
+        setCityName("reports.unknownLocation");
       }
     }
     fetchCity();
@@ -145,7 +145,7 @@ export default function ReportCard({
             <div className="flex items-center gap-1 text-neutral-700 dark:text-neutral-200 font-semibold text-xs min-[450px]:text-sm sm:text-base">
               <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-primary" />
               <span className="truncate max-w-[120px] min-[450px]:max-w-[180px] sm:max-w-none">
-                {cityName}
+                {t(cityName)}
               </span>
             </div>
 

@@ -82,7 +82,7 @@ export default function SettingsPage() {
 
   const handleSave = async () => {
     if (!nickname.trim()) {
-      setError(t("profile.emptyNicknameError"));
+      setError("profile.emptyNicknameError");
       return;
     }
 
@@ -103,7 +103,7 @@ export default function SettingsPage() {
 
       setIsEditing(false);
     } catch (err: any) {
-      setError(err.message || t("profile.updateError"));
+      setError(err.message || "profile.updateError");
     } finally {
       setIsSubmitting(false);
     }
@@ -126,13 +126,13 @@ export default function SettingsPage() {
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      setError(t("profile.invalidImageError"));
+      setError("profile.invalidImageError");
       return;
     }
 
     // Validate file size (5MB limit)
     if (file.size > 5 * 1024 * 1024) {
-      setError(t("profile.imageSizeError"));
+      setError("profile.imageSizeError");
       return;
     }
 
@@ -142,7 +142,7 @@ export default function SettingsPage() {
     try {
       await uploadProfileImage(user.uid, file);
     } catch (err: any) {
-      setError(err.message || t("profile.uploadError"));
+      setError(err.message || "profile.uploadError");
     } finally {
       setUploadingImage(false);
     }
@@ -158,7 +158,7 @@ export default function SettingsPage() {
     try {
       await deleteAccount();
     } catch (err: any) {
-      setError(err.message || t("profile.deleteError"));
+      setError(err.message || "profile.deleteError");
       setIsSubmitting(false);
       setShowDeleteConfirm(false);
     }
@@ -358,7 +358,7 @@ export default function SettingsPage() {
 
               {error && (
                 <div className="mt-4 p-3 bg-red-50 text-red-600 text-sm font-medium rounded-xl border border-red-100">
-                  {error}
+                  {t(error)}
                 </div>
               )}
             </div>
