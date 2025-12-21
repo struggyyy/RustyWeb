@@ -13,17 +13,15 @@
  ************************************************************************** */
 "use client";
 
-// React specific imports
+// React-specific imports
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 // External libraries
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   User,
-  Mail,
   Camera,
   Save,
   X,
@@ -36,6 +34,7 @@ import {
 import { useAuth } from "@/components/context/AuthContext";
 import ProfileImageModal from "@/components/features/settings/ProfileImageModal";
 import CustomCursor from "@/components/common/CustomCursor";
+import LanguageToggle from "@/components/common/LanguageToggle";
 
 export default function SettingsPage() {
   const {
@@ -52,7 +51,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Form state
+  // Form State Management
   const [isEditing, setIsEditing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [nickname, setNickname] = useState(profile?.displayName || "");
@@ -315,43 +314,10 @@ export default function SettingsPage() {
                     <label className="text-xs font-bold text-neutral-400 dark:text-white uppercase tracking-wider ml-1">
                       {t("nav.language")}
                     </label>
-                    <div className="w-full h-12 p-1 bg-neutral-100/50 dark:bg-neutral-900/50 rounded-xl flex relative border border-white/40 dark:border-neutral-700/40">
-                      {/* Animated Sliding Background */}
-                      <div
-                        className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white dark:bg-neutral-700 rounded-lg shadow-sm transition-all duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
-                          language === "pl"
-                            ? "translate-x-[calc(100%+4px)]"
-                            : "translate-x-0"
-                        } left-1`}
-                      />
-
-                      <button
-                        onClick={() => {
-                          setLanguage("en");
-                          i18n.changeLanguage("en");
-                        }}
-                        className={`flex-1 relative z-10 flex items-center justify-center text-sm font-bold rounded-lg transition-colors duration-200 ${
-                          i18n.language === "en"
-                            ? "text-neutral-900 dark:text-white"
-                            : "text-neutral-500 dark:text-neutral-300 hover:text-neutral-700 dark:hover:text-neutral-200"
-                        }`}
-                      >
-                        English
-                      </button>
-                      <button
-                        onClick={() => {
-                          setLanguage("pl");
-                          i18n.changeLanguage("pl");
-                        }}
-                        className={`flex-1 relative z-10 flex items-center justify-center text-sm font-bold rounded-lg transition-colors duration-200 ${
-                          i18n.language === "pl"
-                            ? "text-neutral-900 dark:text-white"
-                            : "text-neutral-500 dark:text-neutral-300 hover:text-neutral-700 dark:hover:text-neutral-200"
-                        }`}
-                      >
-                        Polski
-                      </button>
-                    </div>
+                    <LanguageToggle
+                      variant="long"
+                      onLanguageChange={(lang) => setLanguage(lang)}
+                    />
                   </div>
                 </div>
               )}

@@ -18,34 +18,30 @@ import { useState, useRef, useEffect } from "react";
 
 // External libraries
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 import {
   User,
   MoreHorizontal,
   X,
   LogOut,
-  Settings,
   Shield,
   Key,
+  Globe,
+  Moon,
 } from "lucide-react";
 
 // Internal imports
 import { useAuth } from "@/components/context/AuthContext";
-import { useTranslation } from "react-i18next";
-import { Globe, Moon } from "lucide-react";
 import { useTheme } from "@/components/context/ThemeProvider";
+import LanguageToggle from "@/components/common/LanguageToggle";
 
 export default function DashboardHeader() {
   const [isOpen, setIsOpen] = useState<"none" | "more" | "profile">("none");
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { logOut, user, updateUserProfile, isAdmin } = useAuth();
-  const { t, i18n } = useTranslation();
+  const { logOut, isAdmin } = useAuth();
+  const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === "dark";
-
-  const handleLanguageChange = (lang: string) => {
-    i18n.changeLanguage(lang);
-    updateUserProfile({ language: lang }).catch(console.error);
-  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -128,37 +124,7 @@ export default function DashboardHeader() {
                     <Globe className="w-4 h-4 text-neutral-400" />
                     {t("nav.language")}
                   </div>
-                  <div className="flex bg-neutral-100/50 dark:bg-neutral-900/50 rounded-lg p-0.5 border border-white/40 dark:border-neutral-700/40 relative">
-                    {/* Animated Sliding Background */}
-                    <div
-                      className={`absolute top-0.5 bottom-0.5 w-[calc(50%-2px)] bg-white dark:bg-neutral-800 rounded-md shadow-sm transition-all duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
-                        i18n.language === "pl"
-                          ? "translate-x-full"
-                          : "translate-x-0"
-                      } left-0.5`}
-                    />
-
-                    <button
-                      onClick={() => handleLanguageChange("en")}
-                      className={`flex-1 relative z-10 px-2 py-0.5 text-xs font-bold rounded-md transition-colors duration-200 ${
-                        i18n.language === "en"
-                          ? "text-neutral-900 dark:text-white"
-                          : "text-neutral-500 dark:text-neutral-300 hover:text-neutral-700 dark:hover:text-neutral-200"
-                      }`}
-                    >
-                      EN
-                    </button>
-                    <button
-                      onClick={() => handleLanguageChange("pl")}
-                      className={`flex-1 relative z-10 px-2 py-0.5 text-xs font-bold rounded-md transition-colors duration-200 ${
-                        i18n.language === "pl"
-                          ? "text-neutral-900 dark:text-white"
-                          : "text-neutral-500 dark:text-neutral-300 hover:text-neutral-700 dark:hover:text-neutral-200"
-                      }`}
-                    >
-                      PL
-                    </button>
-                  </div>
+                  <LanguageToggle className="w-24" />
                 </div>
 
                 {/* Dark Theme Toggle */}
