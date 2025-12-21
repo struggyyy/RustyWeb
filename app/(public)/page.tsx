@@ -55,16 +55,17 @@ export default function Page() {
   const coverImage = allImages[0];
   const carouselImages = [allImages[1], ...allImages.slice(2)];
 
-  // Reset carousel when language changes
+  // Reset loaded images when language changes, ensuring we re-verify loading for new srcs
   useEffect(() => {
-    setCarouselIndex(0);
+    setLoadedImages(new Set());
+    // We do NOT reset carouselIndex here, to preserve the user's progress across languages
   }, [currentLanguage]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  /* One-time auto-reveal state (10s delay) */
+  /* One-time auto-reveal state (7s delay) */
   const [hasAutoRevealed, setHasAutoRevealed] = useState(false);
   const hasInteracted = useRef(false);
 
@@ -80,13 +81,13 @@ export default function Page() {
   };
 
   useEffect(() => {
-    // 10 second timer to reveal the preview (en2) once
+    // 7 second timer to reveal the preview (en2) once
     const timer = setTimeout(() => {
       // Only reveal if user hasn't interacted yet and we are on the first slide
       if (!hasInteracted.current && carouselIndex === 0) {
         setHasAutoRevealed(true);
       }
-    }, 10000);
+    }, 7000);
 
     return () => clearTimeout(timer);
   }, []); // Run once on mount
