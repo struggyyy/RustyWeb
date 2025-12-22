@@ -25,7 +25,7 @@ import { updateReportStatus } from "@/lib/firebase/admin";
 import { deleteReport } from "@/lib/firebase/reports";
 import { useAuth } from "@/components/context/AuthContext";
 import { Report, ReportStatus } from "@/lib/types/reports";
-import DashboardHeader from "@/components/layout/DashboardHeader";
+import Header from "@/components/layout/Header";
 import AdminReportModal from "@/components/features/reports/AdminReportModal";
 import GoogleMaps from "@/components/features/maps/GoogleMaps";
 import MapReportModal from "@/components/features/reports/MapReportModal";
@@ -218,7 +218,7 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="h-screen w-full flex flex-col relative overflow-hidden font-sans">
-      <DashboardHeader />
+      <Header variant="protected" />
 
       {/* Static Fixed Header Section */}
       <div className="flex-shrink-0 w-full pt-4 md:pt-8 px-4 sm:px-10 z-20 pointer-events-auto">

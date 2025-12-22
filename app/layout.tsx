@@ -23,7 +23,7 @@ import { Inter } from "next/font/google";
 import { AuthProvider } from "@/components/context/AuthContext";
 import { ThemeProvider } from "@/components/context/ThemeProvider";
 import BackgroundPattern from "@/components/common/BackgroundPattern";
-import I18nProvider from "@/components/providers/I18nProvider";
+import I18nProvider from "@/components/context/I18nProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 

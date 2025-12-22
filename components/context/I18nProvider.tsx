@@ -11,19 +11,14 @@
  *              or intended publication of such source code.               *
  *                                                                         *
  ************************************************************************** */
+"use client";
+
+// React specific imports
+import { ReactNode } from "react";
 
 // Internal imports
-import Header from "@/components/layout/Header";
+import "@/lib/i18n/i18n";
 
-export default function PublicLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <>
-      <Header variant="public" />
-      {children}
-    </>
-  );
+export default function I18nProvider({ children }: { children: ReactNode }) {
+  return <>{children}</>;
 }

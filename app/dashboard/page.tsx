@@ -17,7 +17,6 @@
 import { useEffect, useState } from "react";
 
 // External libraries
-
 import {
   collection,
   query,
@@ -33,7 +32,7 @@ import { useAuth } from "@/components/context/AuthContext";
 import { Report } from "@/lib/types/reports";
 import { deleteReport } from "@/lib/firebase/reports";
 import UserReportModal from "@/components/features/reports/UserReportModal";
-import DashboardHeader from "@/components/layout/DashboardHeader";
+import Header from "@/components/layout/Header";
 import CustomCursor from "@/components/common/CustomCursor";
 import ReportsGrid from "@/components/features/reports/ReportsGrid";
 import DashboardEmptyState from "@/components/features/dashboard/DashboardEmptyState";
@@ -106,7 +105,7 @@ export default function UserDashboardPage() {
   return (
     <div className="h-screen w-full flex flex-col relative overflow-hidden font-sans">
       <CustomCursor variant="precise" />
-      <DashboardHeader />
+      <Header variant="protected" />
 
       {/* Header Content */}
       <div className="flex-shrink-0 w-full pt-4 md:pt-8 px-4 sm:px-10 z-10 pointer-events-auto">

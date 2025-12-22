@@ -1,6 +1,22 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
+// React-specific imports
 import React, { useRef, useEffect, useCallback, useState } from "react";
+
+// External libraries
 import Image from "next/image";
 
 interface TutorialCarouselProps {
@@ -21,7 +37,7 @@ export default function TutorialCarousel({
   const containerRef = useRef<HTMLDivElement>(null);
   const lastScrollTime = useRef<number>(0);
 
-  // --- Navigation Logic ---
+  // Navigation Logic
 
   const nextSlide = useCallback(() => {
     onIndexChange((currentIndex + 1) % images.length);
@@ -30,28 +46,8 @@ export default function TutorialCarousel({
   const prevSlide = useCallback(() => {
     onIndexChange(currentIndex === 0 ? images.length - 1 : currentIndex - 1);
   }, [currentIndex, onIndexChange, images.length]);
-  // ... (skip unchanged handlers) ...
-  // ... (Render Block)
-  {
-    images.map((src, index) => (
-      <div key={index} className="w-full h-full flex-shrink-0 relative">
-        <Image
-          src={src}
-          alt={`Tutorial step ${index + 1}`}
-          fill
-          className="object-cover"
-          priority={index === 0}
-          loading="eager" // Load off-screen images immediately
-          onLoadingComplete={() => onImageLoad(index)}
-          draggable={false}
-        />
-      </div>
-    ));
-  }
 
-  // --- Interaction Handlers ---
-
-  // 1. Click Zones (Left 30% / Right 70%)
+  // Handle click zones (Left 30% / Right 70%)
   const handleContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -64,25 +60,7 @@ export default function TutorialCarousel({
     }
   };
 
-  // 2. Mouse Scroll (Debounced)
-  const handleWheel = useCallback(
-    (e: WheelEvent) => {
-      const now = Date.now();
-      if (now - lastScrollTime.current < 500) return; // 500ms debounce
-
-      if (Math.abs(e.deltaY) > 20) {
-        if (e.deltaY > 0) {
-          nextSlide();
-        } else {
-          prevSlide();
-        }
-        lastScrollTime.current = now;
-      }
-    },
-    [nextSlide, prevSlide]
-  );
-
-  // 3. Swipe Support
+  // Handle swipe support
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
   };
@@ -103,7 +81,7 @@ export default function TutorialCarousel({
     touchStartX.current = null;
   };
 
-  // --- Preloading ---
+  // Preload adjacent images
   useEffect(() => {
     if (images.length === 0) return;
     const nextIndex = (currentIndex + 1) % images.length;

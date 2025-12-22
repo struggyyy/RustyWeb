@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 
 // Internal imports
 import CustomCursor from "@/components/common/CustomCursor";
-import TutorialCarousel from "@/components/home/TutorialCarousel";
+import TutorialCarousel from "@/components/features/home/TutorialCarousel";
 import i18n from "@/lib/i18n/i18n";
 
 // Generate 19 tutorial steps for each language
