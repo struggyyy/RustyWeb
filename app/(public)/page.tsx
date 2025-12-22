@@ -13,16 +13,17 @@
  ************************************************************************** */
 "use client";
 
-// external imports
+// React-specific imports
+import { useState, useEffect, useRef } from "react";
+
+// External imports
 import Link from "next/link";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 
-// internal imports
-// internal imports
+// Internal imports
 import CustomCursor from "@/components/common/CustomCursor";
 import TutorialCarousel from "@/components/home/TutorialCarousel";
-import { useState, useEffect, useRef } from "react";
 import i18n from "@/lib/i18n/i18n";
 
 // Generate 19 tutorial steps for each language
@@ -46,19 +47,13 @@ export default function Page() {
   const allImages =
     currentLanguage === "pl" ? ALL_TUTORIAL_STEPS_PL : ALL_TUTORIAL_STEPS_EN;
 
-  // LOGIC CHANGE:
-  // 1. The Carousel's first slide (Index 0) is "en2" (allImages[1]).
-  //    This ensures that when we scroll, "en2" slides out cleanly to "en3".
-  // 2. We use "en1" (coverImage) as a static Overlay on top.
-  //    - Idle: Overlay is Opacity 100 (Hides en2).
-  //    - Hover: Overlay fades to Opacity 0 (Reveals en2).
+  // Carousel Logic: First slide is "en2" (index 0). "en1" is an overlay HIDDEN on hover (revealing en2).
   const coverImage = allImages[0];
   const carouselImages = [allImages[1], ...allImages.slice(2)];
 
-  // Reset loaded images when language changes, ensuring we re-verify loading for new srcs
+  // Reset loaded images when language changes
   useEffect(() => {
     setLoadedImages(new Set());
-    // We do NOT reset carouselIndex here, to preserve the user's progress across languages
   }, [currentLanguage]);
 
   useEffect(() => {
@@ -92,13 +87,6 @@ export default function Page() {
     return () => clearTimeout(timer);
   }, []); // Run once on mount
 
-  // Prevent hydration mismatch for language dependent content if needed,
-  // but simpler to just render.
-  // Note: accessing i18n.language directly in render might cause hydration mismatch
-  // if server sees 'en' and client sees 'pl'.
-  // Ideally we use a hook or suppress warning if it flips.
-  // For now let's use the hook value but ensure it matches.
-
   // Clock logic
   const [currentTime, setCurrentTime] = useState("");
 
@@ -128,10 +116,7 @@ export default function Page() {
     const nav: any = navigator;
     if (nav.getBattery) {
       nav.getBattery().then((battery: any) => {
-        const updateBattery = () => {
-          setBatteryLevel(battery.level);
-        };
-        // Initial set
+        const updateBattery = () => setBatteryLevel(battery.level);
         updateBattery();
         // Listeners
         battery.addEventListener("levelchange", updateBattery);
@@ -176,7 +161,6 @@ export default function Page() {
         }
 
         // 3. Set a new timer to unlock only after scrolling STOPS (150ms silence).
-        // This ensures the entire inertial tail of a smooth scroll counts as one gesture.
         scrollTimeout.current = setTimeout(() => {
           isScrollLocked.current = false;
         }, 150);
@@ -196,6 +180,7 @@ export default function Page() {
     return null; // or a loading skeleton to be safe against hydration mismatch
   }
 
+  // Full screen with overflow handling for custom scrolling logic
   return (
     <div className="min-h-screen min-[960px]:h-screen flex flex-col relative overflow-x-hidden min-[960px]:overflow-hidden font-sans cursor-none">
       <CustomCursor />

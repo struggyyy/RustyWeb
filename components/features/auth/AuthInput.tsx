@@ -70,7 +70,10 @@ export default function AuthInput({
 
   return (
     <div className="space-y-2 transition-all duration-300 hover:-translate-y-0.5 focus-within:-translate-y-0.5">
-      <label className="text-xs min-[600px]:text-sm font-bold text-text-dark dark:text-neutral-200 uppercase tracking-wide">
+      <label
+        suppressHydrationWarning
+        className="text-xs min-[600px]:text-sm font-bold text-text-dark dark:text-neutral-200 uppercase tracking-wide"
+      >
         {label}
       </label>
       <div className={getInputWrapperClass(isError)}>

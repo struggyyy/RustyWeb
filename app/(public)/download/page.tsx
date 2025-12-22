@@ -12,6 +12,7 @@
  *                                                                         *
  ************************************************************************** */
 "use client";
+
 // external imports
 import { useTranslation, Trans } from "react-i18next";
 

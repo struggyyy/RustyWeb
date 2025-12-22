@@ -1,11 +1,28 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
-import CustomCursor from "@/components/common/CustomCursor";
+// React-specific imports
 import { useTranslation, Trans } from "react-i18next";
+
+// Internal imports
+import CustomCursor from "@/components/common/CustomCursor";
 
 export default function PrivacyPolicy() {
   const { t } = useTranslation();
 
+  // Privacy Policy Page Container
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden font-sans cursor-none bg-neutral-50 transition-colors duration-300">
       <CustomCursor />
@@ -23,6 +40,7 @@ export default function PrivacyPolicy() {
 
         <div className="h-px bg-neutral-200 dark:bg-neutral-300 w-full my-10" />
 
+        {/* Content Section */}
         <div className="prose prose-neutral dark:prose-invert prose-lg max-w-none">
           <p className="text-neutral-700 dark:text-neutral-200">
             {t("privacy.intro")}
