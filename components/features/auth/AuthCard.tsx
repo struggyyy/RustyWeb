@@ -28,16 +28,9 @@ export default function AuthCard({
 }: AuthCardProps) {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans">
-      {/* 
-        Glassmorphism Card Container
-        - bg-neutral-50/60 & dark:bg-neutral-900/60: Base semi-transparent background
-        - backdrop-blur-2xl: Strong blur for the glass effect
-        - shadow-2xl: Deep shadow for depth
-        - border border-white/60: Subtle border to define edges
-        - relative overflow-hidden: Contains the inner gradient overlay
-      */}
+      {/* Glassmorphism Card */}
       <div className="max-w-md w-full bg-neutral-50/60 dark:bg-neutral-900/60 backdrop-blur-2xl rounded-3xl shadow-2xl dark:shadow-[0_0_30px_rgba(255,255,255,0.15)] p-4 min-[600px]:p-10 border border-white/60 dark:border-neutral-700/60 relative overflow-hidden">
-        {/* Inner Gradient Overlay for shine effect */}
+        {/* Inner gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
 
         {showLanguageToggle && (

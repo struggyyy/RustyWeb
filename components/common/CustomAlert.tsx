@@ -1,6 +1,19 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
-import React from "react";
+// External libraries
 import { Loader2 } from "lucide-react";
 
 interface AlertButton {
@@ -23,7 +36,6 @@ export default function CustomAlert({
   title,
   message,
   buttons = [{ text: "OK" }],
-  onRequestClose,
 }: CustomAlertProps) {
   if (!visible) return null;
 
@@ -39,16 +51,13 @@ export default function CustomAlert({
         return "bg-green-500 text-white hover:bg-green-600";
       case "default":
       default:
-        // If there's only one button, primary. If multiple, secondary?
-        // Matching app logic generally: Primary brand color
         return "bg-brand-primary text-white hover:opacity-90";
     }
   };
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-neutral-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-      {/* Backdrop tap to close if onRequestClose provided? Usually alerts block. */}
-      {/* We won't add close on backdrop click for robust alerts/confirmations */}
+      {/* Backdrop */}
 
       <div className="w-full max-w-sm bg-white dark:bg-neutral-800 rounded-[28px] p-6 shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
         <h3 className="text-xl font-bold text-center text-neutral-900 dark:text-white mb-2">

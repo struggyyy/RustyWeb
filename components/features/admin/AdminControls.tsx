@@ -17,7 +17,7 @@
 import { useState, useRef, useEffect } from "react";
 
 // External libraries
-import { Search, MapPin, X, List, Filter } from "lucide-react";
+import { Search, MapPin, X, List } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 // Internal imports
@@ -77,7 +77,7 @@ export default function AdminControls({
 }: AdminControlsProps) {
   const { t, i18n } = useTranslation();
 
-  // Local UI State for Search
+  // Search state
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
@@ -135,7 +135,7 @@ export default function AdminControls({
             self.findIndex((t) => t.display_name === value.display_name)
         );
 
-        // Sort logic (same as original)
+        // Sort by relevance
         uniqueData.sort((a: any, b: any) => {
           const getTier = (item: any) => {
             const type = item.type || "";
@@ -172,6 +172,7 @@ export default function AdminControls({
                   "isolated_dwelling",
                   "farm",
                   "allotments",
+                  "amenity",
                 ].includes(type))
             )
               return 5;
@@ -221,12 +222,8 @@ export default function AdminControls({
       return;
     }
 
+    // Reset location filter on input change
     if (val !== lastSelectedRef.current) {
-      // Parent resets filterLocation if we pass null, but we need to signal that.
-      // The original logic checked `if val !== lastSelectedRef && filterLocation !== null`
-      // We will just let the parent handle the actual reset if we select something else or clear.
-      // Actually, original code: if (val !== lastSelectedRef.current && filterLocation !== null) setFilterLocation(null);
-      // We need to support this.
       if (val !== lastSelectedRef.current) {
         setFilterLocation(null);
       }
@@ -281,7 +278,7 @@ export default function AdminControls({
   return (
     <div className="flex flex-col gap-3">
       <div className="flex w-full gap-2">
-        {/* Combined Search & Location Bar */}
+        {/* Search bar */}
         <div
           className={`relative z-30 flex-1 flex items-center bg-white dark:bg-neutral-200 border border-neutral-200 dark:border-neutral-200 rounded-lg shadow-sm dark:shadow-[0_0_15px_rgba(255,255,255,0.1)] focus-within:border-brand-primary focus-within:ring-1 focus-within:ring-brand-primary transition-all h-10 ${
             selectedLocationName ? "pl-2" : ""
@@ -329,7 +326,7 @@ export default function AdminControls({
               if (e.key === "Enter") {
                 const lowerVal = inputValue.trim().toLowerCase();
 
-                // 1. Status Check
+                // Check for status match
                 const matchedStatus = reportStatuses.find(
                   (s) =>
                     t(`reports.status${s}`).toLowerCase() === lowerVal ||
@@ -346,7 +343,7 @@ export default function AdminControls({
                   return;
                 }
 
-                // 2. Date Check
+                // Check for date match
                 let dateParsed: Date | null = null;
                 if (/^\d{1,2}[./-]\d{1,2}[./-]\d{4}$/.test(inputValue.trim())) {
                   const parts = inputValue.trim().split(/[./-]/);
@@ -368,7 +365,7 @@ export default function AdminControls({
                   return;
                 }
 
-                // 3. Fallback to Text Search
+                // Default to text search
                 setSearchQuery(inputValue);
                 setShowSuggestions(false);
               }
@@ -386,7 +383,7 @@ export default function AdminControls({
             } pr-3 placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none min-w-[20px]`}
           />
 
-          {/* Location Suggestions Dropdown */}
+          {/* Suggestions list */}
           {showSuggestions &&
             suggestions.length > 0 &&
             !selectedLocationName && (
@@ -409,7 +406,7 @@ export default function AdminControls({
             )}
         </div>
 
-        {/* Radius Input - Conditional */}
+        {/* Radius filter */}
         {selectedLocationName && (
           <div className="animate-in fade-in slide-in-from-left-4 duration-300">
             <RadiusPicker
@@ -440,7 +437,7 @@ export default function AdminControls({
         </button>
       </div>
 
-      {/* Row 2: Status Buttons (Always below) */}
+      {/* Status filters */}
       <div className="flex flex-wrap gap-2 items-center">
         <button
           onClick={() => setSelectedStatuses([])}
@@ -475,7 +472,7 @@ export default function AdminControls({
             </button>
           );
         })}
-        {/* Report Count Badge */}
+        {/* Count badge */}
         <div className="px-3 py-1.5 bg-neutral-100 dark:bg-neutral-200 rounded-full border border-neutral-200 dark:border-neutral-200 shadow-sm animate-in fade-in zoom-in duration-300 flex items-center justify-center">
           <span className="text-xs sm:text-sm font-bold text-neutral-600 dark:text-black">
             {filteredCount}

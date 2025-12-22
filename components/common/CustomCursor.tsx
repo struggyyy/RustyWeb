@@ -1,5 +1,19 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
+// React specific imports
 import { useEffect, useRef, useState } from "react";
 
 interface CustomCursorProps {
@@ -13,7 +27,7 @@ export default function CustomCursor({
   const [isVisible, setIsVisible] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
 
-  // Size configuration based on variant
+  // Dynamic cursor sizing
   const getCursorSize = () => {
     if (variant === "default") return "w-8 h-8";
     // Precise variant shrinks on hover
@@ -37,7 +51,7 @@ export default function CustomCursor({
     const checkHover = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
 
-      // Check if the element or its parents are interactive
+      // Check for interactive elements
       const isClickable =
         target.tagName === "BUTTON" ||
         target.tagName === "A" ||
@@ -48,7 +62,6 @@ export default function CustomCursor({
         target.closest("button") !== null ||
         target.closest(".cursor-pointer") !== null ||
         // Keep the computed check for cases where we might miss the class
-        // (Though with cursor:none !important, this mostly returns 'auto' or 'none')
         window.getComputedStyle(target).cursor === "pointer";
 
       setIsHovering(!!isClickable);

@@ -29,7 +29,7 @@ export default function AdminReportsList({
   onDetailsPress,
   hasFilters,
 }: AdminReportsListProps) {
-  // Visual: Grid Layout for Reports
+  // Reports grid
   return (
     <div className="flex-1 grid gap-4 sm:gap-6 max-w-4xl pb-8">
       {filteredReports.length === 0 ? (

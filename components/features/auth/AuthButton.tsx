@@ -34,7 +34,7 @@ export default function AuthButton({
   variant = "primary",
   ...props
 }: AuthButtonProps) {
-  // Styling: Base layout + Variant specific colors
+  // Button styles
   const baseClass =
     "w-full py-2.5 min-[600px]:py-4 rounded-xl font-bold text-sm min-[600px]:text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all uppercase tracking-wide flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed";
 

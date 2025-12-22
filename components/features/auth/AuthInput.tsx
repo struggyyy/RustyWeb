@@ -45,7 +45,7 @@ export default function AuthInput({
       : "password"
     : type;
 
-  // Derived Styles
+  // Dynamic styles
   const getInputWrapperClass = (hasError?: boolean) => `
     relative w-full rounded-xl transition-all duration-300 font-medium
     ${
@@ -55,15 +55,15 @@ export default function AuthInput({
     }
   `;
 
-  // Base input text styles
+  // Base styles
   const inputClass =
     "w-full pl-12 pr-12 py-2.5 min-[600px]:py-4 bg-transparent outline-none rounded-xl text-text-dark placeholder:text-text-tertiary placeholder:font-normal";
 
-  // Error state input text styles (red text)
+  // Error styles
   const errorInputClass =
     "w-full pl-12 pr-12 py-2.5 min-[600px]:py-4 bg-transparent outline-none rounded-xl text-red-900 placeholder:text-red-300 placeholder:font-normal";
 
-  // Combine appropriate classes
+  // Final classes
   const finalInputClass = `${
     isError ? errorInputClass : inputClass
   } dark:text-neutral-900 dark:placeholder:text-neutral-500 ${className || ""}`;
@@ -95,7 +95,7 @@ export default function AuthInput({
           {...props}
         />
 
-        {/* Password Visibility Toggle */}
+        {/* Visibility toggle */}
         {isPasswordType && (
           <button
             type="button"
@@ -110,7 +110,7 @@ export default function AuthInput({
           </button>
         )}
 
-        {/* Clear Button (only if not password and explicitly enabled & has value) */}
+        {/* Clear button */}
         {!isPasswordType && showClearButton && value && onClear && (
           <button
             type="button"

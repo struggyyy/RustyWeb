@@ -1,8 +1,19 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
-import React from "react";
-
-// Available background patterns
+// Background pattern definitions
 const PATTERNS = {
   dots: {
     backgroundImage:
@@ -76,6 +87,6 @@ export default function BackgroundPattern({
   );
 }
 
-// Export pattern types for easy switching
+// Pattern types export
 export { PATTERNS };
 export type { PatternType };

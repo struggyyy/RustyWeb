@@ -1,6 +1,22 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+// React specific imports
+import React from "react";
+
+// External libraries
 import {
   ThemeProvider as NextThemesProvider,
   useTheme as useNextTheme,
@@ -8,8 +24,7 @@ import {
 
 type Theme = "light" | "dark";
 
-// We can simply export the provider directly if we don't need custom logic,
-// but keeping the wrapper allows us to maintain the exact interface consumption.
+// Theme provider wrapper
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return (
     <NextThemesProvider
@@ -23,12 +38,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Wrapper hook to expose consistent interface
+// Custom hook for theme management
 export function useTheme() {
   const { theme, setTheme, systemTheme } = useNextTheme();
-
-  // normalizedTheme handles 'system' preference resolution if needed,
-  // but for simple toggle, we just return theme and a toggler.
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");

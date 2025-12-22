@@ -28,54 +28,19 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
   updateProfile,
-  deleteUser,
 } from "firebase/auth";
-import {
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  writeBatch,
-  collection,
-  query,
-  where,
-  getDocs,
-  serverTimestamp,
-} from "firebase/firestore";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
+import { doc, getDoc } from "firebase/firestore";
 
 // Internal imports
-import "../../lib/i18n/i18n"; // Import i18n config side-effect
-import { auth, db, storage } from "@/lib/firebase/firebase";
-import { Report } from "@/lib/types/reports";
-
-interface UserProfile {
-  id: string;
-  email: string;
-  displayName?: string | null;
-  phoneNumber?: string | null;
-  profileImage?: string | null;
-  createdAt: any;
-  updatedAt?: any;
-  role?: "user" | "admin";
-  notificationPreferences?: {
-    email: boolean;
-    push: boolean;
-    haptics?: boolean;
-  };
-  pushToken?: string;
-  language?: string;
-  points?: number;
-  adminPreferences?: {
-    selectedStatuses?: string[];
-    maxDistance?: number;
-  };
-}
+import "../../lib/i18n/i18n";
+import { auth, db } from "@/lib/firebase/firebase";
+import {
+  UserProfile,
+  initializeUserProfile,
+  uploadUserImage,
+  deleteUserAccount,
+  updateServiceUserProfile,
+} from "@/lib/services/userService";
 
 interface AuthContextType {
   user: User | null;
@@ -133,6 +98,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [pathname]);
 
+  // Auth State Listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
@@ -150,8 +116,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               i18n.changeLanguage(userData.language);
             }
 
-            const isUserAdmin = userData.role === "admin";
-            setIsAdmin(isUserAdmin);
+            setIsAdmin(userData.role === "admin");
           } else {
             setProfile(null);
             setIsAdmin(false);
@@ -172,7 +137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, []); // Only run on mount
+  }, []);
 
   // Dedicated Effect for Route Protection
   useEffect(() => {
@@ -187,13 +152,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (user) {
       // 1. Check Email Verification
-      // If user is verified and tries to access verify-email page -> Redirect to Dashboard
       if (user.emailVerified && pathname?.startsWith("/verify-email")) {
         router.replace("/dashboard");
         return;
       }
 
-      // If user is NOT verified and tries to access other protected routes -> Redirect to verify-email
+      // If user is NOT verified and tries to access other protected routes
       if (
         !user.emailVerified &&
         isProtected &&
@@ -207,10 +171,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // 2. Role-based Redirects
       if (isAdmin && pathname?.startsWith("/dashboard")) {
-        // Admin trying to access user dashboard -> Redirect to Admin Panel
         router.replace("/admin");
       } else if (!isAdmin && pathname?.startsWith("/admin")) {
-        // Regular user trying to access admin panel -> Redirect to Dashboard
         router.replace("/dashboard");
       }
     } else {
@@ -233,36 +195,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     language: string = "en"
   ) => {
     const newUser = await createUserWithEmailAndPassword(auth, email, password);
+    const initialProfile = await initializeUserProfile(
+      newUser.user,
+      nickname,
+      language
+    );
 
-    // Create complete user profile in Firestore
-    const userDocRef = doc(db, "users", newUser.user.uid);
-    const initialProfileData: UserProfile = {
-      id: newUser.user.uid,
-      email: newUser.user.email || email,
-      displayName: nickname,
-      createdAt: serverTimestamp(),
-      notificationPreferences: {
-        email: true,
-        push: true,
-        haptics: true,
-      },
-      language: language,
-      role: "user",
-      points: 0,
-    };
-
-    await setDoc(userDocRef, initialProfileData);
-
-    // Optimistically update local state to match Mobile App behavior (prevents race conditions)
-    setProfile(initialProfileData);
+    // Optimistically update local state
+    setProfile(initialProfile);
     setProfileLoaded(true);
 
-    // Send verification email automatically (suppress error if rate restricted)
+    // Send verification email
     try {
       await sendEmailVerification(newUser.user);
     } catch (error) {
       console.warn("Failed to send initial verification email:", error);
-      // Continue anyway, user can resend from the page
     }
 
     router.push(`/verify-email?email=${encodeURIComponent(email)}`);
@@ -295,7 +242,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (isProtected) {
         router.push("/");
       } else {
-        // If we are not on a protected route, we can reset the flag immediately
         isClosingSessionRef.current = false;
       }
     } catch (error) {
@@ -304,7 +250,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Reset closing session ref when we land on a public page
+  // Reset session close flag on public pages
   useEffect(() => {
     const isProtected = PROTECTED_PATHS.some((path) =>
       pathname?.startsWith(path)
@@ -315,12 +261,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [pathname]);
 
   const sendVerificationEmail = async () => {
-    if (!auth.currentUser) {
-      throw new Error("No user is currently logged in.");
-    }
-    if (auth.currentUser.emailVerified) {
+    if (!auth.currentUser) throw new Error("No user is currently logged in.");
+    if (auth.currentUser.emailVerified)
       throw new Error("Your email is already verified.");
-    }
     await sendEmailVerification(auth.currentUser);
   };
 
@@ -334,15 +277,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateUserProfile = async (updates: Partial<UserProfile>) => {
-    if (!user) {
-      throw new Error("Not authenticated");
-    }
-    const userDocRef = doc(db, "users", user.uid);
-    const updateData = { ...updates, updatedAt: serverTimestamp() };
-    await updateDoc(userDocRef, updateData);
+    if (!user) throw new Error("Not authenticated");
+
+    await updateServiceUserProfile(user.uid, updates);
 
     setProfile((prev: UserProfile | null) =>
-      prev ? { ...prev, ...updateData } : null
+      prev ? { ...prev, ...updates } : null
     );
 
     if (updates.language) {
@@ -355,9 +295,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     photoURL?: string;
     email?: string;
   }) => {
-    if (!auth.currentUser) {
+    if (!auth.currentUser)
       throw new Error("User not authenticated for auth update.");
-    }
 
     if (updates.displayName !== undefined || updates.photoURL !== undefined) {
       await updateProfile(auth.currentUser, {
@@ -379,108 +318,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     userId: string,
     file: File
   ): Promise<string | undefined> => {
-    const fileExtension = file.name.split(".").pop();
-    const imageId = `${Date.now()}.${fileExtension}`;
-    const storageRef = ref(storage, `profileImages/${userId}/${imageId}`);
-
-    const snapshot = await uploadBytes(storageRef, file);
-    const downloadURL = await getDownloadURL(snapshot.ref);
-
+    const downloadURL = await uploadUserImage(
+      userId,
+      file,
+      profile?.profileImage
+    );
     await updateUserAuth({ photoURL: downloadURL });
     await updateUserProfile({ profileImage: downloadURL });
-
     return downloadURL;
   };
 
   const deleteAccount = async () => {
     const currentUser = auth.currentUser;
-    if (!currentUser) {
+    if (!currentUser)
       throw new Error("No user is currently logged in to delete.");
-    }
-
-    console.log(
-      `[deleteAccount] Starting comprehensive account deletion for user: ${currentUser.uid}`
-    );
 
     isClosingSessionRef.current = true;
 
     try {
-      // 1. Get all user reports
-      const reportsQuery = query(
-        collection(db, "reports"),
-        where("userId", "==", currentUser.uid)
-      );
-      const reportsSnapshot = await getDocs(reportsQuery);
-      const reports: Report[] = reportsSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Report[];
-      console.log(`[deleteAccount] Found ${reports.length} reports to delete.`);
-
-      // 2. Delete all report images from Storage
-      const imageDeletionPromises: Promise<void>[] = [];
-      reports.forEach((report) => {
-        if (report.imageUrl) {
-          const imageRef = ref(storage, report.imageUrl);
-          imageDeletionPromises.push(deleteObject(imageRef));
-        }
-      });
-
-      // 3. Delete user's profile picture from Storage
-      if (profile?.profileImage) {
-        console.log(
-          `[deleteAccount] Deleting profile image: ${profile.profileImage}`
-        );
-        const profileImageRef = ref(storage, profile.profileImage);
-        imageDeletionPromises.push(deleteObject(profileImageRef));
-      }
-
-      if (imageDeletionPromises.length > 0) {
-        await Promise.all(imageDeletionPromises);
-        console.log(
-          "[deleteAccount] All associated images have been deleted from Storage."
-        );
-      }
-
-      // 4. Delete all Firestore documents atomically (reports + user profile)
-      const batch = writeBatch(db);
-      reports.forEach((report) => {
-        const reportDocRef = doc(db, "reports", report.id);
-        batch.delete(reportDocRef);
-      });
-      const userDocRef = doc(db, "users", currentUser.uid);
-      batch.delete(userDocRef);
-
-      await batch.commit();
-      console.log(
-        "[deleteAccount] All Firestore documents (reports and user profile) deleted."
-      );
-
-      // 5. Delete Firebase Auth user
-      await deleteUser(currentUser);
+      await deleteUserAccount(currentUser, profile?.profileImage);
       router.push("/");
-      console.log(
-        `[deleteAccount] Firebase Auth user deleted successfully: ${currentUser.uid}`
-      );
     } catch (e: any) {
       isClosingSessionRef.current = false;
       console.error("[deleteAccount] Account deletion process failed:", e);
 
+      // Map Firebase errors to user-friendly messages
       if (e.code === "auth/requires-recent-login") {
         throw new Error("Please sign in again before deleting your account.");
       }
-
       if (e.message?.includes("storage") || e.code?.startsWith("storage/")) {
         throw new Error("Failed to delete profile data. Please try again.");
       }
-
       if (
         e.message?.includes("firestore") ||
         e.code?.startsWith("firestore/")
       ) {
         throw new Error("Failed to delete account records. Please try again.");
       }
-
       throw new Error("Account deletion failed. Please try again.");
     }
   };
