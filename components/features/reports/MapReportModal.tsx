@@ -22,6 +22,7 @@ import { X, Navigation, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 
 // Internal imports
 import { Report } from "@/lib/types/reports";
+import { formatDate, getStatusTextColor } from "@/lib/utils/reports";
 
 interface MapReportModalProps {
   report: Report | null;
@@ -46,31 +47,6 @@ export default function MapReportModal({
   const [imageLoaded, setImageLoaded] = useState(false);
 
   if (!report) return null;
-
-  const formatDate = (timestamp: any) => {
-    if (!timestamp) return "";
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const getStatusTextColor = (status: string) => {
-    switch (status) {
-      case "Submitted":
-        return "text-status-Submitted";
-      case "Accepted":
-        return "text-status-Accepted";
-      case "Completed":
-        return "text-status-Completed";
-      case "Canceled":
-        return "text-status-Canceled";
-      default:
-        return "text-neutral-500";
-    }
-  };
 
   const handleNavigate = () => {
     if (onNavigate) {

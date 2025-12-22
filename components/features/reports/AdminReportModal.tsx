@@ -23,6 +23,11 @@ import { X, Trash2, Loader2, MapPin, User } from "lucide-react";
 // Internal imports
 import { Report, ReportStatus, reportStatuses } from "@/lib/types/reports";
 import { getCityFromCoordinates } from "@/lib/services/geocoding";
+import {
+  formatDate,
+  getStatusColor,
+  getStatusTextColor,
+} from "@/lib/utils/reports";
 
 interface AdminReportModalProps {
   report: Report;
@@ -39,14 +44,11 @@ export default function AdminReportModal({
   onDelete,
   onShowOnMap,
 }: AdminReportModalProps) {
-  const [selectedStatus, setSelectedStatus] = useState<ReportStatus>(
-    report.status
-  );
+  const { t, i18n } = useTranslation();
   const [isUpdating, setIsUpdating] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [cityName, setCityName] = useState<string>("Loading...");
   const [isDeleting, setIsDeleting] = useState(false);
-  const { t, i18n } = useTranslation();
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -60,6 +62,7 @@ export default function AdminReportModal({
     }
   };
 
+  // Fetch city name from coordinates
   useEffect(() => {
     async function fetchCity() {
       if (report.location) {
@@ -75,57 +78,14 @@ export default function AdminReportModal({
     fetchCity();
   }, [report.location]);
 
-  const formatDate = (timestamp: any) => {
-    if (!timestamp) return "";
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString(i18n.language, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const getStatusColor = (status: ReportStatus) => {
-    switch (status) {
-      case "Submitted":
-        return "bg-status-Submitted text-white border-status-Submitted";
-      case "Accepted":
-        return "bg-status-Accepted text-white border-status-Accepted";
-      case "Completed":
-        return "bg-status-Completed text-white border-status-Completed";
-      case "Canceled":
-        return "bg-status-Canceled text-white border-status-Canceled";
-      default:
-        return "bg-neutral-100 text-neutral-500 border-neutral-200";
-    }
-  };
-
-  const getStatusTextColor = (status: string) => {
-    switch (status) {
-      case "Submitted":
-        return "text-status-Submitted";
-      case "Accepted":
-        return "text-status-Accepted";
-      case "Completed":
-        return "text-status-Completed";
-      case "Canceled":
-        return "text-status-Canceled";
-      default:
-        return "text-neutral-500";
-    }
-  };
-
   const handleStatusClick = async (status: ReportStatus) => {
     if (isUpdating) return;
 
-    setSelectedStatus(status);
     setIsUpdating(true);
     try {
       await onStatusUpdate(status);
     } catch (error) {
       console.error("Failed to update status:", error);
-      // Revert selection on error
-      setSelectedStatus(report.status);
     } finally {
       setIsUpdating(false);
     }
@@ -211,7 +171,7 @@ export default function AdminReportModal({
                   report.status
                 )}`}
               >
-                {formatDate(report.createdAt)}
+                {formatDate(report.createdAt, i18n.language)}
               </div>
 
               {/* Image */}

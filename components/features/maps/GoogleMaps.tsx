@@ -17,12 +17,15 @@
 import { useEffect, useRef, useState } from "react";
 
 // External libraries
-import { MapPin, Plus, Minus, Layers, Map as MapIcon } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 // Internal imports
 import { Report } from "@/lib/types/reports";
 import { useTheme } from "@/components/context/ThemeProvider";
+import { useGoogleMaps } from "@/hooks/useGoogleMaps";
+import { getPinColor, getReportCoordinates } from "@/lib/utils/maps";
 import { nightMapStyle } from "@/lib/mapStyles";
+import MapControls from "./MapControls";
 
 interface GoogleMapsProps {
   reports: Report[];
@@ -44,199 +47,47 @@ export default function GoogleMaps({
   focusedLocation,
 }: GoogleMapsProps) {
   const { theme } = useTheme();
+  const { isLoaded, loadError } = useGoogleMaps();
+
   const isDark = theme === "dark";
   const mapRef = useRef<HTMLDivElement>(null);
   const googleMapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+
   const [mapType, setMapType] = useState<"roadmap" | "satellite">("roadmap");
   const [isStreetViewVisible, setIsStreetViewVisible] = useState(false);
-  const [loadError, setLoadError] = useState<string | null>(null);
-  const scriptLoadedRef = useRef(false);
 
-  // Get pin color based on report status
-  const getPinColor = (status: string): string => {
-    switch (status) {
-      case "Submitted":
-        return "#1976D2"; // Blue
-      case "Accepted":
-        return "#00796B"; // Teal
-      case "Completed":
-        return "#2E7D32"; // Green
-      case "Canceled":
-        return "#C62828"; // Red
-      default:
-        return "#6366f1"; // Default indigo
-    }
-  };
-
-  // Load Google Maps API
-  useEffect(() => {
-    const loadGoogleMaps = async () => {
-      // Check if already loaded
-      if (
-        window.google &&
-        window.google.maps &&
-        window.google.maps.importLibrary
-      ) {
-        setIsLoaded(true);
-        return;
-      }
-
-      // Check if script is already being loaded
-      if (scriptLoadedRef.current) {
-        // Wait for it to load
-        const checkGoogle = () => {
-          if (
-            window.google &&
-            window.google.maps &&
-            window.google.maps.importLibrary
-          ) {
-            setIsLoaded(true);
-          } else {
-            setTimeout(checkGoogle, 100);
-          }
-        };
-        checkGoogle();
-        return;
-      }
-
-      // Check if script element already exists
-      const existingScript = document.querySelector(
-        'script[src*="maps.googleapis.com"]'
-      );
-      if (existingScript) {
-        scriptLoadedRef.current = true;
-        // Wait for it to load
-        const checkGoogle = () => {
-          if (
-            window.google &&
-            window.google.maps &&
-            window.google.maps.importLibrary
-          ) {
-            setIsLoaded(true);
-          } else {
-            setTimeout(checkGoogle, 100);
-          }
-        };
-        checkGoogle();
-        return;
-      }
-
-      const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
-      if (!apiKey || apiKey === "your_google_maps_api_key_here") {
-        setLoadError(
-          "Google Maps API key not configured. Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables."
-        );
-        return;
-      }
-
-      scriptLoadedRef.current = true;
-
-      const script = document.createElement("script");
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,marker&loading=async&v=weekly`;
-      script.async = true;
-
-      const scriptLoadPromise = new Promise<void>((resolve, reject) => {
-        script.onload = () => {
-          // Wait a bit more to ensure libraries are fully loaded
-          setTimeout(() => {
-            if (
-              window.google &&
-              window.google.maps &&
-              window.google.maps.importLibrary
-            ) {
-              resolve();
-            } else {
-              reject(new Error("Google Maps libraries not fully loaded"));
-            }
-          }, 500);
-        };
-
-        script.onerror = (error) => {
-          console.error("Google Maps script load error:", error);
-          reject(
-            new Error(
-              "Failed to load Google Maps. Please check your internet connection and API key."
-            )
-          );
-        };
-      });
-
-      document.head.appendChild(script);
-
-      try {
-        await scriptLoadPromise;
-        setIsLoaded(true);
-      } catch (error) {
-        setLoadError(
-          error instanceof Error ? error.message : "Failed to load Google Maps"
-        );
-      }
-    };
-
-    loadGoogleMaps();
-
-    return () => {
-      // Don't remove the script on cleanup to prevent issues with multiple components
-      // The script will remain loaded for the session
-    };
-  }, []);
-
-  // Initialize map
+  // Initialize and update map
   useEffect(() => {
     if (!isLoaded || !window.google || !mapRef.current) return;
 
     const initMap = async () => {
       try {
-        const { Map } = await window.google.maps.importLibrary("maps");
+        await window.google.maps.importLibrary("maps");
 
-        // AdvancedMarkerElement removed to support client-side dark mode styling (requires no mapId)
-
-        // Calculate center and zoom based on reports or focusedLocation
-        let center = { lat: 52.2, lng: 19.1 }; // Center of Poland
-        let zoom = 6; // Zoom level to show entire Poland
+        // Default: Center of Poland
+        let center = { lat: 52.2, lng: 19.1 };
+        let zoom = 6;
 
         if (focusedLocation) {
           center = {
             lat: focusedLocation.latitude,
             lng: focusedLocation.longitude,
           };
-          zoom = 15; // Close up zoom
+          zoom = 15;
         } else if (reports.length > 0) {
-          // Calculate center based on reports when they exist
+          // Calculate center based on valid report locations
           let validReports = 0;
           let totalLat = 0;
           let totalLng = 0;
 
           reports.forEach((report) => {
-            if (!report.location || typeof report.location !== "object") {
-              return; // Skip invalid location
+            const coords = getReportCoordinates(report);
+            if (coords) {
+              totalLat += coords.lat;
+              totalLng += coords.lng;
+              validReports++;
             }
-
-            const location = report.location as any;
-            let lat: number, lng: number;
-
-            if (
-              typeof location.latitude === "number" &&
-              typeof location.longitude === "number"
-            ) {
-              lat = location.latitude;
-              lng = location.longitude;
-            } else if (
-              typeof location.lat === "number" &&
-              typeof location.lng === "number"
-            ) {
-              lat = location.lat;
-              lng = location.lng;
-            } else {
-              return; // Skip invalid location
-            }
-
-            totalLat += lat;
-            totalLng += lng;
-            validReports++;
           });
 
           if (validReports > 0) {
@@ -244,7 +95,7 @@ export default function GoogleMaps({
               lat: totalLat / validReports,
               lng: totalLng / validReports,
             };
-            zoom = reports.length > 1 ? 10 : 12; // Normal zoom for reports
+            zoom = reports.length > 1 ? 10 : 12;
           }
         }
 
@@ -252,66 +103,50 @@ export default function GoogleMaps({
           center,
           zoom,
           mapTypeId: "roadmap",
-          // mapId removed to enable client-side 'styles' array for Dark Mode
-          disableDefaultUI: true, // Disable all default controls to use custom themed ones
+          disableDefaultUI: true, // Use custom controls
           zoomControl: false,
           mapTypeControl: false,
-          streetViewControl: true, // Re-enable standard Pegman for drag-and-drop functionality
+          streetViewControl: true,
           fullscreenControl: false,
           styles: isDark ? nightMapStyle : [],
         };
 
-        googleMapRef.current = new Map(mapRef.current, mapOptions);
+        googleMapRef.current = new window.google.maps.Map(
+          mapRef.current,
+          mapOptions
+        );
 
-        // Add markers
+        // Clear existing markers
         markersRef.current.forEach((marker) => (marker.map = null));
         markersRef.current = [];
 
+        // Add new markers
         reports.forEach((report) => {
-          if (!report.location || typeof report.location !== "object") {
-            return;
-          }
+          const coords = getReportCoordinates(report);
+          if (!coords) return;
 
-          const location = report.location as any;
-          let lat: number, lng: number;
-
-          if (
-            typeof location.latitude === "number" &&
-            typeof location.longitude === "number"
-          ) {
-            lat = location.latitude;
-            lng = location.longitude;
-          } else if (
-            typeof location.lat === "number" &&
-            typeof location.lng === "number"
-          ) {
-            lat = location.lat;
-            lng = location.lng;
-          } else {
-            return;
-          }
-
-          // Create pin element
-          // Create pin icon as Data URI for legacy Marker
           const pinColor = getPinColor(report.status);
+
+          // SVG Icon for marker
           const svgString = `
             <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
               <circle cx="20" cy="20" r="18" fill="${pinColor}" stroke="white" stroke-width="3"/>
               <circle cx="20" cy="20" r="8" fill="white"/>
             </svg>
           `;
+
           const iconUrl =
             "data:image/svg+xml;charset=UTF-8," +
             encodeURIComponent(svgString.trim());
 
           const marker = new window.google.maps.Marker({
-            position: { lat, lng },
+            position: coords,
             map: googleMapRef.current,
             title: `Report #${report.id.slice(0, 6)}`,
             icon: {
               url: iconUrl,
               scaledSize: new window.google.maps.Size(40, 40),
-              anchor: new window.google.maps.Point(20, 20), // Center the circle
+              anchor: new window.google.maps.Point(20, 20),
             },
           });
 
@@ -322,39 +157,23 @@ export default function GoogleMaps({
           markersRef.current.push(marker);
         });
 
-        // Fit bounds only when there are multiple reports AND no specific focus
+        // Fit bounds logic
         if (reports.length > 1 && !focusedLocation) {
           const bounds = new window.google.maps.LatLngBounds();
           let validBoundsCount = 0;
 
           reports.forEach((report) => {
-            if (!report.location || typeof report.location !== "object") return;
-            const location = report.location as any;
-            let lat: number, lng: number;
-
-            if (
-              typeof location.latitude === "number" &&
-              typeof location.longitude === "number"
-            ) {
-              lat = location.latitude;
-              lng = location.longitude;
-            } else if (
-              typeof location.lat === "number" &&
-              typeof location.lng === "number"
-            ) {
-              lat = location.lat;
-              lng = location.lng;
-            } else {
-              return;
+            const coords = getReportCoordinates(report);
+            if (coords) {
+              bounds.extend(coords);
+              validBoundsCount++;
             }
-
-            bounds.extend({ lat, lng });
-            validBoundsCount++;
           });
 
           if (validBoundsCount > 1) {
             googleMapRef.current.fitBounds(bounds);
 
+            // Avoid zooming in too close automatically
             const listener = window.google.maps.event.addListener(
               googleMapRef.current,
               "idle",
@@ -367,7 +186,8 @@ export default function GoogleMaps({
             );
           }
         }
-        // Listen for Street View visibility changes
+
+        // Street View listener
         const panorama = googleMapRef.current.getStreetView();
         if (panorama) {
           panorama.addListener("visible_changed", () => {
@@ -376,14 +196,13 @@ export default function GoogleMaps({
         }
       } catch (error) {
         console.error("Error initializing Google Map:", error);
-        setLoadError("Failed to initialize map");
       }
     };
 
     initMap();
   }, [isLoaded, reports, onMarkerClick, focusedLocation]);
 
-  // Handle focusedLocation updates explicitly
+  // Handle focused location change separate from init
   useEffect(() => {
     if (googleMapRef.current && focusedLocation) {
       googleMapRef.current.panTo({
@@ -394,21 +213,14 @@ export default function GoogleMaps({
     }
   }, [focusedLocation]);
 
-  // Update map styles when theme changes
+  // Theme update effect
   useEffect(() => {
     if (googleMapRef.current) {
-      console.log("Applying map theme:", isDark ? "DARK" : "LIGHT");
       googleMapRef.current.setOptions({
         styles: isDark ? nightMapStyle : [],
       });
     }
   }, [isDark]);
-
-  // Removed separate marker effect since it's now handled in initMap
-  // To support dynamic updates, we would need to separate them again, but for now let's initialize together to ensure libraries are loaded.
-  // Actually, to support updates when 'reports' change without re-initializing the map, we should keep the map instance but update markers.
-  // But 'importLibrary' is async, so we need to handle that.
-  // Let's stick to this combined effect for simplicity and correctness first.
 
   if (loadError) {
     return (
@@ -434,6 +246,7 @@ export default function GoogleMaps({
     );
   }
 
+  // Helper functions for controls
   const handleZoomIn = () => {
     if (googleMapRef.current) {
       googleMapRef.current.setZoom(googleMapRef.current.getZoom() + 1);
@@ -470,56 +283,14 @@ export default function GoogleMaps({
     <div className={`relative ${className} group`}>
       <div ref={mapRef} className="w-full h-full rounded-xl overflow-hidden" />
 
-      {/* Custom Controls Overlay - Hidden in Street View */}
-      {!isStreetViewVisible && (
-        <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
-          {/* Map Type Toggle */}
-          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden flex flex-col">
-            <button
-              onClick={() => handleMapTypeChange("roadmap")}
-              className={`p-2 transition-colors ${
-                mapType === "roadmap"
-                  ? "bg-neutral-100 dark:bg-neutral-700 text-brand-primary dark:text-white"
-                  : "text-neutral-500 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-700"
-              }`}
-              title="Map View"
-            >
-              <MapIcon className="w-5 h-5" />
-            </button>
-            <div className="h-[1px] bg-neutral-200 dark:bg-neutral-700 w-full" />
-            <button
-              onClick={() => handleMapTypeChange("satellite")}
-              className={`p-2 transition-colors ${
-                mapType === "satellite"
-                  ? "bg-neutral-100 dark:bg-neutral-700 text-brand-primary dark:text-white"
-                  : "text-neutral-500 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-700"
-              }`}
-              title="Satellite View"
-            >
-              <Layers className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Zoom Controls */}
-          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden flex flex-col mt-2">
-            <button
-              onClick={handleZoomIn}
-              className="p-2 text-neutral-600 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
-              title="Zoom In"
-            >
-              <Plus className="w-5 h-5" />
-            </button>
-            <div className="h-[1px] bg-neutral-200 dark:bg-neutral-700 w-full" />
-            <button
-              onClick={handleZoomOut}
-              className="p-2 text-neutral-600 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
-              title="Zoom Out"
-            >
-              <Minus className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Custom Controls Overlay */}
+      <MapControls
+        mapType={mapType}
+        onMapTypeChange={handleMapTypeChange}
+        onZoomIn={handleZoomIn}
+        onZoomOut={handleZoomOut}
+        isVisible={!isStreetViewVisible}
+      />
 
       {/* No reports message overlay */}
       {reports.length === 0 && (

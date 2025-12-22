@@ -18,11 +18,16 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 // External libraries
-import { MapPin, Check, X, Clock, FileCheck } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 // Internal imports
 import { Report } from "@/lib/types/reports";
 import { getCityFromCoordinates } from "@/lib/services/geocoding";
+import {
+  formatDate,
+  getStatusIcon,
+  getStatusTextClass,
+} from "@/lib/utils/reports";
 
 interface ReportCardProps {
   report: Report;
@@ -53,50 +58,6 @@ export default function ReportCard({
     }
     fetchCity();
   }, [report.location]);
-
-  const formatDate = (timestamp: any) => {
-    if (!timestamp) return "";
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString(i18n.language, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Submitted":
-        return "text-status-Submitted";
-      case "Accepted":
-        return "text-status-Accepted";
-      case "Completed":
-        return "text-status-Completed";
-      case "Canceled":
-        return "text-status-Canceled";
-      default:
-        return "text-neutral-500";
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "Submitted":
-        return <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-400" />;
-      case "Accepted":
-        return (
-          <FileCheck className="w-4 h-4 sm:w-5 sm:h-5 text-status-Accepted" />
-        );
-      case "Completed":
-        return (
-          <Check className="w-4 h-4 sm:w-5 sm:h-5 text-status-Completed" />
-        );
-      case "Canceled":
-        return <X className="w-4 h-4 sm:w-5 sm:h-5 text-status-Canceled" />;
-      default:
-        return null; // For Accepted or others without specific icon
-    }
-  };
 
   return (
     <div
@@ -138,7 +99,7 @@ export default function ReportCard({
           <div className="flex flex-col gap-1 items-start w-full">
             {/* Date */}
             <div className="text-sm min-[450px]:text-base sm:text-lg md:text-xl font-bold text-neutral-800 dark:text-white leading-tight mb-0.5">
-              {formatDate(report.createdAt)}
+              {formatDate(report.createdAt, i18n.language)}
             </div>
 
             {/* City Name (Geocoded) */}
@@ -164,7 +125,7 @@ export default function ReportCard({
             {/* Status Badge */}
             <div className="self-center">
               <span
-                className={`px-2 py-0.5 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-xs min-[800px]:text-sm font-bold uppercase tracking-wider whitespace-nowrap ${getStatusColor(
+                className={`px-2 py-0.5 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-xs min-[800px]:text-sm font-bold uppercase tracking-wider whitespace-nowrap ${getStatusTextClass(
                   report.status
                 )} bg-current/10`}
               >
@@ -175,18 +136,13 @@ export default function ReportCard({
             {/* Points (Always visible under status) */}
             {!isAdmin && (
               <div className="flex items-center gap-1 text-xs sm:text-sm font-bold text-neutral-600 dark:text-white mt-1">
-                {report.status === "Submitted" ? (
-                  getStatusIcon("Submitted")
-                ) : report.status === "Canceled" ? (
-                  getStatusIcon("Canceled")
-                ) : (
-                  <>
-                    {getStatusIcon(report.status)}
+                {getStatusIcon(report.status)}
+                {report.status !== "Submitted" &&
+                  report.status !== "Canceled" && (
                     <span>
                       {report.points} {t("reports.pts")}
                     </span>
-                  </>
-                )}
+                  )}
               </div>
             )}
           </div>

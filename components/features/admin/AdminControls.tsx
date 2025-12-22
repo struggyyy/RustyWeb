@@ -343,18 +343,47 @@ export default function AdminControls({
                 let dateParsed: Date | null = null;
                 if (/^\d{1,2}[./-]\d{1,2}[./-]\d{4}$/.test(inputValue.trim())) {
                   const parts = inputValue.trim().split(/[./-]/);
-                  dateParsed = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+                  // Construct using local time (Year, MonthIndex, Day)
+                  dateParsed = new Date(
+                    parseInt(parts[2]),
+                    parseInt(parts[1]) - 1,
+                    parseInt(parts[0])
+                  );
                 } else {
-                  const potentialDate = new Date(inputValue.trim());
+                  const trimmed = inputValue.trim();
+                  let potentialDate = new Date(trimmed);
+
+                  // If invalid or year missing, try heuristic
+                  const hasYear = /\d{4}/.test(trimmed);
+
                   if (!isNaN(potentialDate.getTime())) {
+                    // If user didn't type a year, force current year
+                    if (!hasYear) {
+                      potentialDate.setFullYear(new Date().getFullYear());
+                    }
                     dateParsed = potentialDate;
+                  } else if (!hasYear) {
+                    // Try appending current year if initial parse failed
+                    const withYear = `${trimmed} ${new Date().getFullYear()}`;
+                    const retryDate = new Date(withYear);
+                    if (!isNaN(retryDate.getTime())) {
+                      dateParsed = retryDate;
+                    }
                   }
                 }
 
                 if (dateParsed && !isNaN(dateParsed.getTime())) {
-                  const isoDate = dateParsed.toISOString().split("T")[0];
-                  setDateFrom(isoDate);
-                  setDateTo(isoDate);
+                  // Manually construct local YYYY-MM-DD string to avoid UTC shifts
+                  const year = dateParsed.getFullYear();
+                  const month = String(dateParsed.getMonth() + 1).padStart(
+                    2,
+                    "0"
+                  );
+                  const day = String(dateParsed.getDate()).padStart(2, "0");
+                  const localDateString = `${year}-${month}-${day}`;
+
+                  setDateFrom(localDateString);
+                  setDateTo(localDateString);
                   setInputValue("");
                   setSearchQuery("");
                   setShowSuggestions(false);

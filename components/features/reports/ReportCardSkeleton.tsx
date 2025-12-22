@@ -11,8 +11,6 @@
  *              or intended publication of such source code.               *
  *                                                                         *
  ************************************************************************** */
-import React from "react";
-
 export default function ReportCardSkeleton() {
   return (
     <div className="bg-white/60 backdrop-blur-2xl border border-white/60 shadow-xl p-3 sm:p-5 rounded-2xl animate-pulse relative overflow-hidden">

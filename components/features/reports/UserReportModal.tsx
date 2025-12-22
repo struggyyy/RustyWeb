@@ -11,25 +11,23 @@
  *              or intended publication of such source code.               *
  *                                                                         *
  ************************************************************************** */
+"use client";
+
 // React specific imports
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+
+// External libraries
+import { X, Trash2, MapPin } from "lucide-react";
 
 // Internal imports
 import { Report } from "@/lib/types/reports";
 import { getCityFromCoordinates } from "@/lib/services/geocoding";
 import {
-  X,
-  Trash2,
-  MapPin,
-  AlertCircle,
-  Clock,
-  CheckCircle,
-  XCircle,
-  FileCheck,
-  Check,
-} from "lucide-react";
-
+  formatDate,
+  getStatusColor,
+  getStatusTextColor,
+} from "@/lib/utils/reports";
 import CustomAlert from "@/components/common/CustomAlert";
 
 interface UserReportModalProps {
@@ -43,7 +41,7 @@ export default function UserReportModal({
   onClose,
   onDelete,
 }: UserReportModalProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -64,25 +62,6 @@ export default function UserReportModal({
     fetchCity();
   }, [report.location, t]);
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "Submitted":
-        return <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-400" />;
-      case "Accepted":
-        return (
-          <FileCheck className="w-4 h-4 sm:w-5 sm:h-5 text-status-Accepted" />
-        );
-      case "Completed":
-        return (
-          <Check className="w-4 h-4 sm:w-5 sm:h-5 text-status-Completed" />
-        );
-      case "Canceled":
-        return <X className="w-4 h-4 sm:w-5 sm:h-5 text-status-Canceled" />;
-      default:
-        return null;
-    }
-  };
-
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
@@ -92,61 +71,6 @@ export default function UserReportModal({
       console.error("Delete failed", error);
     } finally {
       setIsDeleting(false);
-    }
-  };
-
-  const formatDate = (timestamp: any) => {
-    if (!timestamp) return "";
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString(i18n.language, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const getStatusTextColor = (status: string) => {
-    switch (status) {
-      case "Submitted":
-        return "text-status-Submitted";
-      case "Accepted":
-        return "text-status-Accepted";
-      case "Completed":
-        return "text-status-Completed";
-      case "Canceled":
-        return "text-status-Canceled";
-      default:
-        return "text-neutral-500";
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Submitted":
-        return "bg-status-Submitted/10 text-status-Submitted border-status-Submitted/20 dark:bg-status-Submitted dark:text-white dark:border-status-Submitted";
-      case "Accepted":
-        return "bg-status-Accepted/10 text-status-Accepted border-status-Accepted/20 dark:bg-status-Accepted dark:text-white dark:border-status-Accepted";
-      case "Completed":
-        return "bg-status-Completed/10 text-status-Completed border-status-Completed/20 dark:bg-status-Completed dark:text-white dark:border-status-Completed";
-      case "Canceled":
-        return "bg-status-Canceled/10 text-status-Canceled border-status-Canceled/20 dark:bg-status-Canceled dark:text-white dark:border-status-Canceled";
-      default:
-        return "bg-neutral-100 text-neutral-500 border-neutral-200 dark:bg-neutral-100 dark:text-neutral-500 dark:border-neutral-200";
-    }
-  };
-
-  const getStatusNote = (status: string) => {
-    switch (status) {
-      case "Submitted":
-        return t("reports.noteSubmitted");
-      case "Accepted":
-        return t("reports.noteAccepted");
-      case "Completed":
-        return t("reports.noteCompleted");
-      case "Canceled":
-        return t("reports.noteCanceled");
-      default:
-        return "";
     }
   };
 
@@ -300,7 +224,7 @@ export default function UserReportModal({
             onPress: () => setShowAlert(false),
           },
           {
-            text: t("common.delete"), // Need to ensure "delete" or "confirm" key exists. 'common.delete' is in profile but maybe not common. profile.delete exists.
+            text: t("common.delete"),
             style: "destructive",
             loading: isDeleting,
             onPress: handleDelete,

@@ -10,10 +10,10 @@
  *        The copyright notice above does not evidence any actual          *
  *              or intended publication of such source code.               *
  *                                                                         *
- * ************************************************************************* */
+ ************************************************************************** */
 "use client";
 
-// React-specific imports
+// React specific imports
 import React from "react";
 
 // Internal imports
