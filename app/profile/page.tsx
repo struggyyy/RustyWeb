@@ -14,27 +14,20 @@
 "use client";
 
 // React-specific imports
-import { useState, useRef } from "react";
-import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
 // External libraries
+import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
-import {
-  ArrowLeft,
-  User,
-  Camera,
-  Save,
-  X,
-  Trash2,
-  Globe,
-  Pencil,
-} from "lucide-react";
+import { ArrowLeft, X, Pencil } from "lucide-react";
 
 // Internal imports
 import { useAuth } from "@/components/context/AuthContext";
 import ProfileImageModal from "@/components/features/settings/ProfileImageModal";
 import CustomCursor from "@/components/common/CustomCursor";
-import LanguageToggle from "@/components/common/LanguageToggle";
+import ProfileAvatar from "@/components/features/profile/ProfileAvatar";
+import ProfileForm from "@/components/features/profile/ProfileForm";
+import DeleteAccountSection from "@/components/features/profile/DeleteAccountSection";
 
 export default function SettingsPage() {
   const {
@@ -49,7 +42,6 @@ export default function SettingsPage() {
   } = useAuth();
   const { t, i18n } = useTranslation();
   const router = useRouter();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Form State Management
   const [isEditing, setIsEditing] = useState(false);
@@ -148,11 +140,6 @@ export default function SettingsPage() {
   };
 
   const handleDeleteAccount = async () => {
-    if (!showDeleteConfirm) {
-      setShowDeleteConfirm(true);
-      return;
-    }
-
     setIsSubmitting(true);
     try {
       await deleteAccount();
@@ -224,174 +211,40 @@ export default function SettingsPage() {
 
           <div className="p-8 sm:p-10 flex flex-col items-center">
             {/* Profile Image Section */}
-            <div className="relative mb-6">
-              <div
-                className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden bg-neutral-100 dark:bg-neutral-800 border-4 border-white dark:border-neutral-700 shadow-2xl dark:shadow-[0_0_20px_rgba(255,255,255,0.2)] cursor-pointer transition-transform hover:scale-[1.02] group"
-                onClick={() =>
-                  profile.profileImage ? setIsModalOpen(true) : null
-                }
-              >
-                {profile.profileImage ? (
-                  <img
-                    src={profile.profileImage}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-neutral-50 dark:bg-neutral-800 text-neutral-300 dark:text-neutral-600">
-                    <User className="w-16 h-16" />
-                  </div>
-                )}
-
-                {/* Hover Overlay for View */}
-                {profile.profileImage && (
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center rounded-full"></div>
-                )}
-              </div>
-
-              {/* Upload Button (Floating) */}
-              {isEditing && (
-                <>
-                  <div
-                    className="absolute bottom-1 right-1 w-9 h-9 bg-neutral-900 dark:bg-neutral-700 text-white rounded-full shadow-lg cursor-pointer hover:bg-neutral-800 dark:hover:bg-neutral-600 hover:scale-110 transition-all border-4 border-white dark:border-neutral-800 flex items-center justify-center"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    {uploadingImage ? (
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <Camera className="w-4 h-4" />
-                    )}
-                  </div>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    className="hidden"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                  />
-                </>
-              )}
-            </div>
+            <ProfileAvatar
+              imageUrl={profile.profileImage}
+              isEditing={isEditing}
+              uploadingImage={uploadingImage}
+              onImageUpload={handleImageUpload}
+              onImageClick={() =>
+                profile.profileImage ? setIsModalOpen(true) : null
+              }
+            />
 
             {/* User Info / Edit Forms */}
-            <div className="w-full space-y-6 text-center">
-              {/* Display Mode */}
-              {!isEditing ? (
-                <div className="space-y-1 animate-in fade-in duration-300">
-                  <h2 className="text-2xl sm:text-3xl font-black text-neutral-800 dark:text-white tracking-tight">
-                    {profile.displayName || t("profile.anonymousUser")}
-                  </h2>
-                  <p className="text-neutral-500 dark:text-neutral-300 font-medium">
-                    {user.email}
-                  </p>
-
-                  <div className="pt-6 flex justify-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-100/50 dark:bg-neutral-800/50 rounded-full border border-neutral-200/50 dark:border-neutral-700/50 dark:shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-                      <Globe className="w-4 h-4 text-neutral-400 dark:text-neutral-300" />
-                      <span className="text-sm font-bold text-neutral-600 dark:text-white">
-                        {language === "en" ? "English" : "Polski"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                /* Edit Mode */
-                <div className="space-y-4 max-w-sm mx-auto animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  <div className="space-y-2 text-left">
-                    <label className="text-xs font-bold text-neutral-400 dark:text-white uppercase tracking-wider ml-1">
-                      {t("profile.nickname")}
-                    </label>
-                    <input
-                      type="text"
-                      value={nickname}
-                      onChange={(e) => setNickname(e.target.value)}
-                      className="w-full px-4 py-3 bg-white dark:bg-neutral-200 border border-neutral-200 dark:border-neutral-200 rounded-lg shadow-sm dark:shadow-[0_0_15px_rgba(255,255,255,0.1)] focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary font-bold text-neutral-800 dark:text-neutral-900 placeholder:text-neutral-400 transition-all h-12"
-                      placeholder={t("profile.nicknamePlaceholder")}
-                    />
-                  </div>
-
-                  <div className="space-y-2 text-left">
-                    <label className="text-xs font-bold text-neutral-400 dark:text-white uppercase tracking-wider ml-1">
-                      {t("nav.language")}
-                    </label>
-                    <LanguageToggle
-                      variant="long"
-                      onLanguageChange={(lang) => setLanguage(lang)}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {error && (
-                <div className="mt-4 p-3 bg-red-50 text-red-600 text-sm font-medium rounded-xl border border-red-100">
-                  {t(error)}
-                </div>
-              )}
-            </div>
+            <ProfileForm
+              isEditing={isEditing}
+              nickname={nickname}
+              email={user.email || ""}
+              language={language}
+              error={error}
+              onNicknameChange={setNickname}
+              onLanguageChange={setLanguage}
+            />
 
             {/* Divider */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent my-8" />
 
             {/* Account Actions */}
-            {/* Action Buttons (Below Card) */}
-            <div className="flex justify-center w-full">
-              {isEditing ? (
-                <button
-                  onClick={handleSave}
-                  disabled={isSubmitting}
-                  className="px-12 py-3 rounded-xl bg-red-500 text-white font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2"
-                >
-                  {isSubmitting ? (
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <>
-                      <Save className="w-5 h-5" />
-                      {t("profile.saveChanges")}
-                    </>
-                  )}
-                </button>
-              ) : !showDeleteConfirm ? (
-                <button
-                  onClick={() => setShowDeleteConfirm(true)}
-                  className="text-red-500 hover:text-red-600 font-bold transition-colors text-sm"
-                >
-                  {t("profile.deleteAccount")}
-                </button>
-              ) : (
-                <div className="w-full bg-red-50/80 border border-red-100 rounded-2xl p-6 text-center space-y-4 animate-in fade-in zoom-in-95 duration-200">
-                  <div className="space-y-1">
-                    <h4 className="text-red-800 font-bold">
-                      {t("profile.deleteConfirmationTitle")}
-                    </h4>
-                    <p className="text-red-600 text-xs">
-                      {t("profile.deleteConfirmationDesc")}
-                    </p>
-                  </div>
-                  <div className="flex gap-3 justify-center">
-                    <button
-                      onClick={() => setShowDeleteConfirm(false)}
-                      className="px-4 py-2 bg-white text-neutral-600 rounded-xl text-sm font-bold shadow-sm hover:bg-neutral-50 transition-colors"
-                    >
-                      {t("profile.cancel")}
-                    </button>
-                    <button
-                      onClick={handleDeleteAccount}
-                      disabled={isSubmitting}
-                      className="px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-bold shadow-md hover:bg-red-700 transition-colors flex items-center gap-2"
-                    >
-                      {isSubmitting ? (
-                        <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      ) : (
-                        <>
-                          <Trash2 className="w-3 h-3" />
-                          {t("profile.delete")}
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+            <DeleteAccountSection
+              isEditing={isEditing}
+              isSubmitting={isSubmitting}
+              showDeleteConfirm={showDeleteConfirm}
+              onSave={handleSave}
+              onDeleteRequest={() => setShowDeleteConfirm(true)}
+              onDeleteConfirm={handleDeleteAccount}
+              onDeleteCancel={() => setShowDeleteConfirm(false)}
+            />
           </div>
         </div>
 

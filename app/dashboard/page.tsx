@@ -17,7 +17,6 @@
 import { useEffect, useState } from "react";
 
 // External libraries
-import { useRouter } from "next/navigation";
 import { MapPin } from "lucide-react";
 import {
   collection,
@@ -25,12 +24,11 @@ import {
   where,
   orderBy,
   onSnapshot,
-  Timestamp,
 } from "firebase/firestore";
+import { useTranslation } from "react-i18next";
 
 // Internal imports
 import { db } from "@/lib/firebase/firebase";
-import { useTranslation } from "react-i18next";
 import { useAuth } from "@/components/context/AuthContext";
 import { Report } from "@/lib/types/reports";
 import { deleteReport } from "@/lib/firebase/reports";
@@ -41,12 +39,11 @@ import ReportCardSkeleton from "@/components/features/reports/ReportCardSkeleton
 import CustomCursor from "@/components/common/CustomCursor";
 
 export default function UserDashboardPage() {
-  const { user, logOut, isAdmin, loading: authLoading } = useAuth();
+  const { user, isAdmin, loading: authLoading } = useAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [showReportModal, setShowReportModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
@@ -59,6 +56,7 @@ export default function UserDashboardPage() {
       return;
     }
 
+    // Fetch reports for current user
     const q = query(
       collection(db, "reports"),
       where("userId", "==", user.uid),
@@ -77,20 +75,13 @@ export default function UserDashboardPage() {
     return () => unsubscribe();
   }, [user, isAdmin, authLoading]);
 
-  const formatDate = (timestamp: Timestamp) => {
-    if (!timestamp) return "";
-    return timestamp.toDate().toLocaleDateString(i18n.language, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
+  // Handle opening details modal
   const handleDetailsPress = (report: Report) => {
     setSelectedReport(report);
     setShowReportModal(true);
   };
 
+  // Handle report deletion
   const handleDeleteReport = async (reportId: string) => {
     if (!selectedReport) return;
     try {
@@ -117,6 +108,7 @@ export default function UserDashboardPage() {
       <CustomCursor variant="precise" />
       <DashboardHeader />
 
+      {/* Header Content */}
       <div className="flex-shrink-0 w-full pt-4 md:pt-8 px-4 sm:px-10 z-10 pointer-events-auto">
         <div className="max-w-4xl mx-auto flex items-center h-10 md:h-12">
           <h1 className="text-lg min-[400px]:text-xl sm:text-4xl lg:text-5xl font-black text-neutral-800 dark:text-white tracking-tight">
@@ -135,12 +127,14 @@ export default function UserDashboardPage() {
         <div className="max-w-4xl mx-auto flex flex-col min-h-full">
           <div className="flex-1">
             {loading ? (
+              // Loading State (Skeletons)
               <div className="grid gap-4 sm:gap-6 max-w-4xl">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <ReportCardSkeleton key={i} />
                 ))}
               </div>
             ) : reports.length === 0 ? (
+              // Empty State
               <div className="bg-white/80 dark:bg-neutral-900/40 backdrop-blur-md rounded-3xl p-8 sm:p-16 text-center border-2 border-dashed border-neutral-200 dark:border-white/30 mt-4 max-w-4xl mx-auto shadow-sm dark:shadow-[0_0_30px_rgba(0,0,0,0.2)]">
                 <div className="w-16 h-16 sm:w-24 sm:h-24 bg-neutral-50 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 ring-1 ring-black/5 dark:ring-white/10">
                   <MapPin className="w-8 h-8 sm:w-12 sm:h-12 text-neutral-300 dark:text-white/80" />
@@ -153,6 +147,7 @@ export default function UserDashboardPage() {
                 </p>
               </div>
             ) : (
+              // Reports List
               <div className="grid gap-4 sm:gap-6 max-w-4xl">
                 {reports.map((report) => (
                   <div

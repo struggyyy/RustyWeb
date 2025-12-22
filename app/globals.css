@@ -1,7 +1,21 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Tailwind Theme Configuration */
 @theme {
   --color-brand-primary: var(--brand-primary);
 
@@ -54,6 +68,7 @@
   }
 }
 
+/* Global Variables */
 :root {
   /* Brand */
   --brand-primary: #BD5151;
@@ -110,7 +125,6 @@ body {
   background: var(--neutral-50);
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
-  /* transition: background-color 0.3s ease, color 0.3s ease; Removed to prevent flash on load */
 }
 
 @keyframes shake-left {

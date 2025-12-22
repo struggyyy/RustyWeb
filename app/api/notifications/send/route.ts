@@ -1,10 +1,27 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
+
+// External libraries
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
+    // Parse request body
     const body = await request.json();
     const { to, title, body: messageBody, data } = body;
 
+    // Construct notification message
     const message = {
       to,
       sound: "default",
@@ -13,6 +30,7 @@ export async function POST(request: Request) {
       data: data || {},
     };
 
+    // Send to Expo Push API
     const response = await fetch("https://exp.host/--/api/v2/push/send", {
       method: "POST",
       headers: {
