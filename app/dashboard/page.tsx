@@ -17,7 +17,7 @@
 import { useEffect, useState } from "react";
 
 // External libraries
-import { MapPin } from "lucide-react";
+
 import {
   collection,
   query,
@@ -32,11 +32,11 @@ import { db } from "@/lib/firebase/firebase";
 import { useAuth } from "@/components/context/AuthContext";
 import { Report } from "@/lib/types/reports";
 import { deleteReport } from "@/lib/firebase/reports";
-import ReportCard from "@/components/features/reports/ReportCard";
 import UserReportModal from "@/components/features/reports/UserReportModal";
 import DashboardHeader from "@/components/layout/DashboardHeader";
-import ReportCardSkeleton from "@/components/features/reports/ReportCardSkeleton";
 import CustomCursor from "@/components/common/CustomCursor";
+import ReportsGrid from "@/components/features/reports/ReportsGrid";
+import DashboardEmptyState from "@/components/features/dashboard/DashboardEmptyState";
 
 export default function UserDashboardPage() {
   const { user, isAdmin, loading: authLoading } = useAuth();
@@ -126,43 +126,12 @@ export default function UserDashboardPage() {
       <main className="flex-1 w-full overflow-y-auto px-4 sm:px-10 pb-6 pt-4 sm:pt-6 [mask-image:linear-gradient(to_bottom,transparent,black_20px)]">
         <div className="max-w-4xl mx-auto flex flex-col min-h-full">
           <div className="flex-1">
-            {loading ? (
-              // Loading State (Skeletons)
-              <div className="grid gap-4 sm:gap-6 max-w-4xl">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <ReportCardSkeleton key={i} />
-                ))}
-              </div>
-            ) : reports.length === 0 ? (
-              // Empty State
-              <div className="bg-white/80 dark:bg-neutral-900/40 backdrop-blur-md rounded-3xl p-8 sm:p-16 text-center border-2 border-dashed border-neutral-200 dark:border-white/30 mt-4 max-w-4xl mx-auto shadow-sm dark:shadow-[0_0_30px_rgba(0,0,0,0.2)]">
-                <div className="w-16 h-16 sm:w-24 sm:h-24 bg-neutral-50 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 ring-1 ring-black/5 dark:ring-white/10">
-                  <MapPin className="w-8 h-8 sm:w-12 sm:h-12 text-neutral-300 dark:text-white/80" />
-                </div>
-                <h3 className="text-lg sm:text-2xl font-bold text-neutral-700 dark:text-white mb-3">
-                  {t("dashboard.noReportsTitle")}
-                </h3>
-                <p className="text-neutral-400 dark:text-neutral-200 max-w-md mx-auto text-sm sm:text-lg font-medium">
-                  {t("dashboard.noReportsDesc")}
-                </p>
-              </div>
-            ) : (
-              // Reports List
-              <div className="grid gap-4 sm:gap-6 max-w-4xl">
-                {reports.map((report) => (
-                  <div
-                    key={report.id}
-                    className="transform transition-all duration-300 hover:scale-[1.01]"
-                  >
-                    <ReportCard
-                      report={report}
-                      isAdmin={false}
-                      onDetailsPress={handleDetailsPress}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+            <ReportsGrid
+              isLoading={loading}
+              reports={reports}
+              onDetailsPress={handleDetailsPress}
+              emptyState={<DashboardEmptyState />}
+            />
           </div>
 
           <footer className="w-full py-6 text-center text-neutral-400 dark:text-neutral-200 text-sm font-bold uppercase tracking-widest mt-8">

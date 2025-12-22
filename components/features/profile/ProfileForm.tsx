@@ -43,7 +43,7 @@ export default function ProfileForm({
 
   return (
     <div className="w-full space-y-6 text-center">
-      {/* Display Mode */}
+      {/* Display mode */}
       {!isEditing ? (
         <div className="space-y-1 animate-in fade-in duration-300">
           <h2 className="text-2xl sm:text-3xl font-black text-neutral-800 dark:text-white tracking-tight">
@@ -63,7 +63,7 @@ export default function ProfileForm({
           </div>
         </div>
       ) : (
-        /* Edit Mode */
+        // Edit mode
         <div className="space-y-4 max-w-sm mx-auto animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="space-y-2 text-left">
             <label className="text-xs font-bold text-neutral-400 dark:text-white uppercase tracking-wider ml-1">

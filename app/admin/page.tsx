@@ -30,7 +30,7 @@ import AdminReportModal from "@/components/features/reports/AdminReportModal";
 import GoogleMaps from "@/components/features/maps/GoogleMaps";
 import MapReportModal from "@/components/features/reports/MapReportModal";
 import AdminControls from "@/components/features/admin/AdminControls";
-import AdminReportsList from "@/components/features/admin/AdminReportsList";
+import AdminReportsGrid from "@/components/features/admin/AdminReportsGrid";
 import { useAdminData } from "@/hooks/useAdminData";
 
 export default function AdminDashboardPage() {
@@ -277,7 +277,7 @@ export default function AdminDashboardPage() {
               />
             </div>
           ) : (
-            <AdminReportsList
+            <AdminReportsGrid
               filteredReports={filteredReports}
               onDetailsPress={handleDetailsPress}
               hasFilters={hasFilters}

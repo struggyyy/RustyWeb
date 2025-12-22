@@ -13,8 +13,8 @@
  ************************************************************************** */
 "use client";
 
-// React specific imports
-import { useRef } from "react";
+// React-specific imports
+import React, { useRef } from "react";
 
 // External libraries
 import { User, Camera } from "lucide-react";

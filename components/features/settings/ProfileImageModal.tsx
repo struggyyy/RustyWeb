@@ -13,7 +13,7 @@
  ************************************************************************** */
 "use client";
 
-// React specific imports
+// React-specific imports
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -55,7 +55,7 @@ export default function ProfileImageModal({
         onClick={onClose}
       />
 
-      {/* Modal Content */}
+      {/* Modal content */}
       <div className="relative w-full max-w-lg bg-white dark:bg-neutral-200 rounded-[32px] shadow-2xl dark:shadow-[0_0_40px_rgba(0,0,0,0.5)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-100 dark:border-neutral-300">

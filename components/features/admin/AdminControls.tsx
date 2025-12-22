@@ -75,12 +75,11 @@ export default function AdminControls({
   setShowMapView,
   filteredCount,
 }: AdminControlsProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   // Search state
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
     null
@@ -115,7 +114,6 @@ export default function AdminControls({
       return;
     }
 
-    setIsLoadingSuggestions(true);
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
@@ -206,8 +204,6 @@ export default function AdminControls({
       }
     } catch (error) {
       console.error("Geocoding error:", error);
-    } finally {
-      setIsLoadingSuggestions(false);
     }
   };
 
