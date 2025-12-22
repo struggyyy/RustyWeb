@@ -1,4 +1,19 @@
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
 import { doc, writeBatch, increment, getDoc } from "firebase/firestore";
+
+// Internal imports
 import { db } from "./firebase";
 import { ReportStatus } from "@/lib/types/reports";
 import { sendReportStatusNotification } from "../services/notifications";

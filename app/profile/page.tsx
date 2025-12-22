@@ -23,7 +23,7 @@ import { ArrowLeft, X, Pencil } from "lucide-react";
 
 // Internal imports
 import { useAuth } from "@/components/context/AuthContext";
-import ProfileImageModal from "@/components/features/settings/ProfileImageModal";
+import ProfileImageModal from "@/components/features/profile/ProfileImageModal";
 import CustomCursor from "@/components/common/CustomCursor";
 import ProfileAvatar from "@/components/features/profile/ProfileAvatar";
 import ProfileForm from "@/components/features/profile/ProfileForm";

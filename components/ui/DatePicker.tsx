@@ -21,7 +21,6 @@ import {
   Calendar as CalendarIcon,
   ChevronLeft,
   ChevronRight,
-  X,
 } from "lucide-react";
 
 interface DatePickerProps {
@@ -105,10 +104,7 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
     // 2. If we have a start date but no end date
     if (tempFrom && !tempTo) {
       if (strDate < tempFrom) {
-        // Clicked before start -> Swap or just set new start?
-        // Standard behavior: Reset start to this new date, clear end
-        // OR make it a range [New, OldStart].
-        // Let's allow selecting backwards as a range:
+        // Clicked before start -> Reset start to this new date, clear end
         setTempTo(tempFrom);
         setTempFrom(strDate);
       } else if (strDate === tempFrom) {
@@ -150,7 +146,7 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
       days.push(<div key={`empty-${i}`} />);
     }
 
-    // Days
+    // Days Generation
     for (let d = 1; d <= daysInMonth; d++) {
       const currentDate = new Date(displayYear, displayMonth, d);
       const strDate = currentDate.toLocaleDateString("en-CA");
@@ -158,9 +154,6 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
       const isTo = tempTo === strDate;
       const inRange =
         tempFrom && tempTo && strDate > tempFrom && strDate < tempTo;
-
-      // Preview Range on Hover could be nice but not strictly required
-      // For now, simple logic
 
       days.push(
         <button
@@ -218,6 +211,7 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
 
   return (
     <div className="relative" ref={containerRef}>
+      {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`h-10 flex-shrink-0 flex items-center gap-2 px-3 py-2 border rounded-lg transition-all shadow-sm ${
@@ -290,7 +284,7 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
                 </div>
               </div>
 
-              {/* Right Calendar (Hidden on mobile usually or stacked) */}
+              {/* Right Calendar */}
               <div className="flex-1">
                 <div className="grid grid-cols-7 mb-2">
                   {DAYS.map((d) => (
@@ -308,6 +302,7 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
               </div>
             </div>
 
+            {/* Footer Controls */}
             <div className="flex justify-between items-center pt-2 border-t border-neutral-50 dark:border-neutral-300">
               <button
                 onClick={() => {

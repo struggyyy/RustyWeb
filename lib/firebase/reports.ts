@@ -1,28 +1,22 @@
-import {
-  deleteDoc,
-  doc,
-  collection,
-  query,
-  where,
-  getDocs,
-  orderBy,
-  addDoc,
-  serverTimestamp,
-  writeBatch,
-  increment,
-  getDoc,
-  GeoPoint,
-  Timestamp,
-} from "firebase/firestore";
-import {
-  ref,
-  deleteObject,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+/** *************************************************************************
+ *                                                                         *
+ *                       Copyright (c) 2025, @struggyyy                    *
+ *                                                                         *
+ *                             Project: Rusty                              *
+ *                                                                         *
+ *                         All Rights Reserved                             *
+ *                                                                         *
+ *         This is unpublished proprietary source code of @struggyyy.      *
+ *        The copyright notice above does not evidence any actual          *
+ *              or intended publication of such source code.               *
+ *                                                                         *
+ ************************************************************************** */
+// External libraries
+import { deleteDoc, doc } from "firebase/firestore";
+import { ref, deleteObject } from "firebase/storage";
+
+// Internal imports
 import { db, storage } from "./firebase";
-import { Report, ReportStatus } from "@/lib/types/reports";
-import { sendReportStatusNotification } from "@/lib/services/notifications";
 
 // Delete Report Logic
 export const deleteReportImage = async (imageUrl: string) => {

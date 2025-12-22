@@ -31,7 +31,7 @@ import GoogleMaps from "@/components/features/maps/GoogleMaps";
 import MapReportModal from "@/components/features/reports/MapReportModal";
 import AdminControls from "@/components/features/admin/AdminControls";
 import AdminReportsGrid from "@/components/features/admin/AdminReportsGrid";
-import { useAdminData } from "@/hooks/useAdminData";
+import { useAdminData } from "@/components/features/admin/hooks/useAdminData";
 
 export default function AdminDashboardPage() {
   const { user, isAdmin, loading: authLoading } = useAuth();

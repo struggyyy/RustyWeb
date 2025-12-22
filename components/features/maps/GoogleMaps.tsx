@@ -22,9 +22,9 @@ import { MapPin } from "lucide-react";
 // Internal imports
 import { Report } from "@/lib/types/reports";
 import { useTheme } from "@/components/context/ThemeProvider";
-import { useGoogleMaps } from "@/hooks/useGoogleMaps";
+import { useGoogleMaps } from "@/components/features/maps/hooks/useGoogleMaps";
 import { getPinColor, getReportCoordinates } from "@/lib/utils/maps";
-import { nightMapStyle } from "@/lib/mapStyles";
+import { nightMapStyle } from "@/lib/constants/mapStyles";
 import MapControls from "./MapControls";
 
 interface GoogleMapsProps {

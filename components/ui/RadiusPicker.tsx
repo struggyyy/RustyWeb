@@ -30,6 +30,7 @@ export const RadiusPicker = ({ radius, onChange }: RadiusPickerProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
+  // Handle click outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -55,6 +56,7 @@ export const RadiusPicker = ({ radius, onChange }: RadiusPickerProps) => {
 
   return (
     <div className="relative" ref={containerRef}>
+      {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`h-10 flex-shrink-0 flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-2 border rounded-lg transition-all shadow-sm ${
@@ -91,6 +93,7 @@ export const RadiusPicker = ({ radius, onChange }: RadiusPickerProps) => {
                 </span>
               </div>
 
+              {/* Slider Input */}
               <input
                 type="range"
                 min="1"
@@ -108,6 +111,7 @@ export const RadiusPicker = ({ radius, onChange }: RadiusPickerProps) => {
               </div>
             </div>
 
+            {/* Action Buttons */}
             <div className="pt-4 border-t border-neutral-50 dark:border-neutral-300 flex justify-end gap-2">
               <button
                 onClick={() => {

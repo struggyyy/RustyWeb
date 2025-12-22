@@ -23,6 +23,7 @@ import { useTranslation } from "react-i18next";
 // Internal imports
 import { db } from "@/lib/firebase/firebase";
 import { Report, ReportStatus } from "@/lib/types/reports";
+import { calculateDistance } from "@/lib/utils/maps";
 
 interface UseAdminDataProps {
   user: any;
@@ -72,26 +73,6 @@ export function useAdminData({
     return () => unsubscribe();
   }, [user, isAdmin, authLoading]);
 
-  // Haversine Distance Calculation
-  const calculateDistance = (
-    lat1: number,
-    lon1: number,
-    lat2: number,
-    lon2: number
-  ): number => {
-    const R = 6371; // Earth's radius in kilometers
-    const dLat = ((lat2 - lat1) * Math.PI) / 180;
-    const dLon = ((lon2 - lon1) * Math.PI) / 180;
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  };
-
   // Apply Filters (Status, Date, Radius, Search)
   useEffect(() => {
     let filtered = [...reports];
@@ -130,23 +111,24 @@ export function useAdminData({
 
     // 4. Text Search
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
+      const queryStr = searchQuery.toLowerCase();
       filtered = filtered.filter((report) => {
         const matchesText =
-          report.id.toLowerCase().includes(query) ||
-          report.description.toLowerCase().includes(query) ||
-          (report.userEmail && report.userEmail.toLowerCase().includes(query));
+          report.id.toLowerCase().includes(queryStr) ||
+          report.description.toLowerCase().includes(queryStr) ||
+          (report.userEmail &&
+            report.userEmail.toLowerCase().includes(queryStr));
 
         const matchesLocation =
           report.location &&
           `${report.location.latitude} ${report.location.longitude}`.includes(
-            query
+            queryStr
           );
 
         const statusTranslation = t(
           `reports.status${report.status}`
         ).toLowerCase();
-        const matchesStatus = statusTranslation.includes(query);
+        const matchesStatus = statusTranslation.includes(queryStr);
 
         const dateString = report.createdAt
           .toDate()
@@ -156,7 +138,7 @@ export function useAdminData({
             day: "numeric",
           })
           .toLowerCase();
-        const matchesDate = dateString.includes(query);
+        const matchesDate = dateString.includes(queryStr);
 
         return matchesText || matchesLocation || matchesStatus || matchesDate;
       });

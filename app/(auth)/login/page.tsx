@@ -15,6 +15,7 @@
 
 // React-specific imports
 import React, { useState } from "react";
+import { Suspense } from "react";
 
 // External libraries
 import Link from "next/link";
@@ -28,7 +29,7 @@ import AuthCard from "@/components/features/auth/AuthCard";
 import AuthInput from "@/components/features/auth/AuthInput";
 import AuthButton from "@/components/features/auth/AuthButton";
 
-export default function LoginPage() {
+function LoginContent() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState(searchParams.get("email") || "");
   const [password, setPassword] = useState("");
@@ -202,5 +203,13 @@ export default function LoginPage() {
         </Link>
       </div>
     </AuthCard>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

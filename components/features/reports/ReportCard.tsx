@@ -26,7 +26,7 @@ import { getCityFromCoordinates } from "@/lib/services/geocoding";
 import {
   formatDate,
   getStatusIcon,
-  getStatusTextClass,
+  getStatusTextColor,
 } from "@/lib/utils/reports";
 
 interface ReportCardProps {
@@ -125,7 +125,7 @@ export default function ReportCard({
             {/* Status Badge */}
             <div className="self-center">
               <span
-                className={`px-2 py-0.5 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-xs min-[800px]:text-sm font-bold uppercase tracking-wider whitespace-nowrap ${getStatusTextClass(
+                className={`px-2 py-0.5 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-xs min-[800px]:text-sm font-bold uppercase tracking-wider whitespace-nowrap ${getStatusTextColor(
                   report.status
                 )} bg-current/10`}
               >

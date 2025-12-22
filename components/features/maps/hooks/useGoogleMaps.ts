@@ -75,7 +75,7 @@ export const useGoogleMaps = () => {
 
       const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-      if (!apiKey || apiKey === "your_google_maps_api_key_here") {
+      if (!apiKey) {
         setLoadError(
           "Google Maps API key not configured. Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables."
         );
@@ -127,8 +127,6 @@ export const useGoogleMaps = () => {
     };
 
     loadGoogleMaps();
-
-    return () => {};
   }, []);
 
   return { isLoaded, loadError };

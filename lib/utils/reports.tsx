@@ -64,22 +64,6 @@ export const getStatusTextColor = (status: string): string => {
   }
 };
 
-// Get text-only color classes (for badges where bg is managed separately or for text only)
-export const getStatusTextClass = (status: string): string => {
-  switch (status) {
-    case "Submitted":
-      return "text-status-Submitted";
-    case "Accepted":
-      return "text-status-Accepted";
-    case "Completed":
-      return "text-status-Completed";
-    case "Canceled":
-      return "text-status-Canceled";
-    default:
-      return "text-neutral-500";
-  }
-};
-
 // Get icon component for status
 export const getStatusIcon = (status: string) => {
   switch (status) {
