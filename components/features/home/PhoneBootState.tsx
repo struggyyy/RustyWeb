@@ -11,9 +11,11 @@
  *              or intended publication of such source code.               *
  *                                                                         *
  ************************************************************************** */
-
-import { Terminal } from "lucide-react";
+// React-specific imports
 import { useEffect, useState } from "react";
+
+// External imports
+import { Terminal } from "lucide-react";
 
 export default function PhoneBootState() {
   const [logs, setLogs] = useState<string[]>([]);

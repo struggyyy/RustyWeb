@@ -293,10 +293,18 @@ export default function Page() {
               </div>
 
               {/* BOOT STATE OVERLAY */}
-              {/* Shows only if NOT crashed and NOT booted yet. Covers everything below status bar. */}
+              {/* Shows only if NOT crashed and NOT booted yet. Covers entire phone including status bar (top-0). */}
               {!isCrashed && !isPhoneBooted && (
-                <div className="absolute inset-x-0 bottom-0 top-5 z-50">
+                <div className="absolute inset-x-0 bottom-0 top-0 z-50">
                   <PhoneBootState />
+                </div>
+              )}
+
+              {/* CRASH STATE OVERLAY */}
+              {/* Higher priority than Boot State. Covers entire phone including status bar. */}
+              {isCrashed && (
+                <div className="absolute inset-x-0 bottom-0 top-0 z-[60]">
+                  <PhoneCrashState onRestart={handleRestart} />
                 </div>
               )}
 
@@ -325,17 +333,13 @@ export default function Page() {
 
               {/* Carousel Container - Fills remaining space */}
               <div className="flex-1 w-full relative bg-black overflow-hidden">
-                {isCrashed ? (
-                  <PhoneCrashState onRestart={handleRestart} />
-                ) : (
-                  <TutorialCarousel
-                    images={carouselImages}
-                    currentIndex={carouselIndex}
-                    onIndexChange={setCarouselIndex}
-                    onImageLoad={handleImageLoad}
-                    onError={handleImageError}
-                  />
-                )}
+                <TutorialCarousel
+                  images={carouselImages}
+                  currentIndex={carouselIndex}
+                  onIndexChange={setCarouselIndex}
+                  onImageLoad={handleImageLoad}
+                  onError={handleImageError}
+                />
               </div>
             </div>
           </div>
