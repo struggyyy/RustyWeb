@@ -24,6 +24,7 @@ import { useTranslation } from "react-i18next";
 // Internal imports
 import CustomCursor from "@/components/common/CustomCursor";
 import TutorialCarousel from "@/components/features/home/TutorialCarousel";
+import PhoneCrashState from "@/components/features/home/PhoneCrashState";
 import i18n from "@/lib/i18n/i18n";
 
 // Generate 19 tutorial steps for each language
@@ -63,6 +64,20 @@ export default function Page() {
   /* One-time auto-reveal state (7s delay) */
   const [hasAutoRevealed, setHasAutoRevealed] = useState(false);
   const hasInteracted = useRef(false);
+
+  /* Crash State Logic */
+  const [isCrashed, setIsCrashed] = useState(false);
+
+  const handleImageError = () => {
+    setIsCrashed(true);
+  };
+
+  const handleRestart = () => {
+    setIsCrashed(false);
+    // Force a re-mount or index reset could help, but for now just resetting state works as "retry"
+    setCarouselIndex(0);
+    setLoadedImages(new Set());
+  };
 
   /* Image Loading State to prevent black screens */
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
@@ -294,12 +309,17 @@ export default function Page() {
 
               {/* Carousel Container - Fills remaining space */}
               <div className="flex-1 w-full relative bg-black overflow-hidden">
-                <TutorialCarousel
-                  images={carouselImages}
-                  currentIndex={carouselIndex}
-                  onIndexChange={setCarouselIndex}
-                  onImageLoad={handleImageLoad}
-                />
+                {isCrashed ? (
+                  <PhoneCrashState onRestart={handleRestart} />
+                ) : (
+                  <TutorialCarousel
+                    images={carouselImages}
+                    currentIndex={carouselIndex}
+                    onIndexChange={setCarouselIndex}
+                    onImageLoad={handleImageLoad}
+                    onError={handleImageError}
+                  />
+                )}
               </div>
             </div>
           </div>

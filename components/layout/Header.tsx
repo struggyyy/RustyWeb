@@ -199,10 +199,14 @@ export default function Header({ variant }: HeaderProps) {
                 </Link>
 
                 {!isAdmin && (
-                  <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-white/50 dark:hover:bg-neutral-700/50 rounded-xl transition-colors group">
+                  <Link
+                    href="/request-access"
+                    onClick={() => setIsOpen("none")}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-white/50 dark:hover:bg-neutral-700/50 rounded-xl transition-colors group"
+                  >
                     <Key className="w-4 h-4 text-neutral-400 group-hover:text-brand-primary transition-colors" />
                     {t("nav.requestAdmin")}
-                  </button>
+                  </Link>
                 )}
 
                 <div className="h-px bg-neutral-200/50 dark:bg-neutral-700/50 my-1 mx-2" />

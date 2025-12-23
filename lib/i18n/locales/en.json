@@ -200,6 +200,12 @@
     "joinUs": "Join Us",
     "downloadApp": "Download the App"
   },
+  "requestAccess": {
+    "title": "Admin Access",
+    "comingSoon": "Coming Soon",
+    "description": "We are currently working on a secure verification process for community moderators. This feature will be available in a future update.",
+    "back": "Back to Home"
+  },
   "download": {
     "title": "Reclaim Your <0>Space</0>",
     "description": "Report abandoned vehicles to free up parking spaces and improve your neighborhood. Join the community effort to create cleaner, safer, and more eco-friendly surroundings for everyone.",

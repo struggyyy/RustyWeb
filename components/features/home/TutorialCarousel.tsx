@@ -24,6 +24,7 @@ interface TutorialCarouselProps {
   currentIndex: number;
   onIndexChange: (index: number) => void;
   onImageLoad: (index: number) => void;
+  onError?: () => void;
 }
 
 export default function TutorialCarousel({
@@ -31,6 +32,7 @@ export default function TutorialCarousel({
   currentIndex,
   onIndexChange,
   onImageLoad,
+  onError,
 }: TutorialCarouselProps) {
   const [isHovered, setIsHovered] = useState(false);
   const touchStartX = useRef<number | null>(null);
@@ -129,6 +131,7 @@ export default function TutorialCarousel({
               priority={index === 0}
               loading="eager"
               onLoadingComplete={() => onImageLoad(index)}
+              onError={() => onError?.()}
               draggable={false}
             />
           </div>

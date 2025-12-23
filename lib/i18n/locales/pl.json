@@ -95,7 +95,7 @@
   },
   "nav": {
     "privacyPolicy": "Polityka Prywatności",
-    "requestAdmin": "Poproś o dostęp",
+    "requestAdmin": "Poproś o Dostęp Administratora",
     "requestAccountDeletion": "Poproś o usunięcie konta",
     "language": "Język",
     "darkTheme": "Ciemny motyw",
@@ -199,6 +199,12 @@
     "subtitle": "Z KAŻDYM KLIKNIĘCIEM.",
     "joinUs": "Dołącz do nas",
     "downloadApp": "Pobierz aplikację"
+  },
+  "requestAccess": {
+    "title": "Dostęp Administratora",
+    "comingSoon": "Wkrótce",
+    "description": "Obecnie pracujemy nad bezpiecznym procesem weryfikacji dla moderatorów społeczności. Ta funkcja będzie dostępna w niedalekiej przyszłości.",
+    "back": "Wróć do strony głównej"
   },
   "download": {
     "title": "Odzyskaj Swoją <0>Przestrzeń</0>",
