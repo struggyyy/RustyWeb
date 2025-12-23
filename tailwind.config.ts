@@ -47,6 +47,16 @@ const config: Config = {
         },
         error: "#C62828",
       },
+      keyframes: {
+        progress: {
+          "0%": { transform: "translateX(-100%)" },
+          "50%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+      },
+      animation: {
+        progress: "progress 2s ease-in-out infinite",
+      },
     },
   },
   plugins: [],

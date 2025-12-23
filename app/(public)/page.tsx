@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import CustomCursor from "@/components/common/CustomCursor";
 import TutorialCarousel from "@/components/features/home/TutorialCarousel";
 import PhoneCrashState from "@/components/features/home/PhoneCrashState";
+import PhoneBootState from "@/components/features/home/PhoneBootState";
 import i18n from "@/lib/i18n/i18n";
 
 // Generate 19 tutorial steps for each language
@@ -52,6 +53,9 @@ export default function Page() {
   const coverImage = allImages[0];
   const carouselImages = [allImages[1], ...allImages.slice(2)];
 
+  /* Boot State Logic */
+  const [isPhoneBooted, setIsPhoneBooted] = useState(false);
+
   // Reset loaded images when language changes
   useEffect(() => {
     setLoadedImages(new Set());
@@ -77,6 +81,7 @@ export default function Page() {
     // Force a re-mount or index reset could help, but for now just resetting state works as "retry"
     setCarouselIndex(0);
     setLoadedImages(new Set());
+    setIsPhoneBooted(false); // Re-trigger boot on restart
   };
 
   /* Image Loading State to prevent black screens */
@@ -287,6 +292,14 @@ export default function Page() {
                 </div>
               </div>
 
+              {/* BOOT STATE OVERLAY */}
+              {/* Shows only if NOT crashed and NOT booted yet. Covers everything below status bar. */}
+              {!isCrashed && !isPhoneBooted && (
+                <div className="absolute inset-x-0 bottom-0 top-5 z-50">
+                  <PhoneBootState />
+                </div>
+              )}
+
               {/* COVER OVERLAY (en1) */}
               {/* Visible ONLY at Index 0. Fades OUT on Hover OR Loop to reveal Carousel (en2). */}
               {carouselIndex === 0 && (
@@ -303,6 +316,9 @@ export default function Page() {
                     fill
                     className="object-cover"
                     priority
+                    onLoad={() => {
+                      setTimeout(() => setIsPhoneBooted(true), 2000);
+                    }}
                   />
                 </div>
               )}
