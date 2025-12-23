@@ -281,7 +281,7 @@ export default function Page() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 opacity-90">
+                <div className="flex items-center gap-1 opacity-90 mr-1">
                   {/* Battery Only - Rounded Style */}
                   <div className="w-5 h-2.5 border-[1.5px] border-white/80 rounded-full flex items-center p-[1.5px] relative overflow-hidden">
                     <div

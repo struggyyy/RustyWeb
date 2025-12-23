@@ -83,13 +83,24 @@ export default function CustomCursor({
   return (
     <>
       <style jsx global>{`
-        * {
-          cursor: none !important;
+        /* Default: Custom cursor hidden */
+        .custom-cursor-element {
+          display: none !important;
+        }
+
+        /* Fine pointer (Desktop/Mouse): Show custom cursor, hide system cursor */
+        @media (hover: hover) and (pointer: fine) {
+          * {
+            cursor: none !important;
+          }
+          .custom-cursor-element {
+            display: flex !important;
+          }
         }
       `}</style>
       <div
         ref={cursorRef}
-        className={`fixed top-0 left-0 ${sizeClass} border-[2.5px] border-white rounded-full pointer-events-none z-[2147483647] mix-blend-difference transition-[width,height,opacity] duration-250 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex items-center justify-center will-change-transform`}
+        className={`custom-cursor-element fixed top-0 left-0 ${sizeClass} border-[2.5px] border-white rounded-full pointer-events-none z-[2147483647] mix-blend-difference transition-[width,height,opacity] duration-250 ease-[cubic-bezier(0.34,1.56,0.64,1)] items-center justify-center will-change-transform flex`}
         style={{ opacity: isVisible ? 1 : 0 }}
       >
         <div
