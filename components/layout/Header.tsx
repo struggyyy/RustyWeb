@@ -126,7 +126,7 @@ export default function Header({ variant }: HeaderProps) {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 px-4 pt-4 pb-2 md:px-10 md:pt-8 md:pb-10 z-50 flex justify-between items-start pointer-events-none">
+    <nav className="fixed top-0 left-0 right-0 px-4 pt-4 pb-2 md:px-10 md:pt-8 md:pb-10 z-[100] flex justify-between items-start pointer-events-none">
       {/* Left Side - Back Button (Public Only) */}
       <div className="pointer-events-auto">
         {variant === "public" &&
