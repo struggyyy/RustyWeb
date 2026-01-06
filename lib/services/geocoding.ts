@@ -42,7 +42,7 @@ export async function getCityFromCoordinates(
 ): Promise<string> {
   const rLat = lat.toFixed(3);
   const rLng = lng.toFixed(3);
-  const cacheKey = `geo:${rLat},${rLng}`;
+  const cacheKey = `geo_v3:${rLat},${rLng}`;
 
   // 1. Check Memory Cache
   if (CACHE[cacheKey]) {
@@ -69,6 +69,7 @@ export async function getCityFromCoordinates(
         {
           headers: {
             "User-Agent": "RustyWeb/1.0",
+            "Accept-Language": "pl",
           },
         }
       );
@@ -96,13 +97,18 @@ export async function getCityFromCoordinates(
         address.state ||
         "Unknown Location";
 
+      // Map to Polish display name if available
+      const cleanCity = city.trim();
+      const cityKey = cleanCity.toLowerCase().replace(/\s+/g, " ");
+      const finalCity = POLISH_DISPLAY_NAMES[cityKey] || cleanCity;
+
       // Save to caches
-      CACHE[cacheKey] = city;
+      CACHE[cacheKey] = finalCity;
       if (typeof window !== "undefined") {
-        localStorage.setItem(cacheKey, city);
+        localStorage.setItem(cacheKey, finalCity);
       }
 
-      return city;
+      return finalCity;
     } catch (error) {
       console.error("Geocoding error:", error);
       return "Unknown Location";

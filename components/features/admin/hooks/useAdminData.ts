@@ -24,6 +24,7 @@ import { useTranslation } from "react-i18next";
 import { db } from "@/lib/firebase/firebase";
 import { Report, ReportStatus } from "@/lib/types/reports";
 import { calculateDistance } from "@/lib/utils/maps";
+import { MOCK_REPORTS } from "@/lib/data/mockReports";
 
 interface UseAdminDataProps {
   user: any;
@@ -59,18 +60,27 @@ export function useAdminData({
     if (authLoading) return;
     if (!user || !isAdmin) return;
 
-    const q = query(collection(db, "reports"), orderBy("createdAt", "desc"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetchedReports = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Report[];
-      setReports(fetchedReports);
-      setFilteredReports(fetchedReports);
-      setLoading(false);
-    });
+    // MOCK DATA OVERRIDE
+    // const q = query(collection(db, "reports"), orderBy("createdAt", "desc"));
+    // const unsubscribe = onSnapshot(q, (snapshot) => {
+    //   const fetchedReports = snapshot.docs.map((doc) => ({
+    //     id: doc.id,
+    //     ...doc.data(),
+    //   })) as Report[];
+    //   setReports(fetchedReports);
+    //   setFilteredReports(fetchedReports);
+    //   setLoading(false);
+    // });
 
-    return () => unsubscribe();
+    // Simulate fetch
+    setTimeout(() => {
+      setReports(MOCK_REPORTS);
+      setFilteredReports(MOCK_REPORTS);
+      setLoading(false);
+    }, 500);
+
+    return () => {}; // No unsubscribe needed
+    // return () => unsubscribe();
   }, [user, isAdmin, authLoading]);
 
   // Apply Filters (Status, Date, Radius, Search)

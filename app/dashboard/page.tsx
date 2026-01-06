@@ -36,6 +36,7 @@ import Header from "@/components/layout/Header";
 import CustomCursor from "@/components/common/CustomCursor";
 import ReportsGrid from "@/components/features/reports/ReportsGrid";
 import DashboardEmptyState from "@/components/features/dashboard/DashboardEmptyState";
+import { MOCK_REPORTS } from "@/lib/data/mockReports";
 
 export default function UserDashboardPage() {
   const { user, isAdmin, loading: authLoading } = useAuth();
@@ -56,22 +57,28 @@ export default function UserDashboardPage() {
     }
 
     // Fetch reports for current user
-    const q = query(
-      collection(db, "reports"),
-      where("userId", "==", user.uid),
-      orderBy("createdAt", "desc")
-    );
+    // MOCK DATA OVERRIDE - Ignore user ID filter for demo
+    // const q = query(
+    //   collection(db, "reports"),
+    //   where("userId", "==", user.uid),
+    //   orderBy("createdAt", "desc")
+    // );
+    // const unsubscribe = onSnapshot(q, ...);
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetchedReports = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Report[];
-      setReports(fetchedReports);
+    setTimeout(() => {
+      setReports(MOCK_REPORTS);
       setLoading(false);
-    });
+    }, 500);
 
-    return () => unsubscribe();
+    return () => {}; // unsubscribe();
+    // const unsubscribe = onSnapshot(q, (snapshot) => {
+    //   const fetchedReports = snapshot.docs.map((doc) => ({
+    //     id: doc.id,
+    //     ...doc.data(),
+    //   })) as Report[];
+    //   setReports(fetchedReports);
+    //   setLoading(false);
+    // });
   }, [user, isAdmin, authLoading]);
 
   // Handle opening details modal
