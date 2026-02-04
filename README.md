@@ -2,6 +2,8 @@
 
 **RustyWeb** is the official web portal and administrative dashboard for the **Rusty** ecosystem. It serves as both a high-conversion landing page for the mobile app and a powerful tool for administrators to manage and verify reported vehicles.
 
+![RustyWeb Preview](./assets/home.png)
+
 [**🚀 View Live Demo**](https://rusty-web-two.vercel.app/)
 
 ---
