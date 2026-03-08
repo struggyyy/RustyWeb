@@ -218,9 +218,9 @@ export default function Page() {
       <main className="flex-1 w-full max-w-screen-2xl mx-auto px-4 sm:px-8 pt-8 pb-2 min-[960px]:pb-0 flex justify-center pt-16 min-[960px]:pt-24 overflow-x-hidden overflow-y-auto min-h-[calc(100vh-2rem)] md:min-h-0">
         <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-[var(--gap-fluid)] w-full max-w-5xl lg:max-w-[1600px] min-[960px]:h-full">
           {/* Left Side - CTA */}
-          <div className="w-auto flex flex-col items-start space-y-4 z-10 md:pb-48">
+          <div className="w-full md:w-auto flex flex-col items-center md:items-start space-y-4 z-10 md:pb-48">
             {/* Slogan and Buttons Container */}
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start text-left origin-center md:origin-left scale-[0.80] min-[400px]:scale-[0.90] md:scale-100 w-max">
               <h1
                 suppressHydrationWarning
                 className="text-fluid-title font-black text-neutral-900 dark:text-white leading-[0.9] tracking-tighter whitespace-nowrap"
@@ -234,7 +234,7 @@ export default function Page() {
                 </span>
               </h1>
 
-              <div className="flex gap-3 md:gap-4 items-center mt-2 md:mt-3">
+              <div className="flex flex-nowrap justify-start gap-3 md:gap-4 items-center mt-4 md:mt-3">
                 <Link
                   href="/signup"
                   className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-brand-primary text-white dark:text-black text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-xl dark:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:opacity-90 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
@@ -252,7 +252,7 @@ export default function Page() {
           </div>
 
           {/* Right Side - Phone Mockup */}
-          <div className="w-full md:w-[320px] flex justify-center relative md:mt-0 flex-shrink-0 min-[960px]:h-full items-start min-[960px]:items-center overflow-visible">
+          <div className="w-full md:w-[320px] min-[960px]:w-auto flex justify-center relative md:mt-0 flex-shrink-0 min-[960px]:h-full items-start min-[960px]:items-center overflow-visible">
             {/* Decorative glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-neutral-50 rounded-full blur-3xl -z-10" />
 
@@ -267,7 +267,7 @@ export default function Page() {
                 isHoveringPhone.current = false;
               }}
               // Scale down on mobile, normal scale on desktop
-              className="group relative w-[320px] h-[700px] scale-[0.80] min-[400px]:scale-[0.90] md:scale-100 origin-top mb-[-140px] min-[400px]:mb-[-70px] md:mb-0 min-[960px]:w-auto min-[960px]:h-full min-[960px]:max-h-full min-[960px]:aspect-[320/700] bg-black rounded-[2.5rem] border-[8px] border-neutral-900 shadow-2xl overflow-hidden ring-4 ring-neutral-100/50 flex-shrink-0 flex flex-col"
+              className="group relative w-[320px] h-[700px] scale-[0.85] min-[360px]:scale-[0.95] min-[400px]:scale-100 origin-top mb-[-105px] min-[360px]:mb-[-35px] min-[400px]:mb-0 min-[960px]:w-auto min-[960px]:h-full min-[960px]:max-h-full min-[960px]:max-w-[min(400px,40vw)] min-[960px]:aspect-[320/700] bg-black rounded-[2.5rem] border-[8px] border-neutral-900 shadow-2xl overflow-hidden ring-4 ring-neutral-100/50 flex-shrink-0 flex flex-col"
             >
               {/* Status Bar Area - Separate from content */}
               <div className="w-full h-5 bg-[#666666] flex justify-between items-center px-4 relative shrink-0 z-40">
