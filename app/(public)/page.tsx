@@ -31,12 +31,12 @@ import i18n from "@/lib/i18n/i18n";
 // Generate 19 tutorial steps for each language
 const ALL_TUTORIAL_STEPS_EN = Array.from(
   { length: 19 },
-  (_, i) => `/images/en/en${i + 1}.png`
+  (_, i) => `/images/en/en${i + 1}.png`,
 );
 
 const ALL_TUTORIAL_STEPS_PL = Array.from(
   { length: 19 },
-  (_, i) => `/images/pl/pl${i + 1}.png`
+  (_, i) => `/images/pl/pl${i + 1}.png`,
 );
 
 export default function Page() {
@@ -118,7 +118,7 @@ export default function Page() {
           hour: "2-digit",
           minute: "2-digit",
           hour12: false,
-        })
+        }),
       );
     };
 
@@ -252,7 +252,7 @@ export default function Page() {
           </div>
 
           {/* Right Side - Phone Mockup */}
-          <div className="w-full md:w-[320px] flex justify-center relative md:mt-0 flex-shrink-0 min-[960px]:h-full items-center">
+          <div className="w-full md:w-[320px] flex justify-center relative md:mt-0 flex-shrink-0 min-[960px]:h-full items-start min-[960px]:items-center overflow-visible">
             {/* Decorative glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-neutral-50 rounded-full blur-3xl -z-10" />
 
@@ -266,7 +266,8 @@ export default function Page() {
               onMouseLeave={() => {
                 isHoveringPhone.current = false;
               }}
-              className="group relative w-[320px] h-[700px] min-[960px]:w-auto min-[960px]:h-full min-[960px]:max-h-full min-[960px]:aspect-[320/700] bg-neutral-900 rounded-[2.5rem] border-[8px] border-neutral-900 shadow-2xl overflow-hidden ring-4 ring-neutral-100/50 flex-shrink-0 flex flex-col"
+              // Scale down on mobile, normal scale on desktop
+              className="group relative w-[320px] h-[700px] scale-[0.80] min-[400px]:scale-[0.90] md:scale-100 origin-top mb-[-140px] min-[400px]:mb-[-70px] md:mb-0 min-[960px]:w-auto min-[960px]:h-full min-[960px]:max-h-full min-[960px]:aspect-[320/700] bg-black rounded-[2.5rem] border-[8px] border-neutral-900 shadow-2xl overflow-hidden ring-4 ring-neutral-100/50 flex-shrink-0 flex flex-col"
             >
               {/* Status Bar Area - Separate from content */}
               <div className="w-full h-5 bg-[#666666] flex justify-between items-center px-4 relative shrink-0 z-40">
@@ -332,7 +333,7 @@ export default function Page() {
               )}
 
               {/* Carousel Container - Fills remaining space */}
-              <div className="flex-1 w-full relative bg-black overflow-hidden">
+              <div className="flex-1 w-full relative bg-black overflow-hidden -mt-[1px]">
                 <TutorialCarousel
                   images={carouselImages}
                   currentIndex={carouselIndex}
