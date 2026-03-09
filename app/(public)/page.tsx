@@ -215,35 +215,35 @@ export default function Page() {
         />
       </div>
 
-      <main className="flex-1 w-full max-w-screen-2xl mx-auto px-4 sm:px-8 pt-8 pb-2 min-[960px]:pb-0 flex justify-center pt-16 min-[960px]:pt-24 overflow-x-hidden overflow-y-auto min-h-[calc(100vh-2rem)] md:min-h-0">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-[var(--gap-fluid)] w-full max-w-5xl lg:max-w-[1600px] min-[960px]:h-full">
+      <main className="flex-1 w-full max-w-screen-2xl mx-auto px-4 sm:px-8 pt-8 pb-2 min-[960px]:pb-0 flex flex-col items-center justify-start pt-16 min-[960px]:pt-24 overflow-x-hidden overflow-y-auto min-h-[calc(100vh-2rem)] md:min-h-0 relative">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-[var(--gap-fluid)] w-full max-w-5xl lg:max-w-[1600px] flex-1 relative z-10">
           {/* Left Side - CTA */}
           <div className="w-full md:w-auto flex flex-col items-center md:items-start space-y-4 z-10 md:pb-48">
             {/* Slogan and Buttons Container */}
-            <div className="flex flex-col items-start text-left origin-center md:origin-left scale-[0.80] min-[400px]:scale-[0.90] md:scale-100 w-max">
+            <div className="flex flex-col items-start text-left w-max max-w-full">
               <h1
                 suppressHydrationWarning
-                className="text-fluid-title font-black text-neutral-900 dark:text-white leading-[0.9] tracking-tighter whitespace-nowrap"
+                className="font-black text-neutral-900 dark:text-white leading-[0.9] tracking-tighter whitespace-nowrap text-[clamp(1.5rem,9.5vw,4rem)] sm:text-fluid-title"
               >
                 {t("home.title")}{" "}
                 <span
                   suppressHydrationWarning
-                  className="block text-fluid-subtitle text-neutral-400 dark:text-neutral-200 mt-2"
+                  className="block text-neutral-400 dark:text-neutral-200 mt-1 md:mt-2 text-[clamp(1rem,5vw,2.25rem)] sm:text-fluid-subtitle"
                 >
                   {t("home.subtitle")}
                 </span>
               </h1>
 
-              <div className="flex flex-nowrap justify-start gap-3 md:gap-4 items-center mt-4 md:mt-3">
+              <div className="flex flex-nowrap justify-start gap-2 md:gap-4 items-center mt-4 md:mt-3 w-max max-w-full">
                 <Link
                   href="/signup"
-                  className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-brand-primary text-white dark:text-black text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-xl dark:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:opacity-90 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
+                  className="px-[clamp(1rem,5vw,1.5rem)] py-[clamp(0.6rem,2.5vw,0.75rem)] md:px-[var(--padding-button-horizontal)] md:py-[var(--padding-button-vertical)] bg-brand-primary text-white dark:text-black text-[clamp(0.7rem,3vw,1rem)] md:text-fluid-button font-black uppercase tracking-wider rounded-xl md:rounded-2xl shadow-xl dark:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:opacity-90 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
                 >
                   <span suppressHydrationWarning>{t("home.joinUs")}</span>
                 </Link>
                 <Link
                   href="/download"
-                  className="px-[var(--padding-button-horizontal)] py-[var(--padding-button-vertical)] bg-[#CECECE] dark:bg-neutral-300 text-white dark:text-black text-fluid-button font-black uppercase tracking-wider rounded-2xl shadow-lg dark:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:bg-neutral-300 dark:hover:bg-neutral-200 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
+                  className="px-[clamp(1rem,5vw,1.5rem)] py-[clamp(0.6rem,2.5vw,0.75rem)] md:px-[var(--padding-button-horizontal)] md:py-[var(--padding-button-vertical)] bg-[#CECECE] dark:bg-neutral-300 text-white dark:text-black text-[clamp(0.7rem,3vw,1rem)] md:text-fluid-button font-black uppercase tracking-wider rounded-xl md:rounded-2xl shadow-lg dark:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:bg-neutral-300 dark:hover:bg-neutral-200 hover:scale-105 transition-all transform flex items-center justify-center whitespace-nowrap"
                 >
                   <span suppressHydrationWarning>{t("home.downloadApp")}</span>
                 </Link>
@@ -252,10 +252,7 @@ export default function Page() {
           </div>
 
           {/* Right Side - Phone Mockup */}
-          <div className="w-full md:w-[320px] min-[960px]:w-auto flex justify-center relative md:mt-0 flex-shrink-0 min-[960px]:h-full items-start min-[960px]:items-center overflow-visible">
-            {/* Decorative glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-neutral-50 rounded-full blur-3xl -z-10" />
-
+          <div className="w-full md:w-[320px] min-[960px]:w-auto flex justify-center relative md:mt-0 flex-shrink-0 min-[960px]:min-h-0 items-start min-[960px]:items-center overflow-visible pb-12 md:pb-0">
             {/* Phone Bezel - Responsive with maintained aspect ratio */}
             <div
               onMouseEnter={() => {
@@ -266,8 +263,8 @@ export default function Page() {
               onMouseLeave={() => {
                 isHoveringPhone.current = false;
               }}
-              // Scale down on mobile, normal scale on desktop
-              className="group relative w-[320px] h-[700px] scale-[0.85] min-[360px]:scale-[0.95] min-[400px]:scale-100 origin-top mb-[-105px] min-[360px]:mb-[-35px] min-[400px]:mb-0 min-[960px]:w-auto min-[960px]:h-full min-[960px]:max-h-full min-[960px]:max-w-[min(400px,40vw)] min-[960px]:aspect-[320/700] bg-black rounded-[2.5rem] border-[8px] border-neutral-900 shadow-2xl overflow-hidden ring-4 ring-neutral-100/50 flex-shrink-0 flex flex-col"
+              // Scale down on mobile, normal scale on desktop, slightly enlarge on ultra-wides
+              className="group relative w-[320px] h-[700px] scale-[0.85] min-[360px]:scale-[0.95] min-[400px]:scale-100 min-[960px]:scale-100 lg:scale-[1.05] xl:scale-[1.1] origin-top md:origin-center mb-[-105px] min-[360px]:mb-[-35px] md:mb-0 bg-black rounded-[2.5rem] border-[8px] border-neutral-900 shadow-2xl overflow-hidden ring-4 ring-neutral-100/50 flex-shrink-0 flex flex-col"
             >
               {/* Status Bar Area - Separate from content */}
               <div className="w-full h-5 bg-[#666666] flex justify-between items-center px-4 relative shrink-0 z-40">
@@ -345,11 +342,17 @@ export default function Page() {
             </div>
           </div>
         </div>
-      </main>
 
-      <footer className="w-full py-4 min-[960px]:py-6 text-center text-neutral-400 dark:text-neutral-200 text-sm font-bold uppercase tracking-widest">
-        <span suppressHydrationWarning>{t("common.footer")}</span>
-      </footer>
+        {/* Footer moved inside main to share the same scroll container and not crop shadows */}
+        <footer className="w-full py-4 min-[960px]:py-6 text-center text-neutral-400 dark:text-neutral-200 text-sm font-bold uppercase tracking-widest mt-auto shrink-0 bg-transparent relative z-0 pointer-events-none">
+          <span
+            className="pointer-events-auto relative z-50"
+            suppressHydrationWarning
+          >
+            {t("common.footer")}
+          </span>
+        </footer>
+      </main>
     </div>
   );
 }
