@@ -20,6 +20,8 @@
 *.pem
 *.key
 *.cert
+*.der
+*.crt
 
 # debug
 npm-debug.log*
@@ -28,9 +30,20 @@ yarn-error.log*
 
 # local env files
 .env
+.env.*
+!.env.example
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Firebase / Secrets
+firebase-service-account.json
+firebase-debug.log
+google-services.json
+GoogleService-Info.plist
+*.keystore
+*.jks
