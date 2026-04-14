@@ -130,8 +130,9 @@ export default function TutorialCarousel({
               className="object-cover"
               priority={index === 0}
               loading="eager"
-              onLoadingComplete={() => onImageLoad(index)}
+              onLoad={() => onImageLoad(index)}
               onError={() => onError?.()}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               draggable={false}
             />
           </div>
