@@ -35,7 +35,7 @@
     "eslint": "latest",
     "eslint-config-next": "latest",
     "jsdom": "^27.3.0",
-    "postcss": "^8.5.6",
+    "postcss": "^8.5.10",
     "tailwindcss": "^4.1.17",
     "typescript": "latest",
     "vite-tsconfig-paths": "^6.0.3",
@@ -43,6 +43,7 @@
   },
   "overrides": {
     "protobufjs": "^7.5.5",
-    "vite": "7.3.2"
+    "vite": "7.3.2",
+    "postcss": "^8.5.10"
   }
 }
