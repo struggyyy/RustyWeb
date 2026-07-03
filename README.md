@@ -1,5 +1,7 @@
 # RustyWeb 🌐
 
+[![License: Proprietary](https://img.shields.io/badge/license-Proprietary-red?style=for-the-badge&logo=github)](LICENSE.md)
+
 **RustyWeb** is the official web portal and administrative dashboard for the **Rusty** ecosystem. It serves as both a high-conversion landing page for the mobile app and a powerful tool for administrators to manage and verify reported vehicles.
 
 ![RustyWeb Preview](./public/assets/home.png)
@@ -76,15 +78,10 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## 🧪 Testing & Quality
 
-We use **Vitest** for unit and integration testing.
+We ensure stability and code quality using **Vitest** and **ESLint**.
 
-- **Run Tests**: `npm test`
-
----
-
-## 📄 License
-
-This project is proprietary and confidential. All rights reserved. See the [LICENSE.md](LICENSE.md) file for details.
+- **Run Tests**: `npm run test` (Vitest)
+- **Linting**: `npm run lint` (Next.js ESLint configuration)
 
 ---
 
