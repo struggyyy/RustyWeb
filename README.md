@@ -2,7 +2,7 @@
 
 [![License: Proprietary](https://img.shields.io/badge/license-Proprietary-red?style=for-the-badge&logo=github)](LICENSE.md)
 
-**RustyWeb** is the official web portal and administrative dashboard for the **Rusty** ecosystem. It serves as both a high-conversion landing page for the mobile app and a powerful tool for administrators to manage and verify reported vehicles.
+**RustyWeb** is the official web portal and administrative dashboard for the **Rusty** ecosystem. It serves as both a high-conversion landing page for the **RustyApp** mobile application and a powerful console for administrators to verify and manage reported vehicles.
 
 [![RustyWeb Preview](./public/assets/home.png)](https://rusty-web-two.vercel.app/)
 
