@@ -65,23 +65,23 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## 🛠️ Tech Stack
 
-- **Framework**: [Next.js](https://nextjs.org/) (v15+)
-- **Language**: TypeScript
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) (v4)
-- **Icons**: Lucide React
-- **Backend / Auth**: Firebase (v11)
-- **Internationalization**: `i18next` & `react-i18next`
-- **Testing**: Vitest & React Testing Library
-- **Deployment**: Vercel
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Database / Auth**: [Firebase 12](https://firebase.google.com/)
+- **Internationalization**: [i18next](https://www.i18next.com/) & `react-i18next`
+- **Testing**: [Vitest](https://vitest.dev/) & [React Testing Library](https://testing-library.com/) (jsdom)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Deployment**: [Vercel](https://vercel.com/)
 
 ---
 
 ## 🧪 Testing & Quality
 
-We ensure stability and code quality using **Vitest** and **ESLint**.
+We maintain code reliability and high standards through Vitest testing and Next.js linting checks.
 
-- **Run Tests**: `npm run test` (Vitest)
-- **Linting**: `npm run lint` (Next.js ESLint configuration)
+- **Run Tests**: `npm run test` (Vitest unit and integration tests)
+- **Linting Check**: `npm run lint` (ESLint static analysis check)
 
 ---
 
