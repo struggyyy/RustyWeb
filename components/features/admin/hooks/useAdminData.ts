@@ -90,7 +90,7 @@ export function useAdminData({
     // 1. Status Filter
     if (selectedStatuses.length > 0) {
       filtered = filtered.filter((report) =>
-        selectedStatuses.includes(report.status)
+        selectedStatuses.includes(report.status),
       );
     }
 
@@ -113,7 +113,7 @@ export function useAdminData({
           filterLocation.latitude,
           filterLocation.longitude,
           report.location.latitude,
-          report.location.longitude
+          report.location.longitude,
         );
         return dist <= radius;
       });
@@ -132,11 +132,11 @@ export function useAdminData({
         const matchesLocation =
           report.location &&
           `${report.location.latitude} ${report.location.longitude}`.includes(
-            queryStr
+            queryStr,
           );
 
         const statusTranslation = t(
-          `reports.status${report.status}`
+          `reports.status${report.status}`,
         ).toLowerCase();
         const matchesStatus = statusTranslation.includes(queryStr);
 

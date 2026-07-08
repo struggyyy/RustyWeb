@@ -69,7 +69,7 @@ function VerifyEmailContent() {
             if (email) {
               const normalizedEmail = email.trim().toLowerCase();
               localStorage.removeItem(
-                `emailResendCooldownExpiry_${normalizedEmail}`
+                `emailResendCooldownExpiry_${normalizedEmail}`,
               );
             }
             return 0;
@@ -102,7 +102,7 @@ function VerifyEmailContent() {
         const expiryTime = Date.now() + COOLDOWN_SECONDS * 1000;
         localStorage.setItem(
           `emailResendCooldownExpiry_${normalizedEmail}`,
-          expiryTime.toString()
+          expiryTime.toString(),
         );
       }
     } catch (err: any) {
@@ -122,12 +122,12 @@ function VerifyEmailContent() {
       await logOut();
       await logOut(); // Kept double call from original code, though likely redundant
       router.replace(
-        `/login${email ? `?email=${encodeURIComponent(email)}` : ""}`
+        `/login${email ? `?email=${encodeURIComponent(email)}` : ""}`,
       );
     } catch (err: any) {
       console.error("Logout failed:", err);
       router.replace(
-        `/login${email ? `?email=${encodeURIComponent(email)}` : ""}`
+        `/login${email ? `?email=${encodeURIComponent(email)}` : ""}`,
       );
     }
   };

@@ -85,7 +85,7 @@ export default function MapReportModal({
           {/* Date */}
           <div
             className={`text-lg font-bold text-left mb-4 px-1 ${getStatusTextColor(
-              report.status
+              report.status,
             )}`}
           >
             {formatDate(report.createdAt)}

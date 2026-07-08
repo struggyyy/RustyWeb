@@ -108,7 +108,7 @@ describe("Maps Utils", () => {
         warsaw.lat,
         warsaw.lng,
         berlin.lat,
-        berlin.lng
+        berlin.lng,
       );
 
       // Allow slight variance due to float math
@@ -122,7 +122,7 @@ describe("Maps Utils", () => {
         point.lat,
         point.lng,
         point.lat,
-        point.lng
+        point.lng,
       );
       expect(distance).toBe(0);
     });

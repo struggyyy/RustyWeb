@@ -11,6 +11,5 @@
  *              or intended publication of such source code.               *
  *                                                                         *
  ************************************************************************** */
-
 // External imports
 import "@testing-library/jest-dom";

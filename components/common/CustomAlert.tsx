@@ -40,7 +40,7 @@ export default function CustomAlert({
   if (!visible) return null;
 
   const getButtonStyle = (
-    style?: "default" | "cancel" | "destructive" | "success"
+    style?: "default" | "cancel" | "destructive" | "success",
   ) => {
     switch (style) {
       case "destructive":
@@ -76,7 +76,7 @@ export default function CustomAlert({
               onClick={button.onPress}
               disabled={button.loading}
               className={`flex-1 py-3 px-6 rounded-xl font-bold text-sm transition-all active:scale-95 flex items-center justify-center ${getButtonStyle(
-                button.style
+                button.style,
               )}`}
             >
               {button.loading ? (

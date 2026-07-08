@@ -31,7 +31,7 @@ interface AdminControlsProps {
   selectedLocationName: string;
   setSelectedLocationName: (name: string) => void;
   setFilterLocation: (
-    loc: { latitude: number; longitude: number } | null
+    loc: { latitude: number; longitude: number } | null,
   ) => void;
 
   // Date

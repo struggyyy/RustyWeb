@@ -56,6 +56,9 @@ export default function Page() {
   /* Boot State Logic */
   const [isPhoneBooted, setIsPhoneBooted] = useState(false);
 
+  /* Image Loading State to prevent black screens */
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
+
   // Reset loaded images when language changes
   useEffect(() => {
     setLoadedImages(new Set());
@@ -83,9 +86,6 @@ export default function Page() {
     setLoadedImages(new Set());
     setIsPhoneBooted(false); // Re-trigger boot on restart
   };
-
-  /* Image Loading State to prevent black screens */
-  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
 
   const handleImageLoad = (index: number) => {
     setLoadedImages((prev) => {

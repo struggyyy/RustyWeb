@@ -11,7 +11,6 @@
  *              or intended publication of such source code.               *
  *                                                                         *
  ************************************************************************** */
-
 // Internal imports
 import { ReportStatus } from "@/lib/types/reports";
 
@@ -20,7 +19,7 @@ export const sendPushNotification = async (
   pushToken: string,
   title: string,
   body: string,
-  data?: any
+  data?: any,
 ): Promise<void> => {
   try {
     const response = await fetch("/api/notifications/send", {
@@ -51,7 +50,7 @@ export const sendReportStatusNotification = async (
   pushToken: string,
   reportId: string,
   oldStatus: ReportStatus,
-  newStatus: ReportStatus
+  newStatus: ReportStatus,
 ): Promise<void> => {
   const title = "Report Status Updated";
   const body = `Your report status has changed from ${oldStatus} to ${newStatus}.`;

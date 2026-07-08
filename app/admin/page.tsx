@@ -61,7 +61,7 @@ export default function AdminDashboardPage() {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [showReportModal, setShowReportModal] = useState(false);
   const [selectedMapReport, setSelectedMapReport] = useState<Report | null>(
-    null
+    null,
   );
   const [showMapModal, setShowMapModal] = useState(false);
   const [selectedLocationName, setSelectedLocationName] = useState<string>("");
@@ -75,7 +75,7 @@ export default function AdminDashboardPage() {
 
   // Map Clustering Logic (Local)
   const [mapReportsAtLocation, setMapReportsAtLocation] = useState<Report[]>(
-    []
+    [],
   );
   const [currentMapReportIndex, setCurrentMapReportIndex] = useState(0);
 
@@ -107,11 +107,11 @@ export default function AdminDashboardPage() {
         selectedReport.id,
         selectedReport.userId,
         selectedReport.status,
-        newStatus
+        newStatus,
       );
       // Update local state to reflect change immediately for best UX
       setSelectedReport((prev) =>
-        prev ? { ...prev, status: newStatus } : null
+        prev ? { ...prev, status: newStatus } : null,
       );
     } catch (error) {
       console.error("Failed to update status:", error);
@@ -156,7 +156,7 @@ export default function AdminDashboardPage() {
         (r) =>
           r.location &&
           Math.abs(r.location.latitude - report.location.latitude) < 0.0001 &&
-          Math.abs(r.location.longitude - report.location.longitude) < 0.0001
+          Math.abs(r.location.longitude - report.location.longitude) < 0.0001,
       );
 
       setMapReportsAtLocation(matches);
@@ -164,7 +164,7 @@ export default function AdminDashboardPage() {
       setSelectedMapReport(matches[0]);
       setShowMapModal(true);
     },
-    [filteredReports]
+    [filteredReports],
   );
 
   const handleNextMapReport = () => {

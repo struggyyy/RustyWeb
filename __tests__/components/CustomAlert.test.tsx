@@ -32,7 +32,7 @@ describe("CustomAlert", () => {
         visible={true}
         title="Test Title"
         message="This is a test message"
-      />
+      />,
     );
     expect(screen.getByText("Test Title")).toBeInTheDocument();
     expect(screen.getByText("This is a test message")).toBeInTheDocument();
@@ -68,7 +68,7 @@ describe("CustomAlert", () => {
   it("shows loading spinner when button is loading", () => {
     const buttons = [{ text: "Submit", loading: true }];
     render(
-      <CustomAlert visible={true} title="Loading Test" buttons={buttons} />
+      <CustomAlert visible={true} title="Loading Test" buttons={buttons} />,
     );
 
     // The text 'Submit' should NOT be visible generally if it's replaced by spinner,

@@ -184,7 +184,7 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
                 `}
         >
           {d}
-        </button>
+        </button>,
       );
     }
     return { days, year: displayYear, month: displayMonth };
@@ -197,7 +197,7 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
     const newDate = new Date(
       viewDate.getFullYear(),
       viewDate.getMonth() + delta,
-      1
+      1,
     );
     setViewDate(newDate);
   };
@@ -226,8 +226,8 @@ export function DatePicker({ dateFrom, dateTo, onChange }: DatePickerProps) {
             {dateFrom && dateTo && dateFrom === dateTo
               ? dateFrom
               : !dateFrom && dateTo
-              ? `Up to ${dateTo}`
-              : `${dateFrom} ${dateTo ? "- " + dateTo : ""}`}
+                ? `Up to ${dateTo}`
+                : `${dateFrom} ${dateTo ? "- " + dateTo : ""}`}
           </span>
         )}
       </button>
