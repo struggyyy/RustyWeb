@@ -68,7 +68,7 @@ export default function AdminReportModal({
       if (report.location) {
         const city = await getCityFromCoordinates(
           report.location.latitude,
-          report.location.longitude
+          report.location.longitude,
         );
         setCityName(city);
       } else {
@@ -168,7 +168,7 @@ export default function AdminReportModal({
               {/* Date */}
               <div
                 className={`text-lg font-bold text-left pl-1 ${getStatusTextColor(
-                  report.status
+                  report.status,
                 )}`}
               >
                 {formatDate(report.createdAt, i18n.language)}
@@ -257,7 +257,7 @@ export default function AdminReportModal({
                     <p className="text-xs text-neutral-400 dark:text-neutral-600 truncate font-mono">
                       {report.location
                         ? `${report.location.latitude.toFixed(
-                            6
+                            6,
                           )}, ${report.location.longitude.toFixed(6)}`
                         : "No location data"}
                     </p>

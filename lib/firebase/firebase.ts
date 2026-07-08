@@ -37,7 +37,7 @@ if (
   !firebaseConfig.appId
 ) {
   throw new Error(
-    "Firebase configuration is missing. Make sure you have a .env file with all the required NEXT_PUBLIC_FIREBASE_ variables."
+    "Firebase configuration is missing. Make sure you have a .env file with all the required NEXT_PUBLIC_FIREBASE_ variables.",
   );
 }
 

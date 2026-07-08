@@ -52,7 +52,7 @@ export default function UserReportModal({
       if (report.location) {
         const city = await getCityFromCoordinates(
           report.location.latitude,
-          report.location.longitude
+          report.location.longitude,
         );
         setCityName(city);
       } else {
@@ -113,7 +113,7 @@ export default function UserReportModal({
               {/* Date */}
               <div
                 className={`text-lg font-bold text-left pl-1 ${getStatusTextColor(
-                  report.status
+                  report.status,
                 )}`}
               >
                 {formatDate(report.createdAt)}
@@ -179,7 +179,7 @@ export default function UserReportModal({
                     <p className="text-xs text-neutral-400 dark:text-neutral-600 truncate font-mono">
                       {report.location
                         ? `${report.location.latitude.toFixed(
-                            6
+                            6,
                           )}, ${report.location.longitude.toFixed(6)}`
                         : "No location data"}
                     </p>
@@ -193,7 +193,7 @@ export default function UserReportModal({
                 <div className="flex justify-start">
                   <span
                     className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider ${getStatusColor(
-                      report.status
+                      report.status,
                     )}`}
                   >
                     {t(`reports.status${report.status}`)}

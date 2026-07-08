@@ -17,8 +17,7 @@ import React from "react";
 // External libraries
 import { Loader2, LucideIcon } from "lucide-react";
 
-interface AuthButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface AuthButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
   icon?: LucideIcon;
   children: React.ReactNode;

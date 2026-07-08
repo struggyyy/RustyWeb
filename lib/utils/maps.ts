@@ -11,7 +11,6 @@
  *              or intended publication of such source code.               *
  *                                                                         *
  ************************************************************************** */
-
 // Internal imports
 import { Report } from "@/lib/types/reports";
 
@@ -33,7 +32,7 @@ export const getPinColor = (status: string): string => {
 
 // safely extract latitude and longitude from a report
 export const getReportCoordinates = (
-  report: Report
+  report: Report,
 ): { lat: number; lng: number } | null => {
   if (!report.location || typeof report.location !== "object") {
     return null;
@@ -61,7 +60,7 @@ export const calculateDistance = (
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number
+  lon2: number,
 ): number => {
   const R = 6371; // Earth's radius in kilometers
   const dLat = ((lat2 - lat1) * Math.PI) / 180;

@@ -53,7 +53,7 @@ interface AuthContextType {
     email: string,
     password: string,
     nickname: string,
-    language?: string
+    language?: string,
   ) => Promise<void>;
   logOut: () => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
@@ -66,7 +66,7 @@ interface AuthContextType {
   }) => Promise<void>;
   uploadProfileImage: (
     userId: string,
-    file: File
+    file: File,
   ) => Promise<string | undefined>;
   deleteAccount: () => Promise<void>;
   previousPath: string | null;
@@ -147,7 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (user && !profileLoaded) return;
 
     const isProtected = PROTECTED_PATHS.some((path) =>
-      pathname?.startsWith(path)
+      pathname?.startsWith(path),
     );
 
     if (user) {
@@ -164,7 +164,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         !pathname?.startsWith("/verify-email")
       ) {
         router.replace(
-          `/verify-email?email=${encodeURIComponent(user.email || "")}`
+          `/verify-email?email=${encodeURIComponent(user.email || "")}`,
         );
         return;
       }
@@ -192,13 +192,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     email: string,
     password: string,
     nickname: string,
-    language: string = "en"
+    language: string = "en",
   ) => {
     const newUser = await createUserWithEmailAndPassword(auth, email, password);
     const initialProfile = await initializeUserProfile(
       newUser.user,
       nickname,
-      language
+      language,
     );
 
     // Optimistically update local state
@@ -219,7 +219,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const userCredential = await signInWithEmailAndPassword(
       auth,
       email,
-      password
+      password,
     );
 
     if (userCredential.user.emailVerified) {
@@ -236,7 +236,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // Only redirect to home if we are currently on a protected route
       const isProtected = PROTECTED_PATHS.some((path) =>
-        pathname?.startsWith(path)
+        pathname?.startsWith(path),
       );
 
       if (isProtected) {
@@ -253,7 +253,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Reset session close flag on public pages
   useEffect(() => {
     const isProtected = PROTECTED_PATHS.some((path) =>
-      pathname?.startsWith(path)
+      pathname?.startsWith(path),
     );
     if (!isProtected && isClosingSessionRef.current) {
       isClosingSessionRef.current = false;
@@ -282,7 +282,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await updateServiceUserProfile(user.uid, updates);
 
     setProfile((prev: UserProfile | null) =>
-      prev ? { ...prev, ...updates } : null
+      prev ? { ...prev, ...updates } : null,
     );
 
     if (updates.language) {
@@ -316,12 +316,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const uploadProfileImage = async (
     userId: string,
-    file: File
+    file: File,
   ): Promise<string | undefined> => {
     const downloadURL = await uploadUserImage(
       userId,
       file,
-      profile?.profileImage
+      profile?.profileImage,
     );
     await updateUserAuth({ photoURL: downloadURL });
     await updateUserProfile({ profileImage: downloadURL });

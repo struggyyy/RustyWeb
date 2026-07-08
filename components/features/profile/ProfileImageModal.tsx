@@ -80,6 +80,6 @@ export default function ProfileImageModal({
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

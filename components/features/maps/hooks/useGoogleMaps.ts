@@ -53,7 +53,7 @@ export const useGoogleMaps = () => {
 
       // Check if script element already exists
       const existingScript = document.querySelector(
-        'script[src*="maps.googleapis.com"]'
+        'script[src*="maps.googleapis.com"]',
       );
       if (existingScript) {
         scriptLoadedRef.current = true;
@@ -77,7 +77,7 @@ export const useGoogleMaps = () => {
 
       if (!apiKey) {
         setLoadError(
-          "Google Maps API key not configured. Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables."
+          "Google Maps API key not configured. Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables.",
         );
         return;
       }
@@ -108,8 +108,8 @@ export const useGoogleMaps = () => {
           console.error("Google Maps script load error:", error);
           reject(
             new Error(
-              "Failed to load Google Maps. Please check your internet connection and API key."
-            )
+              "Failed to load Google Maps. Please check your internet connection and API key.",
+            ),
           );
         };
       });
@@ -121,7 +121,7 @@ export const useGoogleMaps = () => {
         setIsLoaded(true);
       } catch (error) {
         setLoadError(
-          error instanceof Error ? error.message : "Failed to load Google Maps"
+          error instanceof Error ? error.message : "Failed to load Google Maps",
         );
       }
     };

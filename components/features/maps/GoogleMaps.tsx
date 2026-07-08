@@ -113,7 +113,7 @@ export default function GoogleMaps({
 
         googleMapRef.current = new window.google.maps.Map(
           mapRef.current,
-          mapOptions
+          mapOptions,
         );
 
         // Clear existing markers
@@ -182,7 +182,7 @@ export default function GoogleMaps({
                   googleMapRef.current.setZoom(15);
                 }
                 window.google.maps.event.removeListener(listener);
-              }
+              },
             );
           }
         }

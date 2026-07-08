@@ -49,7 +49,7 @@ export default function ReportCard({
       if (report.location) {
         const city = await getCityFromCoordinates(
           report.location.latitude,
-          report.location.longitude
+          report.location.longitude,
         );
         setCityName(city);
       } else {
@@ -114,7 +114,7 @@ export default function ReportCard({
             <div className="text-[10px] min-[450px]:text-xs text-neutral-400 dark:text-neutral-200 font-mono pl-0.5">
               {report.location
                 ? `${report.location.latitude.toFixed(
-                    2
+                    2,
                   )}, ${report.location.longitude.toFixed(2)}`
                 : t("reports.noLocation")}
             </div>
@@ -126,7 +126,7 @@ export default function ReportCard({
             <div className="self-center">
               <span
                 className={`px-2 py-0.5 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-xs min-[800px]:text-sm font-bold uppercase tracking-wider whitespace-nowrap ${getStatusTextColor(
-                  report.status
+                  report.status,
                 )} bg-current/10`}
               >
                 {t(`reports.status${report.status}`)}

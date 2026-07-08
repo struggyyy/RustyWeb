@@ -45,7 +45,7 @@ export async function POST(request: Request) {
       const errorData = await response.json();
       return NextResponse.json(
         { error: "Failed to send notification", details: errorData },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     console.error("Error in notification API:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

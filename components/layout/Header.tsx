@@ -93,7 +93,7 @@ export default function Header({ variant }: HeaderProps) {
       if (previousPath) {
         const protectedRoutes = ["/dashboard", "/admin", "/profile"];
         const isPreviousProtected = protectedRoutes.some((route) =>
-          previousPath.startsWith(route)
+          previousPath.startsWith(route),
         );
 
         if (isPreviousProtected && !user) {
@@ -107,11 +107,11 @@ export default function Header({ variant }: HeaderProps) {
       ) {
         const referrerPath = document.referrer.replace(
           window.location.origin,
-          ""
+          "",
         );
         const protectedRoutes = ["/dashboard", "/admin", "/profile"];
         const isReferrerProtected = protectedRoutes.some((route) =>
-          referrerPath.startsWith(route)
+          referrerPath.startsWith(route),
         );
 
         if (isReferrerProtected && !user) {

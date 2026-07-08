@@ -24,11 +24,13 @@
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - **[Node.js](https://nodejs.org/)** (LTS version recommended)
 - **Git**
 - **npm** (comes with Node.js)
 
 ### Installation & Configuration
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/struggyyy/RustyWeb.git
@@ -52,13 +54,16 @@
    # Google Maps
    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_key
    ```
-   *(Note: Collaborators must request specific API keys from the project lead)*
+   _(Note: Collaborators must request specific API keys from the project lead)_
 
 ### Running the App
+
 Start the development server:
+
 ```bash
 npm run dev
 ```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ---

@@ -11,7 +11,6 @@
  *              or intended publication of such source code.               *
  *                                                                         *
  ************************************************************************** */
-
 // External libraries
 import { deleteUser, User } from "firebase/auth";
 import {
@@ -64,7 +63,7 @@ export interface UserProfile {
 export const initializeUserProfile = async (
   user: User,
   nickname: string,
-  language: string = "en"
+  language: string = "en",
 ): Promise<UserProfile> => {
   const userDocRef = doc(db, "users", user.uid);
   const initialProfileData: UserProfile = {
@@ -90,7 +89,7 @@ export const initializeUserProfile = async (
 export const uploadUserImage = async (
   userId: string,
   file: File,
-  oldImageUrl?: string | null
+  oldImageUrl?: string | null,
 ): Promise<string> => {
   // 1. Delete old image if it exists
   if (oldImageUrl) {
@@ -100,7 +99,7 @@ export const uploadUserImage = async (
         const oldImageRef = ref(storage, oldImageUrl);
         await deleteObject(oldImageRef);
         console.log(
-          `[uploadUserImage] Old profile image deleted: ${oldImageUrl}`
+          `[uploadUserImage] Old profile image deleted: ${oldImageUrl}`,
         );
       }
     } catch (error: any) {
@@ -108,7 +107,7 @@ export const uploadUserImage = async (
       if (error.code !== "storage/invalid-url") {
         console.warn(
           `[uploadUserImage] Failed to delete old image: ${oldImageUrl}`,
-          error
+          error,
         );
       }
     }
@@ -126,10 +125,10 @@ export const uploadUserImage = async (
 // Comprehensive account deletion (Reports -> Images -> Profile -> Auth)
 export const deleteUserAccount = async (
   user: User,
-  profileImage?: string | null
+  profileImage?: string | null,
 ): Promise<void> => {
   console.log(
-    `[deleteAccount] Starting comprehensive account deletion for user: ${user.uid}`
+    `[deleteAccount] Starting comprehensive account deletion for user: ${user.uid}`,
   );
 
   // 0. Security Check: Ensure session is fresh (< 5 minutes) to prevent data loss on failed auth delete
@@ -140,7 +139,7 @@ export const deleteUserAccount = async (
 
     if (now - lastSignIn > fiveMinutes) {
       console.warn(
-        "[deleteAccount] Session stale, rejecting deletion to preserve data."
+        "[deleteAccount] Session stale, rejecting deletion to preserve data.",
       );
       // Throw error code that matches Firebase's standard for this scenario
       const error: any = new Error("Requires recent login");
@@ -152,7 +151,7 @@ export const deleteUserAccount = async (
   // 1. Get all user reports
   const reportsQuery = query(
     collection(db, "reports"),
-    where("userId", "==", user.uid)
+    where("userId", "==", user.uid),
   );
   const reportsSnapshot = await getDocs(reportsQuery);
   const reports: Report[] = reportsSnapshot.docs.map((doc) => ({
@@ -172,12 +171,12 @@ export const deleteUserAccount = async (
         } catch (error: any) {
           if (error.code === "storage/invalid-url") {
             console.warn(
-              `[deleteAccount] Skipping invalid image URL: ${report.imageUrl}`
+              `[deleteAccount] Skipping invalid image URL: ${report.imageUrl}`,
             );
           } else {
             console.error(
               `[deleteAccount] Failed to delete image: ${report.imageUrl}`,
-              error
+              error,
             );
           }
         }
@@ -195,12 +194,12 @@ export const deleteUserAccount = async (
       } catch (error: any) {
         if (error.code === "storage/invalid-url") {
           console.warn(
-            `[deleteAccount] Skipping invalid profile image URL: ${profileImage}`
+            `[deleteAccount] Skipping invalid profile image URL: ${profileImage}`,
           );
         } else {
           console.error(
             `[deleteAccount] Failed to delete profile image: ${profileImage}`,
-            error
+            error,
           );
         }
       }
@@ -230,7 +229,7 @@ export const deleteUserAccount = async (
 // Update user profile data in Firestore
 export const updateServiceUserProfile = async (
   userId: string,
-  updates: Partial<UserProfile>
+  updates: Partial<UserProfile>,
 ): Promise<void> => {
   const userDocRef = doc(db, "users", userId);
   const updateData = { ...updates, updatedAt: serverTimestamp() };

@@ -51,7 +51,7 @@ export const deleteReport = async (reportId: string, imageUrl: string) => {
     await deleteDoc(reportDocRef);
 
     console.log(
-      `Report ${reportId} and associated image deleted successfully.`
+      `Report ${reportId} and associated image deleted successfully.`,
     );
   } catch (error) {
     console.error("Error deleting report:", error);

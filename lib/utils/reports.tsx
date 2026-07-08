@@ -21,7 +21,7 @@ import { ReportStatus } from "@/lib/types/reports";
 // Format date timestamp to locale string
 export const formatDate = (
   timestamp: any,
-  language: string = "en-US"
+  language: string = "en-US",
 ): string => {
   if (!timestamp) return "";
   const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);

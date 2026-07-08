@@ -1,0 +1,15 @@
+{
+  "ignore": [
+    "components/common/BackgroundPattern.tsx",
+    "lib/firebase/firebase.ts",
+    "lib/firebase/reports.ts",
+    "lib/services/geocoding.ts",
+    "lib/services/notifications.ts"
+  ],
+  "ignoreDependencies": [
+    "clsx",
+    "tailwind-merge",
+    "eslint-config-prettier",
+    "eslint-plugin-prettier"
+  ]
+}

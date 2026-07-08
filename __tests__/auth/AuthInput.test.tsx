@@ -27,7 +27,7 @@ describe("AuthInput", () => {
         label="Email Address"
         value="test@example.com"
         onChange={() => {}}
-      />
+      />,
     );
     expect(screen.getByText("Email Address")).toBeInTheDocument();
     expect(screen.getByDisplayValue("test@example.com")).toBeInTheDocument();
@@ -39,7 +39,7 @@ describe("AuthInput", () => {
     // A better way is to check if the container has the icon.
     // For this test, we accept if it renders without error.
     const { container } = render(
-      <AuthInput label="Email" icon={Mail} value="" onChange={() => {}} />
+      <AuthInput label="Email" icon={Mail} value="" onChange={() => {}} />,
     );
     // Lucide icons usually render an svg
     expect(container.querySelector("svg")).toBeInTheDocument();
@@ -53,7 +53,7 @@ describe("AuthInput", () => {
         type="password"
         value="secret"
         onChange={() => {}}
-      />
+      />,
     );
 
     const input = screen.getByDisplayValue("secret") as HTMLInputElement;
@@ -79,7 +79,7 @@ describe("AuthInput", () => {
         onChange={() => {}}
         showClearButton={true}
         onClear={handleClear}
-      />
+      />,
     );
 
     // Clear button only shows if type != password and showClearButton is true and value is present
@@ -97,7 +97,7 @@ describe("AuthInput", () => {
         value=""
         onChange={() => {}}
         isError={true}
-      />
+      />,
     );
 
     // Look for red border or background class

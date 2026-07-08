@@ -31,7 +31,7 @@ export const updateReportStatus = async (
   reportId: string,
   userId: string,
   currentStatus: ReportStatus,
-  newStatus: ReportStatus
+  newStatus: ReportStatus,
 ): Promise<void> => {
   if (currentStatus === newStatus) return; // No change, do nothing
 
@@ -66,7 +66,7 @@ export const updateReportStatus = async (
 
     await batch.commit();
     console.log(
-      `Report ${reportId} status updated to ${newStatus}. User ${userId} points adjusted by ${pointsDifference}.`
+      `Report ${reportId} status updated to ${newStatus}. User ${userId} points adjusted by ${pointsDifference}.`,
     );
 
     // Send Notification
@@ -83,7 +83,7 @@ export const updateReportStatus = async (
             pushToken,
             reportId,
             currentStatus,
-            newStatus
+            newStatus,
           );
         }
       }

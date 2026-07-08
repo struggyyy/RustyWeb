@@ -29,7 +29,7 @@ interface AdminSearchProps {
   selectedLocationName: string;
   setSelectedLocationName: (name: string) => void;
   setFilterLocation: (
-    loc: { latitude: number; longitude: number } | null
+    loc: { latitude: number; longitude: number } | null,
   ) => void;
   setDateFrom: (date: string) => void;
   setDateTo: (date: string) => void;
@@ -55,7 +55,7 @@ export function AdminSearch({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
-    null
+    null,
   );
   const searchInputRef = useRef<HTMLInputElement>(null);
   const lastSelectedRef = useRef<string>("");
@@ -93,20 +93,20 @@ export function AdminSearch({
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          query
+          query,
         )}&limit=50&addressdetails=1&countrycodes=pl`,
         {
           headers: {
             "Accept-Language": "pl",
           },
-        }
+        },
       );
       if (response.ok) {
         const data = await response.json();
         const uniqueData = data.filter(
           (value: any, index: number, self: any[]) =>
             index ===
-            self.findIndex((t) => t.display_name === value.display_name)
+            self.findIndex((t) => t.display_name === value.display_name),
         );
 
         // Sort results by type relevance (cities first)
@@ -285,7 +285,7 @@ export function AdminSearch({
             const matchedStatus = reportStatuses.find(
               (s) =>
                 t(`reports.status${s}`).toLowerCase() === lowerVal ||
-                s.toLowerCase() === lowerVal
+                s.toLowerCase() === lowerVal,
             );
 
             if (matchedStatus) {
@@ -305,7 +305,7 @@ export function AdminSearch({
               dateParsed = new Date(
                 parseInt(parts[2]),
                 parseInt(parts[1]) - 1,
-                parseInt(parts[0])
+                parseInt(parts[0]),
               );
             } else {
               const trimmed = inputValue.trim();

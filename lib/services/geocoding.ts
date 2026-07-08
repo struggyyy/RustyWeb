@@ -11,7 +11,6 @@
  *              or intended publication of such source code.               *
  *                                                                         *
  ************************************************************************** */
-
 // Internal imports
 import {
   POLISH_DISPLAY_NAMES,
@@ -38,7 +37,7 @@ export interface LocationSuggestion {
 // Fetch city name from coordinates with caching and rate limiting
 export async function getCityFromCoordinates(
   lat: number,
-  lng: number
+  lng: number,
 ): Promise<string> {
   const rLat = lat.toFixed(3);
   const rLng = lng.toFixed(3);
@@ -70,7 +69,7 @@ export async function getCityFromCoordinates(
           headers: {
             "User-Agent": "RustyWeb/1.0",
           },
-        }
+        },
       );
 
       if (!response.ok) {
@@ -115,7 +114,7 @@ export async function getCityFromCoordinates(
 
 // Search locations by query string with English to Polish translation support
 export async function searchLocations(
-  query: string
+  query: string,
 ): Promise<LocationSuggestion[]> {
   try {
     // 1. Check for English/Common names mapping
@@ -138,7 +137,7 @@ export async function searchLocations(
     // 2. Build Search URL
     const buildUrl = (q: string) =>
       `${NOMINATIM_SEARCH_URL}?format=json&q=${encodeURIComponent(
-        q
+        q,
       )}&limit=8&addressdetails=1&countrycodes=pl&dedupe=1&extratags=1&namedetails=1`;
 
     // 3. Perform primary search

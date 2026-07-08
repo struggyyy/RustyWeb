@@ -27,7 +27,7 @@ describe("PhoneCrashState", () => {
 
     expect(screen.getByText("System Failure")).toBeInTheDocument();
     expect(
-      screen.getByText("Connection to image server interrupted.")
+      screen.getByText("Connection to image server interrupted."),
     ).toBeInTheDocument();
     expect(screen.getByText(/Error Code: 0xDEADBEEF/)).toBeInTheDocument();
   });
