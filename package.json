@@ -12,7 +12,7 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
     "knip": "knip",
-    "check-circular": "madge --circular .",
+    "check-circular": "madge --circular --extensions ts,tsx --ts-config tsconfig.json .",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
