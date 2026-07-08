@@ -54,7 +54,7 @@
     "tailwindcss": "^4.1.17",
     "typescript": "latest",
     "vite-tsconfig-paths": "^6.0.3",
-    "vitest": "4.1.4"
+    "vitest": "^4.1.10"
   },
   "overrides": {
     "protobufjs": "^8.6.3",
