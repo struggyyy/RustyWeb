@@ -64,11 +64,12 @@
     "postcss": "^8.5.18",
     "esbuild": "^0.28.1",
     "websocket-driver": "^0.7.5",
-    "sharp": "^0.35.4",
-    "smol-toml": "^1.7.1",
+    "sharp": "^0.35.5",
+    "smol-toml": "^1.9.1",
     "nanoid": "^3.3.18",
     "browserslist": "^4.28.9",
     "@humanfs/node": "^0.16.8",
-    "@grpc/grpc-js": "^1.14.6"
+    "@grpc/grpc-js": "^1.14.6",
+    "source-map-js": "^1.2.2"
   }
 }
