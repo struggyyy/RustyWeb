@@ -24,7 +24,7 @@
     "i18next": "^25.7.2",
     "i18next-browser-languagedetector": "^8.2.0",
     "lucide-react": "^0.554.0",
-    "next": "16.3.5",
+    "next": "16.3.8",
     "next-themes": "^0.4.6",
     "react": "latest",
     "react-dom": "latest",
@@ -68,6 +68,7 @@
     "smol-toml": "^1.7.1",
     "nanoid": "^3.3.18",
     "browserslist": "^4.28.9",
-    "@humanfs/node": "^0.16.8"
+    "@humanfs/node": "^0.16.8",
+    "@grpc/grpc-js": "^1.14.6"
   }
 }
