@@ -59,7 +59,8 @@
   "overrides": {
     "protobufjs": "^8.6.6",
     "@protobufjs/utf8": "^1.1.1",
-    "vite": "^7.3.5",
+    "vite": "^7.3.7",
+    "launch-editor": "^2.14.2",
     "js-yaml": "^4.3.2",
     "postcss": "^8.5.18",
     "esbuild": "^0.28.1",
