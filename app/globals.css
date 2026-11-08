@@ -108,7 +108,7 @@
   color-scheme: dark;
 
   /* Backgrounds */
-  --neutral-50: #1a1a1a; /* Main background becomes lighter grayish */
+  --neutral-50: #000000; /* Main background becomes black, matching light mode stripes */
   --neutral-100: #262626; /* Slightly lighter for cards/borders */
 
   /* Text */
